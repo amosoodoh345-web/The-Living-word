@@ -18,7 +18,8 @@ import {
   PrayerPage,
   SeminarPage,
   SongsPage,
-  TestimoniesPage
+  TestimoniesPage,
+  WisdomReadingsPage
 } from './LifeOSPages';
 
 const translations = [
@@ -71,7 +72,16 @@ const readStored = (key, fallback) => {
 };
 
 function App() {
-  const [page, setPage] = useState('home');
+  const [page, setPage] = useState(() => new URLSearchParams(window.location.search).get('view') === 'testimonies' ? 'testimonies' : 'home');
+  const [sharedExperience, setSharedExperience] = useState(() => {
+    try {
+      const experience = sessionStorage.getItem('living-word-experience-to-share') || '';
+      sessionStorage.removeItem('living-word-experience-to-share');
+      return experience;
+    } catch {
+      return '';
+    }
+  });
   const [activeTranslation, setActiveTranslation] = useState('kjv');
   const [selectedBook, setSelectedBook] = useState('Genesis');
   const [selectedChapter, setSelectedChapter] = useState(1);
@@ -435,6 +445,16 @@ function App() {
               <i aria-hidden="true" />
               <strong>{BIBLE_BOOKS.reduce((total, book) => total + book.chapters, 0).toLocaleString()}</strong><span>chapters</span>
             </div>
+            <a className="bible-art-credit" href="https://commons.wikimedia.org/wiki/File:Paul_preaching_to_Athens_(SM_5510z).png" target="_blank" rel="noreferrer">St Paul preaching at Athens · Städel Museum · Public Domain</a>
+          </section>
+
+          <section className="wisdom-promo" aria-label="Wisdom readings">
+            <div>
+              <p className="mini-label">Proverbs · Ecclesiastes · Psalms</p>
+              <h3>75 words of wisdom</h3>
+              <p>Original reflection notes with Scripture references, ready to explore in context.</p>
+            </div>
+            <button className="primary-btn small" onClick={() => setPage('wisdom')}>Open wisdom guide <span aria-hidden="true">→</span></button>
           </section>
 
           <div className="reader-layout">
@@ -803,13 +823,14 @@ function App() {
       );
     }
 
+    if (page === 'wisdom') return <WisdomReadingsPage onOpenBible={openScriptureReference} />;
     if (page === 'ministries') return <MinistriesPage />;
     if (page === 'songs') return <SongsPage />;
     if (page === 'novena') return <NovenaPage />;
     if (page === 'rosary' || page === 'chaplet') return <PrayerGuidePage kind={page} key={page} />;
 
     if (page === 'testimonies') {
-      return <TestimoniesPage reports={testimonyDrafts} onAdd={addTestimonyDraft} onDelete={(id) => setTestimonyDrafts((previous) => previous.filter((draft) => draft.id !== id))} />;
+      return <TestimoniesPage reports={testimonyDrafts} onAdd={addTestimonyDraft} onDelete={(id) => setTestimonyDrafts((previous) => previous.filter((draft) => draft.id !== id))} initialExperience={sharedExperience} onPrefillConsumed={setSharedExperience} />;
     }
 
     if (page === 'prayer') {
@@ -832,18 +853,27 @@ function App() {
 
     if (page === 'journal') {
       return (
-        <main className="content-page">
-          <section className="page-intro">
-            <p className="eyebrow">A quiet place to notice</p>
-            <h2>Reflection journal</h2>
-            <p>Write a prayer, a thought from today’s reading, or something you are grateful for. Entries stay on this device.</p>
+        <main className="content-page reflection-journal-page">
+          <section className="reflection-journal-heading">
+            <div><p className="eyebrow">A quiet place to notice</p><h2>Your reflection book</h2></div>
+            <p>Write a prayer, a thought from today’s reading, or something you want to remember. Your pages stay on this device.</p>
           </section>
-          <form className="journal-form panel" onSubmit={saveJournalEntry}>
-            <label htmlFor="journal-entry">What would you like to remember?</label>
-            <textarea id="journal-entry" value={journalText} onChange={(event) => setJournalText(event.target.value)} placeholder="Today, I am thankful for…" rows="7" />
-            <div className="journal-form-footer"><span className="subtle-label">Private · stored on this device</span><button className="primary-btn" type="submit">Save reflection</button></div>
-          </form>
-          <section className="journal-entries">
+          <div className="reflection-book-spread">
+            <aside className="reflection-book-margin">
+              <p className="mini-label">Today’s page</p>
+              <h3>Begin where you are.</h3>
+              <p>There is no need to find perfect words. Start with what is present: a hope, a question, a thank-you, or a prayer.</p>
+              <div className="reflection-margin-rule" />
+              <p className="reflection-margin-note">A private practice · saved on this device</p>
+            </aside>
+            <form className="reflection-writing-panel" onSubmit={saveJournalEntry}>
+              <label htmlFor="journal-entry">What would you like to remember?</label>
+              <textarea id="journal-entry" value={journalText} onChange={(event) => setJournalText(event.target.value)} placeholder="Today, I am thankful for…&#10;&#10;A word or moment I want to carry with me…&#10;&#10;My prayer…" rows="12" />
+              <div className="journal-form-footer"><span className="subtle-label">Private · stored on this device</span><button className="primary-btn" type="submit">Save this page</button></div>
+            </form>
+          </div>
+          <section className="journal-entries reflection-saved-pages">
+            <div className="section-heading"><div><p className="mini-label">Your pages</p><h3>Saved reflections</h3></div><span className="subtle-label">{journal.length} saved</span></div>
             {journal.length === 0 ? <div className="empty-card"><span>✎</span><h3>Your reflections will appear here</h3><p>Start with one small thing you noticed today.</p></div> : journal.map((entry) => (
               <article className="journal-entry panel" key={entry.id}>
                 <p className="mini-label">{entry.date}</p><p>{entry.text}</p>

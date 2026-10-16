@@ -93,6 +93,24 @@
         .bible-main {
             padding: 68px 0 90px;
         }
+        .bible-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 370px;
+            padding: clamp(28px, 5vw, 58px);
+            margin-bottom: 24px;
+            border: 1px solid #21473d;
+            color: #fffefa;
+            background-color: #21473d;
+            background-image: linear-gradient(90deg, rgba(25, 54, 46, .96), rgba(33, 71, 61, .83) 54%, rgba(33, 71, 61, .28)), url('/st-paul-preaching-athens.png');
+            background-position: center, center 43%;
+            background-size: cover;
+        }
+        .bible-hero .eyebrow { color: #e3c17e; }
+        .bible-hero h1 { color: #fffefa; }
+        .bible-hero .lead { max-width: 690px; margin: 0; color: rgba(255, 254, 250, .86); }
+        .bible-art-credit { align-self: flex-end; margin-top: auto; padding-top: 24px; color: rgba(255, 254, 250, .75); font-size: 10px; text-decoration: underline; text-underline-offset: 2px; }
         .eyebrow {
             color: var(--gold);
             font-size: 12px;
@@ -392,6 +410,7 @@
             .app-shell { grid-template-columns: minmax(0, 1fr); }
             .sidebar { order: 2; }
             .reader { order: 1; }
+            .bible-hero { min-height: 330px; }
             .sidebar, .reader { min-width: 0; width: 100%; }
             .book-list { max-height: 260px; }
         }
@@ -415,9 +434,12 @@
     </header>
 
     <main class="shell bible-main">
-        <span class="eyebrow">Scripture library</span>
-        <h1>Read the Bible</h1>
-        <p class="lead">Choose a translation, a book, and a verse. This Bible reader is designed like a simple app so you can study the word with clarity and focus.</p>
+        <section class="bible-hero">
+            <span class="eyebrow">Scripture library · 73 books</span>
+            <h1>Read the Bible</h1>
+            <p class="lead">Choose KJV, WEB, or BBE, then browse a book and chapter. Each version loads its own text; an unavailable passage is reported rather than replaced by another translation.</p>
+            <a class="bible-art-credit" href="https://commons.wikimedia.org/wiki/File:Paul_preaching_to_Athens_(SM_5510z).png" target="_blank" rel="noreferrer">St Paul preaching at Athens · Städel Museum · Public Domain</a>
+        </section>
 
         <section class="app-shell" aria-label="Bible application">
             <aside class="sidebar">
@@ -425,10 +447,8 @@
                     <h3>Translation</h3>
                     <div class="version-list" id="version-list">
                         <button class="version-option active" type="button" data-version="kjv">KJV</button>
-                        <button class="version-option" type="button" data-version="niv">NIV</button>
-                        <button class="version-option" type="button" data-version="esv">ESV</button>
-                        <button class="version-option" type="button" data-version="nasb">NASB</button>
                         <button class="version-option" type="button" data-version="web">WEB</button>
+                        <button class="version-option" type="button" data-version="bbe">BBE</button>
                     </div>
                 </div>
 
@@ -535,10 +555,8 @@
 
         const versions = {
             kjv: 'KJV',
-            niv: 'NIV',
-            esv: 'ESV',
-            nasb: 'NASB',
-            web: 'WEB'
+            web: 'WEB',
+            bbe: 'BBE'
         };
 
         const state = {
@@ -772,7 +790,7 @@
             verseReference.textContent = `${state.book} ${state.chapter}:${state.verse}`;
             versionBadge.textContent = versions[state.version];
 
-            const cacheKey = `bible_verse_cache_${state.book}_${state.chapter}_${state.version}`;
+            const cacheKey = `bible_verse_cache_v2_${state.book}_${state.chapter}_${state.version}`;
             let versesInChapter = null;
             try {
                 const cached = localStorage.getItem(cacheKey);
@@ -785,8 +803,11 @@
                 if (!versesInChapter || versesInChapter.length === 0) {
                     const url = `https://bible-api.com/${encodeURIComponent(reference)}?translation=${state.version}`;
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error('Failed to load chapter');
+                    if (!response.ok) throw new Error(`${versions[state.version]} is unavailable for this chapter (status ${response.status}).`);
                     const data = await response.json();
+                    if (data.translation_id && data.translation_id.toLowerCase() !== state.version) {
+                        throw new Error(`Requested ${versions[state.version]}, but the source returned ${data.translation_id.toUpperCase()}.`);
+                    }
                     versesInChapter = (data.verses || []).map(v => ({ verse: Number(v.verse), text: v.text.trim() }));
                     if (versesInChapter.length > 0) {
                         try {
@@ -839,8 +860,8 @@
                     // Cache rescued the error
                     return;
                 }
-                verseText.textContent = 'The verse could not be loaded right now. Please check your internet connection and try again.';
-                verseList.innerHTML = '<div class="loading">Unable to load verses. Try another translation or chapter.</div>';
+                verseText.textContent = error.message || 'The selected translation could not be loaded.';
+                verseList.textContent = error.message || 'The selected translation could not be loaded.';
             }
         }
 

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="church.css">
     <link rel="stylesheet" href="/site-navigation.css">
     <style>
-        .reading-page { min-height: 100vh; background: radial-gradient(circle at 85% 4%, #e5eee2 0, transparent 32%), var(--paper); }
+        .reading-page { min-height: 100vh; background: linear-gradient(180deg, #f4f0e5 0%, #e8eee7 58%, #f7f6f0 100%); }
         .reading-header { padding: 22px 0; border-bottom: 1px solid rgba(49, 87, 74, .12); background: rgba(255, 254, 250, .82); }
         .reading-nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
         .reading-links { display: flex; align-items: center; gap: 18px; }
@@ -20,16 +20,17 @@
         .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); font-weight: 700; letter-spacing: .08em; text-decoration: none; }
         .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; color: var(--white); background: var(--deep-sage); }
         .back-link { color: var(--deep-sage); font-size: 13px; font-weight: 700; text-decoration: none; }
-        .reading-hero { padding: 76px 0 55px; }
-        .reading-hero h1 { max-width: 760px; margin: 14px 0 20px; font-size: clamp(43px, 7vw, 72px); }
-        .reading-hero p { max-width: 640px; margin: 0; color: var(--muted); font-size: 17px; }
+        .reading-hero { display: flex; flex-direction: column; justify-content: center; min-height: 480px; padding: clamp(34px, 7vw, 78px); border: 1px solid #21473d; color: #fffefa; background-color: #21473d; background-image: linear-gradient(90deg, rgba(24, 46, 39, .94) 0%, rgba(24, 46, 39, .82) 48%, rgba(24, 46, 39, .38) 100%), url('/st-paul-preaching-athens.png'); background-position: center, center 42%; background-size: cover; box-shadow: 0 24px 60px rgba(36, 51, 46, .15); }
+        .reading-hero .eyebrow { color: #e3c17e; }
+        .reading-hero h1 { max-width: 760px; margin: 14px 0 20px; color: #fffefa; font-size: clamp(43px, 7vw, 72px); }
+        .reading-hero > p { max-width: 640px; margin: 0; color: rgba(255, 254, 250, .85); font-size: 17px; }
         .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
         .primary-btn, .secondary-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
         .primary-btn { color: var(--white); background: var(--deep-sage); box-shadow: 0 12px 24px rgba(49, 87, 74, .18); }
         .secondary-btn { color: var(--deep-sage); background: transparent; border: 1px solid rgba(49, 87, 74, .25); }
         .primary-btn:hover, .secondary-btn:hover { transform: translateY(-1px); }
         .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-        .hero-badges span { padding: 7px 12px; border: 1px solid rgba(49, 87, 74, .15); border-radius: 999px; color: var(--deep-sage); background: rgba(255, 255, 255, .45); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+        .hero-badges span { padding: 7px 12px; border: 1px solid rgba(255, 254, 250, .35); border-radius: 4px; color: #fffefa; background: rgba(24, 46, 39, .25); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
         .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 0 0 28px; }
         .feature-card { padding: 22px 22px 20px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
         .feature-highlight { background: linear-gradient(180deg, #fffaf0, #f6efe1); border-color: #e8d7b4; }
@@ -55,13 +56,13 @@
         .shelf-columns h3 span { color: var(--gold); font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
         .shelf-columns p { margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.75; }
         .shelf-columns strong { color: var(--deep-sage); }
-        .wisdom-reading { max-width: 850px; padding: 42px 48px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); scroll-margin-top: 25px; }
-        .wisdom-reading:nth-child(2) { border-left: 4px solid var(--gold); }
+        .wisdom-reading { max-width: none; padding: 42px clamp(24px, 5vw, 60px); border: 0; border-top: 1px solid var(--line); background: rgba(255, 254, 250, .72); box-shadow: none; scroll-margin-top: 25px; }
+        .wisdom-reading:nth-child(2) { border-top: 3px solid var(--gold); }
         .wisdom-reading h2 { margin: 10px 0 22px; font-size: 35px; }
         .wisdom-reading h3 { margin: 27px 0 8px; font: 700 15px/1.2 "DM Sans", sans-serif; color: var(--deep-sage); text-transform: uppercase; letter-spacing: .08em; }
         .wisdom-reading p { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
         .reading-quote { padding: 20px 24px; margin: 0 0 23px; border-left: 3px solid var(--gold); color: var(--ink) !important; background: #fbf3e5; font: 22px/1.5 "Playfair Display", serif; }
-        .practice-box { padding: 18px 21px; margin-top: 24px; color: var(--deep-sage); background: var(--sage); font-size: 14px; }
+        .practice-box { padding: 18px 21px; margin-top: 24px; border-left: 3px solid var(--gold); color: var(--deep-sage); background: #e7eee7; font-size: 14px; }
         .practice-box strong { display: block; margin-bottom: 5px; }
         .night-prayer { max-width: 850px; padding: 38px 48px; margin: 0 0 75px; color: var(--white); background: var(--sage); box-shadow: 10px 10px 0 #dfeadd; scroll-margin-top: 25px; }
         .night-prayer h2 { margin: 10px 0 18px; color: var(--white); font-size: 35px; }
@@ -69,7 +70,7 @@
         .night-prayer .prayer-text { padding: 20px 24px; margin-top: 24px; color: var(--ink); background: var(--white); font: 19px/1.7 "Playfair Display", serif; }
         .night-prayer .prayer-text strong { color: var(--gold); }
         .today-pill { display: inline-flex; align-items: center; margin-bottom: 8px; padding: 6px 11px; border-radius: 999px; color: var(--deep-sage); background: rgba(49, 87, 74, .08); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-        @media (max-width: 720px) { .reading-header { padding-top: 16px; } .reading-nav { flex-wrap: wrap; } .reading-links { order: 3; width: 100%; justify-content: space-between; } .reading-hero { padding: 53px 0 38px; } .feature-grid { grid-template-columns: 1fr; } .wisdom-reading, .book-guide, .bible-shelf { padding: 30px 24px; } .wisdom-reading h2, .book-guide h2, .bible-shelf h2 { font-size: 30px; } .book-guide-grid, .shelf-columns { grid-template-columns: 1fr; gap: 18px; } .shelf-columns h3 { display: block; } .shelf-columns h3 span { display: block; margin-top: 8px; } }
+        @media (max-width: 720px) { .reading-header { padding-top: 16px; } .reading-nav { flex-wrap: wrap; } .reading-links { order: 3; width: 100%; justify-content: space-between; } .reading-hero { min-height: 460px; padding: 38px 24px; } .reading-hero h1 { font-size: 43px; } .feature-grid { grid-template-columns: 1fr; } .wisdom-reading, .book-guide, .bible-shelf { padding: 30px 24px; } .wisdom-reading h2, .book-guide h2, .bible-shelf h2 { font-size: 30px; } .book-guide-grid, .shelf-columns { grid-template-columns: 1fr; gap: 18px; } .shelf-columns h3 { display: block; } .shelf-columns h3 span { display: block; margin-top: 8px; } }
     </style>
 </head>
 <body class="reading-page">

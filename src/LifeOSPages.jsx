@@ -10,6 +10,7 @@ import {
   SEMINAR_SESSIONS,
   SONGS
 } from './data/lifeosContent';
+import { WISDOM_BOOKS, WISDOM_READINGS } from './data/wisdomReadings';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const todayIndex = () => Math.floor(Date.now() / 86400000) % DEVOTIONALS.length;
@@ -18,6 +19,7 @@ export function ExplorePage({ onNavigate }) {
   const destinations = [
     ['seminar', 'Life in the Spirit Seminar', 'Seven sessions with a Scripture reference and reflection question.'],
     ['devotional', 'Daily devotional', 'A short reading prompt, Scripture reference, and prayer.'],
+    ['wisdom', '75 words of wisdom', 'Original reflection notes linked to Proverbs, Ecclesiastes, and Psalms.'],
     ['prayer', 'Prayer library', 'Daily prayer, prayer to the Holy Spirit, and guided devotions.'],
     ['ministries', 'Ministries', 'Explore four ways to serve in parish life.'],
     ['songs', 'Songs and hymns', 'Search titles and creators; lyrics are not reproduced.'],
@@ -108,6 +110,55 @@ export function DevotionalPage({ onOpenBible, onJournal }) {
           <button className="secondary-btn small" onClick={() => onOpenBible(devotional.scripture)}>Read Scripture</button>
         </div>
       </article>
+    </main>
+  );
+}
+
+export function WisdomReadingsPage({ onOpenBible }) {
+  const [selectedBook, setSelectedBook] = useState('All books');
+  const [query, setQuery] = useState('');
+  const filteredReadings = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return WISDOM_READINGS.filter((entry) => {
+      const matchesBook = selectedBook === 'All books' || entry.book === selectedBook;
+      const matchesQuery = !normalizedQuery || `${entry.title} ${entry.reference} ${entry.reflection}`.toLowerCase().includes(normalizedQuery);
+      return matchesBook && matchesQuery;
+    });
+  }, [query, selectedBook]);
+
+  return (
+    <main className="content-page wisdom-page">
+      <section className="page-intro">
+        <p className="eyebrow">75 original reflection notes · Scripture references</p>
+        <h2>Wisdom for the way</h2>
+        <p>Explore 25 notes each from Proverbs, Ecclesiastes, and Psalms. These short reflections are not Bible quotations; open the reference to read the passage in context.</p>
+      </section>
+      <div className="wisdom-toolbar">
+        <div className="wisdom-book-filter" aria-label="Filter wisdom by Bible book">
+          {WISDOM_BOOKS.map((book) => (
+            <button className={selectedBook === book ? 'tab-pill active' : 'tab-pill'} key={book} onClick={() => setSelectedBook(book)} aria-pressed={selectedBook === book}>{book}</button>
+          ))}
+        </div>
+        <label className="field wisdom-search" htmlFor="wisdom-search">
+          <span>Search wisdom notes</span>
+          <input id="wisdom-search" className="search-box" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try patience, trust, or Psalm 23" />
+        </label>
+        <span className="subtle-label" aria-live="polite">{filteredReadings.length} of {WISDOM_READINGS.length} notes</span>
+      </div>
+      <section className="wisdom-reading-list" aria-label="Wisdom reflections">
+        {filteredReadings.map((entry, index) => (
+          <article className="wisdom-reading-entry" key={entry.id}>
+            <span className="wisdom-reading-number">{String(index + 1).padStart(2, '0')}</span>
+            <div className="wisdom-reading-copy">
+              <p className="mini-label">{entry.book}</p>
+              <h3>{entry.title}</h3>
+              <p>{entry.reflection}</p>
+            </div>
+            <button className="text-button wisdom-reference" onClick={() => onOpenBible(entry.reference)}>{entry.reference} <span aria-hidden="true">→</span></button>
+          </article>
+        ))}
+        {filteredReadings.length === 0 && <p className="empty-state">No wisdom notes match that search.</p>}
+      </section>
     </main>
   );
 }
@@ -275,9 +326,9 @@ export function SongsPage() {
   );
 }
 
-export function TestimoniesPage({ reports, onAdd, onDelete }) {
-  const [title, setTitle] = useState('');
-  const [story, setStory] = useState('');
+export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = '', onPrefillConsumed }) {
+  const [title, setTitle] = useState(() => initialExperience ? 'My experience' : '');
+  const [story, setStory] = useState(initialExperience);
   const [category, setCategory] = useState('testimony');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -287,11 +338,17 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
   const [communityPosts, setCommunityPosts] = useState([]);
   const [mySubmissions, setMySubmissions] = useState([]);
   const [pendingSubmissions, setPendingSubmissions] = useState([]);
+  const [pendingComments, setPendingComments] = useState([]);
   const [moderationReports, setModerationReports] = useState([]);
+  const [commentDrafts, setCommentDrafts] = useState({});
   const [isLoadingCommunity, setIsLoadingCommunity] = useState(false);
   const [reportingId, setReportingId] = useState('');
   const [reportReason, setReportReason] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (initialExperience) onPrefillConsumed?.('');
+  }, [initialExperience, onPrefillConsumed]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return undefined;
@@ -338,24 +395,49 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
         const moderatorResult = session
           ? await supabase.rpc('is_moderator')
           : { data: false, error: null };
+        const postIds = (publicResult.data || []).map((post) => post.id);
+        const commentsResult = publicResult.error || postIds.length === 0
+          ? { data: [], error: null }
+          : await supabase
+              .from('testimony_comments')
+              .select('id, testimony_id, body, created_at')
+              .in('testimony_id', postIds)
+              .eq('status', 'approved')
+              .order('created_at', { ascending: true });
 
         if (!isCurrent) return;
-        if (publicResult.error || ownResult.error || moderatorResult.error) {
-          setMessage('The community feed is not available. Check both Supabase migrations and access policies.');
+        if (publicResult.error || ownResult.error || moderatorResult.error || commentsResult.error) {
+          setMessage('The community feed is not available. Check all Supabase migrations and access policies.');
           setIsModerator(false);
           setPendingSubmissions([]);
+          setPendingComments([]);
           setModerationReports([]);
         } else {
           const moderator = moderatorResult.data === true;
-          setCommunityPosts(publicResult.data || []);
+          const commentsByPost = new Map();
+          for (const comment of commentsResult.data || []) {
+            const group = commentsByPost.get(comment.testimony_id) || [];
+            group.push(comment);
+            commentsByPost.set(comment.testimony_id, group);
+          }
+          setCommunityPosts((publicResult.data || []).map((post) => ({
+            ...post,
+            comments: commentsByPost.get(post.id) || []
+          })));
           setMySubmissions(ownResult.data || []);
           setIsModerator(moderator);
 
           if (moderator) {
-            const [pendingResult, reportsResult] = await Promise.all([
+            const [pendingResult, commentsPendingResult, reportsResult] = await Promise.all([
               supabase
                 .from('testimonies')
                 .select('id, user_id, title, body, category, created_at')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: true })
+                .limit(100),
+              supabase
+                .from('testimony_comments')
+                .select('id, testimony_id, user_id, body, created_at')
                 .eq('status', 'pending')
                 .order('created_at', { ascending: true })
                 .limit(100),
@@ -368,14 +450,16 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
             ]);
 
             if (!isCurrent) return;
-            if (pendingResult.error || reportsResult.error) {
+            if (pendingResult.error || commentsPendingResult.error || reportsResult.error) {
               setMessage('The moderator queue could not load. Confirm the moderation migration is applied.');
             } else {
               setPendingSubmissions(pendingResult.data || []);
+              setPendingComments(commentsPendingResult.data || []);
               setModerationReports(reportsResult.data || []);
             }
           } else {
             setPendingSubmissions([]);
+            setPendingComments([]);
             setModerationReports([]);
           }
         }
@@ -442,6 +526,34 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
     setMessage('Submitted for moderator review. It will appear publicly only if approved.');
   };
 
+  const submitCommunityComment = async (event, testimonyId) => {
+    event.preventDefault();
+    const body = (commentDrafts[testimonyId] || '').trim();
+    if (!session || !body) return;
+
+    const { error } = await supabase.from('testimony_comments').insert({
+      testimony_id: testimonyId,
+      user_id: session.user.id,
+      body,
+      status: 'pending'
+    });
+
+    if (error) {
+      setMessage('Your comment could not be submitted. Please try again.');
+      return;
+    }
+
+    setCommentDrafts((previous) => ({ ...previous, [testimonyId]: '' }));
+    setPendingComments((previous) => [{
+      id: `pending-${Date.now()}`,
+      testimony_id: testimonyId,
+      user_id: session.user.id,
+      body,
+      created_at: new Date().toISOString()
+    }, ...previous]);
+    setMessage('Comment submitted for review. It will appear after a moderator approves it.');
+  };
+
   const submitReport = async (event, testimonyId) => {
     event.preventDefault();
     if (!session || !reportReason.trim()) return;
@@ -473,6 +585,26 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
       setCommunityPosts((previous) => [{ ...submission, status, created_at: submission.created_at }, ...previous]);
     }
     setMessage(`Submission ${status}.`);
+  };
+
+  const moderateComment = async (comment, status) => {
+    const { error } = await supabase
+      .from('testimony_comments')
+      .update({ status })
+      .eq('id', comment.id);
+
+    if (error) {
+      setMessage('That comment moderation decision could not be saved.');
+      return;
+    }
+
+    setPendingComments((previous) => previous.filter((entry) => entry.id !== comment.id));
+    if (status === 'approved') {
+      setCommunityPosts((previous) => previous.map((post) => post.id === comment.testimony_id
+        ? { ...post, comments: [...(post.comments || []), { ...comment, status }] }
+        : post));
+    }
+    setMessage(`Comment ${status}.`);
   };
 
   const resolveModerationReport = async (report) => {
@@ -524,6 +656,21 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
               <article className="community-post" key={post.id}>
                 <p className="mini-label">{post.category === 'praise_report' ? 'Praise report' : 'Testimony'} · {new Date(post.created_at).toLocaleDateString()}</p>
                 <h4>{post.title}</h4><p>{post.body}</p>
+                <div className="community-comment-thread">
+                  <p className="mini-label">Conversation · {post.comments?.length || 0}</p>
+                  {(post.comments || []).map((comment) => (
+                    <div className="community-comment" key={comment.id}>
+                      <span>Community member</span><p>{comment.body}</p>
+                    </div>
+                  ))}
+                  {session ? (
+                    <form className="community-comment-form" onSubmit={(event) => submitCommunityComment(event, post.id)}>
+                      <label htmlFor={`comment-${post.id}`}>Add a comment</label>
+                      <textarea id={`comment-${post.id}`} value={commentDrafts[post.id] || ''} onChange={(event) => setCommentDrafts((previous) => ({ ...previous, [post.id]: event.target.value }))} maxLength={2000} required />
+                      <button className="secondary-btn small" type="submit">Comment for review</button>
+                    </form>
+                  ) : <p className="subtle-label">Sign in below to join the conversation. Comments are reviewed before appearing.</p>}
+                </div>
                 {session && <button className="text-button" onClick={() => { setReportingId(post.id); setReportReason(''); }}>Report this story</button>}
                 {reportingId === post.id && (
                   <form className="report-form" onSubmit={(event) => submitReport(event, post.id)}>
@@ -547,6 +694,19 @@ export function TestimoniesPage({ reports, onAdd, onDelete }) {
                     <div className="moderation-actions">
                       <button className="primary-btn small" onClick={() => moderateSubmission(submission, 'approved')}>Approve</button>
                       <button className="secondary-btn small" onClick={() => moderateSubmission(submission, 'rejected')}>Reject</button>
+                    </div>
+                  </article>
+                ))}
+              </section>
+              <section className="community-panel moderation-queue">
+                <div className="section-heading"><div><p className="mini-label">Conversation review</p><h3>Pending comments</h3></div><span className="subtle-label">{pendingComments.length} awaiting review</span></div>
+                {pendingComments.length === 0 ? <p className="empty-state">No comments are waiting for review.</p> : pendingComments.map((comment) => (
+                  <article className="community-post moderation-item" key={comment.id}>
+                    <p className="mini-label">Comment · {new Date(comment.created_at).toLocaleString()}</p>
+                    <p>{comment.body}</p>
+                    <div className="moderation-actions">
+                      <button className="primary-btn small" onClick={() => moderateComment(comment, 'approved')}>Approve comment</button>
+                      <button className="secondary-btn small" onClick={() => moderateComment(comment, 'rejected')}>Reject comment</button>
                     </div>
                   </article>
                 ))}

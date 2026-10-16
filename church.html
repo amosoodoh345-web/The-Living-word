@@ -45,14 +45,17 @@
         nav { display: flex; gap: 26px; color: var(--muted); font-size: 14px; }
         nav a { color: inherit; text-decoration: none; }
         nav a:hover { color: var(--deep-sage); }
-        .hero { padding: 74px 0 58px; background: radial-gradient(circle at 90% 10%, #e5eee2 0, transparent 38%), linear-gradient(135deg, #f7f6f0 40%, #edf1e8); }
+        .hero { padding: 74px 0 58px; color: var(--white); background-color: #21473d; background-image: linear-gradient(90deg, rgba(24, 46, 39, .94) 0%, rgba(24, 46, 39, .82) 48%, rgba(24, 46, 39, .34) 100%), url('/st-paul-preaching-athens.png'); background-position: center, center 42%; background-size: cover; }
+        .hero .eyebrow { color: #e3c17e; }
+        .hero h1 { color: var(--white); }
+        .hero-copy { color: rgba(255, 254, 250, .86); }
         .hero-grid { display: grid; grid-template-columns: 1.25fr .75fr; align-items: end; gap: 70px; }
         .eyebrow { color: var(--gold); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
         h1, h2, h3 { margin: 0; font-family: "Playfair Display", serif; line-height: 1.12; }
         h1 { max-width: 680px; margin-top: 14px; font-size: clamp(44px, 7vw, 76px); letter-spacing: -.03em; }
         .hero-copy { max-width: 530px; margin: 22px 0 0; color: var(--muted); font-size: 17px; }
-        .date-card { padding: 28px; background: var(--deep-sage); color: var(--white); border-radius: 4px; box-shadow: var(--shadow); }
-        .date-card p { margin: 0 0 8px; color: #c5d7ca; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; }
+        .date-card { padding: 28px; background: rgba(255, 254, 250, .12); color: var(--white); border: 1px solid rgba(255, 254, 250, .3); border-radius: 4px; backdrop-filter: blur(8px); }
+        .date-card p { margin: 0 0 8px; color: #e3c17e; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; }
         .date-card strong { display: block; font-family: "Playfair Display", serif; font-size: 28px; }
         main { padding: 58px 0 80px; }
         .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 23px; }
@@ -165,8 +168,8 @@
         </section>
 
         <section class="experience-section" id="experience">
-            <div class="section-heading"><div><span class="eyebrow">Your walk with God</span><h2>My experience notebook</h2></div><p>A private place to record prayers, lessons, answered prayers, and moments of growth.</p></div>
-            <div class="experience-notebook"><label for="experience-note">Write what you are learning</label><textarea id="experience-note" placeholder="Date:&#10;&#10;What happened...&#10;&#10;What I learned about God, myself, or others..."></textarea><div class="journal-footer"><span class="saved" id="experience-status" aria-live="polite"></span><button class="button" id="save-experience" type="button">Save experience</button></div></div>
+            <div class="section-heading"><div><span class="eyebrow">Your walk with God</span><h2>My experience notebook</h2></div><p>Keep a private note or prepare your experience to share with the community. Shared stories are reviewed before publication.</p></div>
+            <div class="experience-notebook"><label for="experience-note">Write what you are learning</label><textarea id="experience-note" placeholder="Date:&#10;&#10;What happened...&#10;&#10;What I learned about God, myself, or others..."></textarea><div class="journal-footer"><span class="saved" id="experience-status" aria-live="polite"></span><div class="experience-actions"><button class="button" id="save-experience" type="button">Save privately</button><button class="button" id="share-experience" type="button">Share experience</button></div></div></div>
         </section>
 
         <section class="reflection-layout" id="reflection">

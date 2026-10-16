@@ -6,11 +6,13 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 
 - Installable home-screen app experience on supported browsers
 - Responsive phone, tablet, and desktop layouts
-- Bible reading with translation selection and bundled passages
+- Bible reading with KJV, WEB, and BBE selection; the reader does not silently substitute translations
 - Seven-session Life in the Spirit formation outline with locally saved progress
 - Daily devotional prompts, prayer intentions, Holy Spirit novena, Rosary, and Divine Mercy Chaplet guides
+- Searchable set of 75 original wisdom reflections linked to Proverbs, Ecclesiastes, and Psalms
 - Ministries directory starter and searchable song/hymn metadata catalogue
-- Private reflection journal, private testimony drafts, saved verses, and recent reading history
+- Wide reflection journal and daily reflection page, private testimony drafts, saved verses, and recent reading history
+- St Paul preaching artwork in the Bible, seminar, and daily reflection heroes (Wikimedia Commons, public domain)
 - Dark mode and offline app shell
 - Personal preferences and notes saved locally on the device
 
@@ -51,7 +53,7 @@ After opening the installed app online once, the app shell and bundled content c
 
 ## Scripture content note
 
-The reader includes a 73-book catalog and loads chapters on demand from bible-api.com when a passage is not bundled locally. Successfully loaded chapters are cached on the device for later offline reading. An internet connection is required the first time a chapter is opened; offline availability grows as chapters are read. Translation and source availability can vary by passage.
+The reader includes a 73-book catalog and loads chapters on demand from bible-api.com when a passage is not bundled locally. Supported selections are KJV, WEB, and BBE. Each selected translation is requested and cached separately; if the source does not return that version, the reader shows an error instead of substituting KJV. An internet connection is required the first time a chapter is opened; offline availability grows as chapters are read. Translation and source availability can vary by passage.
 
 ## Launch readiness and content boundaries
 
@@ -59,16 +61,16 @@ The reader includes a 73-book catalog and loads chapters on demand from bible-ap
 - The prayer pages provide devotional prompts and sequence guides; they do not reproduce complete liturgical prayer texts.
 - The song catalogue contains titles and creator metadata only. It does not include lyrics or recordings. Verify rights for each translation, arrangement, recording, and intended distribution before adding media.
 - Seminar progress, journal entries, and testimony drafts are stored in the current browser only. Testimony drafts are private and are not submitted or visible to other users.
-- Public community features still require a hosted backend, authentication and authorization, privacy and retention policies, moderation, and a reporting process. Do not treat the private draft form as a public testimony service.
+- Public community features require a hosted backend, authentication and authorization, privacy and retention policies, moderation, and a reporting process. Testimony and comment drafts remain pending until moderator approval.
 - Public release still requires an HTTPS deployment target, production configuration, review of Scripture/content licenses, and testing on supported devices and browsers.
 
 ## Supabase community setup
 
-The testimony page supports an optional Supabase-backed community feed. Without real project configuration and both database migrations, the app continues to build and only the private local-draft feature is available. `.env.local` is ignored by Git; replace template values locally and never commit credentials.
+The testimony page supports a Supabase-backed community feed, reviewed submissions, and moderated comments. Auth currently responds from the configured project, but the three content tables have not been created yet; the feed and moderator queue will remain unavailable until all migrations are applied. `.env.local` is ignored by Git; keep project configuration local and never commit service-role credentials.
 
 1. Create a Supabase project.
 2. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` using the project URL and browser-safe anon/publishable key. Do not put a service-role key in a `VITE_` variable or in client code.
-3. Apply both migrations in order using the Supabase SQL Editor or Supabase CLI: `202610160001_create_testimonies.sql`, then `202610160002_moderation_workflow.sql`.
+3. Apply all three migrations in order using the Supabase SQL Editor or Supabase CLI: `202610160001_create_testimonies.sql`, `202610160002_moderation_workflow.sql`, then `202610160003_testimony_comments.sql`.
 4. Configure Supabase Auth email confirmation and add the local and production app URLs to the Auth redirect allowlist. Create and confirm the account that will be the first moderator.
 5. In the Supabase SQL Editor, replace the placeholder email and grant that confirmed account moderator access. Run this only as a trusted project owner:
 
@@ -78,7 +80,7 @@ The testimony page supports an optional Supabase-backed community feed. Without 
 	on conflict (user_id) do nothing;
 	```
 
-6. Sign in with the moderator account. The in-app queue will show pending submissions and reports. Approvals, rejections, and report resolutions are restricted by database RLS; ordinary signed-in users cannot grant themselves moderator status.
+6. Sign in with the moderator account. The in-app queue will show pending stories, comments, and reports. Approvals, rejections, and report resolutions are restricted by database RLS; ordinary signed-in users cannot grant themselves moderator status.
 7. Set the same two public client variables in the hosting provider's build environment, then rebuild and deploy the app over HTTPS.
 
-The app never needs a Supabase service-role key. RLS is required even when the UI hides an action. Before enabling public registration, decide account recovery, privacy/retention terms, moderation response times, abuse handling, and signup rate limits/CAPTCHA. No live Supabase project is connected from this repository yet.
+The app never needs a Supabase service-role key. RLS is required even when the UI hides an action. Before enabling public registration, decide account recovery, privacy/retention terms, moderation response times, abuse handling, and signup rate limits/CAPTCHA. The local project URL and publishable key are configured and the Auth endpoint responds; the testimony and comment tables are not live until all three migrations are applied to the project.

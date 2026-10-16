@@ -2888,16 +2888,11 @@ for (const [bookName, chMap] of Object.entries(bundledLibrary)) {
       const webVerses = transMap.web || [];
       bibleLibrary[bookName].chapters[chNum] = kjvVerses.map(kv => {
         const wv = webVerses.find(w => w.verse === kv.verse);
+        const text = { kjv: kv.text };
+        if (wv) text.web = wv.text;
         return {
           verse: kv.verse,
-          text: {
-            kjv: kv.text,
-            web: wv ? wv.text : kv.text,
-            niv: kv.text,
-            esv: kv.text,
-            nasb: kv.text,
-            bbe: kv.text
-          }
+          text
         };
       });
     }
@@ -2945,7 +2940,7 @@ export async function loadChapterVerses(bookName, chapterNumber, translation = '
   const bookInfo = getBookInfo(bookName);
   const chapter = Number(chapterNumber) || 1;
   const trans = (translation || 'kjv').toLowerCase();
-  const cacheKey = `bible_verse_cache_${bookInfo.name}_${chapter}_${trans}`;
+  const cacheKey = `bible_verse_cache_v2_${bookInfo.name}_${chapter}_${trans}`;
 
   if (memCache.has(cacheKey)) {
     return { verses: memCache.get(cacheKey), source: 'cache', bookInfo };
@@ -2966,7 +2961,7 @@ export async function loadChapterVerses(bookName, chapterNumber, translation = '
 
   const bundledBook = bundledLibrary[bookInfo.name];
   if (bundledBook && bundledBook[chapter]) {
-    const targetList = bundledBook[chapter][trans] || bundledBook[chapter]['kjv'] || [];
+    const targetList = bundledBook[chapter][trans] || [];
     if (targetList.length > 0) {
       memCache.set(cacheKey, targetList);
       return { verses: targetList, source: 'bundled', bookInfo };
@@ -2979,13 +2974,13 @@ export async function loadChapterVerses(bookName, chapterNumber, translation = '
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      if (trans !== 'kjv') {
-        return loadChapterVerses(bookName, chapter, 'kjv');
-      }
-      throw new Error(`Passage not available (status ${res.status})`);
+      throw new Error(`${trans.toUpperCase()} passage unavailable (status ${res.status}). No other translation was substituted.`);
     }
 
     const data = await res.json();
+    if (data.translation_id && data.translation_id.toLowerCase() !== trans) {
+      throw new Error(`Requested ${trans.toUpperCase()}, but the source returned ${data.translation_id.toUpperCase()}.`);
+    }
     const rawVerses = data.verses || [];
     if (!rawVerses.length) {
       throw new Error('No verses returned for this chapter.');
@@ -3005,17 +3000,6 @@ export async function loadChapterVerses(bookName, chapterNumber, translation = '
 
     return { verses, source: 'network', bookInfo };
   } catch (error) {
-    const fallbackKjvKey = `bible_verse_cache_${bookInfo.name}_${chapter}_kjv`;
-    try {
-      const rawKjv = localStorage.getItem(fallbackKjvKey);
-      if (rawKjv) {
-        const parsed = JSON.parse(rawKjv);
-        if (parsed.length > 0) {
-          return { verses: parsed, source: 'offline-cache', bookInfo };
-        }
-      }
-    } catch {}
-
     throw error;
   }
 }
