@@ -1,0 +1,85 @@
+.lifeos-site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  min-height: 62px;
+  color: #24332e;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.lifeos-site-brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+  color: #21473d;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.lifeos-site-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #21473d;
+  color: #fffefa;
+  font-size: 17px;
+}
+
+.lifeos-site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.lifeos-site-nav-links a {
+  flex: 0 0 auto;
+  padding: 8px 11px;
+  border-radius: 6px;
+  color: #52645d;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.16s ease, background 0.16s ease;
+}
+
+.lifeos-site-nav-links a:hover,
+.lifeos-site-nav-links a[aria-current='page'] {
+  background: #eaf0e9;
+  color: #21473d;
+}
+
+@media (max-width: 760px) {
+  .lifeos-site-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .lifeos-site-nav-links {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 2px 4px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .lifeos-site-nav-links a {
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lifeos-site-nav-links a {
+    transition: none;
+  }
+}

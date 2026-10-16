@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Reflection | The Living Word</title>
+    <link rel="stylesheet" href="church.css">
+    <link rel="stylesheet" href="/site-navigation.css">
+    <style>
+        .reflection-page { min-height: 100vh; background: radial-gradient(circle at 90% 0, #e5eee2, transparent 34%), var(--paper); }
+        .page-header { padding: 22px 0; border-bottom: 1px solid var(--line); background: rgba(255, 254, 250, .86); }
+        .page-nav { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+        .back-link { color: var(--deep-sage); font-size: 13px; font-weight: 700; text-decoration: none; }
+        .reflection-main { padding: 72px 0 90px; }
+        .reflection-main h1 { margin: 12px 0 16px; font-size: clamp(42px, 7vw, 70px); }
+        .lead { max-width: 620px; margin: 0 0 38px; color: var(--muted); font-size: 17px; }
+        .reflection-card { max-width: 820px; padding: 38px 46px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+        .reflection-card h2 { margin: 10px 0 20px; font-size: 34px; }
+        .reflection-card p { color: var(--muted); font-size: 16px; }
+        .reflection-prompt { padding: 22px; margin: 25px 0; border-left: 3px solid var(--gold); color: var(--ink) !important; background: #fbf3e5; font: 21px/1.5 "Playfair Display", serif; }
+        .reflection-card textarea { min-height: 230px; }
+        @media (max-width: 720px) { .reflection-main { padding: 50px 0 70px; } .reflection-card { padding: 28px 23px; } .reflection-card h2 { font-size: 29px; } }
+    </style>
+</head>
+<body class="reflection-page">
+    <header class="page-header"><div class="shell" data-site-navigation data-current-page="reflection"></div></header>
+    <main class="shell reflection-main">
+        <span class="eyebrow">A quiet daily practice</span><h1>Daily Reflection</h1><p class="lead">Pause for a few minutes. Read the question slowly, listen to what is happening in your heart, and write honestly. You do not need perfect words.</p>
+        <article class="reflection-card"><span class="eyebrow" id="reflection-date"></span><h2 id="reflection-title"></h2><p id="reflection-text"></p><p class="reflection-prompt" id="reflection-prompt"></p><label for="daily-note">My reflection</label><textarea id="daily-note" placeholder="What are you learning today?&#10;&#10;Write a prayer, a question, or one step you want to take."></textarea><div class="journal-footer"><span class="saved" id="reflection-status" aria-live="polite"></span><button class="button" id="save-daily-note" type="button">Save reflection</button></div></article>
+    </main>
+    <footer><div class="shell">THE LIVING WORD · One honest moment at a time.</div></footer>
+    <script>
+        const reflections = [
+            ['Receiving peace', 'Peace does not mean that every problem is solved. It means you can bring today into God’s care one concern at a time.', 'What worry can you release before the day continues?'],
+            ['Choosing courage', 'God can guide you through a small next step. You do not have to understand the whole path before you begin.', 'Where are you being invited to act with courage?'],
+            ['Living with gratitude', 'Gratitude helps us notice the gifts that are already present: breath, people, provision, work, and another opportunity to grow.', 'Name three things you received today.'],
+            ['Growing in wisdom', 'Wisdom often sounds quiet. It may be the patient answer, the honest choice, or the humility to ask someone for help.', 'What wise choice can you practice today?'],
+            ['Offering encouragement', 'Your words can become shelter for someone else. A sincere message may strengthen a person more than you realize.', 'Who can you encourage with specific, kind words?']
+        ];
+        const today = new Date();
+        const reflection = reflections[(today.getDate() - 1) % reflections.length];
+        document.querySelector('#reflection-date').textContent = new Intl.DateTimeFormat('en', { weekday: 'long', month: 'long', day: 'numeric' }).format(today);
+        document.querySelector('#reflection-title').textContent = reflection[0];
+        document.querySelector('#reflection-text').textContent = reflection[1];
+        document.querySelector('#reflection-prompt').textContent = reflection[2];
+        const note = document.querySelector('#daily-note');
+        const status = document.querySelector('#reflection-status');
+        note.value = localStorage.getItem('daily-reflection-note') || '';
+        document.querySelector('#save-daily-note').addEventListener('click', () => { localStorage.setItem('daily-reflection-note', note.value); status.textContent = 'Reflection saved on this device'; setTimeout(() => status.textContent = '', 2500); });
+    </script>
+    <script type="module" src="/src/siteNavigation.js"></script>
+</body>
+</html>

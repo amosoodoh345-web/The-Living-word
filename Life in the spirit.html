@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Beginner-friendly reflections for living a Spirit-led life.">
+    <title>Life in the Spirit | The Living Word</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="church.css">
+    <link rel="stylesheet" href="/site-navigation.css">
+    <style>
+        .reading-page { min-height: 100vh; background: radial-gradient(circle at 85% 4%, #e5eee2 0, transparent 32%), var(--paper); }
+        .reading-header { padding: 22px 0; border-bottom: 1px solid rgba(49, 87, 74, .12); background: rgba(255, 254, 250, .82); }
+        .reading-nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+        .reading-links { display: flex; align-items: center; gap: 18px; }
+        .reading-links a { color: var(--muted); font-size: 13px; font-weight: 700; text-decoration: none; }
+        .reading-links a:hover { color: var(--deep-sage); }
+        .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); font-weight: 700; letter-spacing: .08em; text-decoration: none; }
+        .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; color: var(--white); background: var(--deep-sage); }
+        .back-link { color: var(--deep-sage); font-size: 13px; font-weight: 700; text-decoration: none; }
+        .reading-hero { padding: 76px 0 55px; }
+        .reading-hero h1 { max-width: 760px; margin: 14px 0 20px; font-size: clamp(43px, 7vw, 72px); }
+        .reading-hero p { max-width: 640px; margin: 0; color: var(--muted); font-size: 17px; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+        .primary-btn, .secondary-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
+        .primary-btn { color: var(--white); background: var(--deep-sage); box-shadow: 0 12px 24px rgba(49, 87, 74, .18); }
+        .secondary-btn { color: var(--deep-sage); background: transparent; border: 1px solid rgba(49, 87, 74, .25); }
+        .primary-btn:hover, .secondary-btn:hover { transform: translateY(-1px); }
+        .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+        .hero-badges span { padding: 7px 12px; border: 1px solid rgba(49, 87, 74, .15); border-radius: 999px; color: var(--deep-sage); background: rgba(255, 255, 255, .45); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 0 0 28px; }
+        .feature-card { padding: 22px 22px 20px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+        .feature-highlight { background: linear-gradient(180deg, #fffaf0, #f6efe1); border-color: #e8d7b4; }
+        .feature-icon { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; color: var(--deep-sage); background: var(--sage); font-size: 21px; }
+        .feature-tag { display: inline-block; margin-top: 12px; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .feature-card h3 { margin: 12px 0 10px; font-size: 26px; }
+        .feature-card p { margin: 0; color: var(--muted); font-size: 14px; }
+        .reading-content { display: grid; gap: 28px; padding-bottom: 80px; }
+        .book-guide { max-width: 850px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid #d7c7a8; background: #fffaf0; box-shadow: 7px 7px 0 #eadfc8; }
+        .book-guide h2 { margin: 10px 0 12px; font-size: 34px; }
+        .book-guide > p { max-width: 700px; margin: 0 0 22px; color: var(--muted); }
+        .book-guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .book-guide-grid div { padding-top: 13px; border-top: 2px solid var(--gold); }
+        .book-guide-grid strong { display: block; margin-bottom: 5px; color: var(--deep-sage); }
+        .book-gui de-grid span { display: block; color: var(--muted); font-size: 13px; }
+        .book-guide .reading-quote { margin-bottom: 0; }
+        .bible-shelf { max-width: 1000px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid var(--line); background: var(--white); }
+        .bible-shelf h2 { margin: 10px 0 8px; font-size: 34px; }
+        .shelf-intro { margin: 0 0 24px; color: var(--muted); }
+        .shelf-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+        .shelf-columns > div { padding-top: 16px; border-top: 2px solid var(--gold); }
+        .shelf-columns h3 { display: flex; justify-content: space-between; gap: 15px; margin: 0 0 13px; font-size: 24px; }
+        .shelf-columns h3 span { color: var(--gold); font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+        .shelf-columns p { margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+        .shelf-columns strong { color: var(--deep-sage); }
+        .wisdom-reading { max-width: 850px; padding: 42px 48px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); scroll-margin-top: 25px; }
+        .wisdom-reading:nth-child(2) { border-left: 4px solid var(--gold); }
+        .wisdom-reading h2 { margin: 10px 0 22px; font-size: 35px; }
+        .wisdom-reading h3 { margin: 27px 0 8px; font: 700 15px/1.2 "DM Sans", sans-serif; color: var(--deep-sage); text-transform: uppercase; letter-spacing: .08em; }
+        .wisdom-reading p { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
+        .reading-quote { padding: 20px 24px; margin: 0 0 23px; border-left: 3px solid var(--gold); color: var(--ink) !important; background: #fbf3e5; font: 22px/1.5 "Playfair Display", serif; }
+        .practice-box { padding: 18px 21px; margin-top: 24px; color: var(--deep-sage); background: var(--sage); font-size: 14px; }
+        .practice-box strong { display: block; margin-bottom: 5px; }
+        .night-prayer { max-width: 850px; padding: 38px 48px; margin: 0 0 75px; color: var(--white); background: var(--sage); box-shadow: 10px 10px 0 #dfeadd; scroll-margin-top: 25px; }
+        .night-prayer h2 { margin: 10px 0 18px; color: var(--white); font-size: 35px; }
+        .night-prayer p { max-width: 720px; margin: 0 0 15px; color: #e2eee4; font-size: 16px; }
+        .night-prayer .prayer-text { padding: 20px 24px; margin-top: 24px; color: var(--ink); background: var(--white); font: 19px/1.7 "Playfair Display", serif; }
+        .night-prayer .prayer-text strong { color: var(--gold); }
+        .today-pill { display: inline-flex; align-items: center; margin-bottom: 8px; padding: 6px 11px; border-radius: 999px; color: var(--deep-sage); background: rgba(49, 87, 74, .08); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        @media (max-width: 720px) { .reading-header { padding-top: 16px; } .reading-nav { flex-wrap: wrap; } .reading-links { order: 3; width: 100%; justify-content: space-between; } .reading-hero { padding: 53px 0 38px; } .feature-grid { grid-template-columns: 1fr; } .wisdom-reading, .book-guide, .bible-shelf { padding: 30px 24px; } .wisdom-reading h2, .book-guide h2, .bible-shelf h2 { font-size: 30px; } .book-guide-grid, .shelf-columns { grid-template-columns: 1fr; gap: 18px; } .shelf-columns h3 { display: block; } .shelf-columns h3 span { display: block; margin-top: 8px; } }
+    </style>
+</head>
+<body class="reading-page">
+    <header class="reading-header">
+        <div class="shell">
+            <div data-site-navigation data-current-page="spirit"></div>
+            <nav class="reading-links" aria-label="On this page">
+                <a href="#begin-here">Begin</a>
+                <a href="#bible-books">Bible</a>
+                <a href="#daily-rhythm">Rhythm</a>
+                <a href="#good-night-prayer">Prayer</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="shell">
+        <section class="reading-hero">
+            <span class="eyebrow">Life in the Spirit · a joyful daily guide</span>
+            <div class="today-pill" id="today" aria-live="polite">Today</div>
+            <h1>Grow in grace, peace, and purpose.</h1>
+            <p>There is no need to know everything before you begin. A life with God grows through small, beautiful habits: pausing in prayer, choosing wisdom, and living with kindness.</p>
+            <div class="hero-actions">
+                <a class="primary-btn" href="#begin-here">Start reading</a>
+                <a class="secondary-btn" href="#good-night-prayer">Night prayer</a>
+            </div>
+            <div class="hero-badges" aria-label="Highlights">
+                <span>Daily wisdom</span>
+                <span>Prayer focus</span>
+                <span>Faith growth</span>
+            </div>
+        </section>
+
+        <section class="feature-grid" aria-label="Helpful pathways">
+            <article class="feature-card feature-highlight">
+                <div class="feature-icon">✦</div>
+                <span class="feature-tag">Daily rhythm</span>
+                <h3>Start your morning with Scripture.</h3>
+                <p>Begin with one verse, one truth, and one faithful step. Simple habits bring lasting fruit.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon">☾</div>
+                <span class="feature-tag">Quiet rest</span>
+                <h3>Let your mind become still.</h3>
+                <p>Slow down, breathe deeply, and remember that God is near even in the middle of busy days.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon">✝</div>
+                <span class="feature-tag">Joyful living</span>
+                <h3>Walk in courage and generosity.</h3>
+                <p>Faith is not only belief; it is how you treat people, how you respond to fear, and how you love well.</p>
+            </article>
+        </section>
+
+        <section class="book-guide" id="begin-here">
+            <span class="eyebrow">Begin here</span>
+            <h2>Study the book of Proverbs</h2>
+            <p>Proverbs is a practical book of Bible wisdom. It teaches us how to speak, work, manage money, choose friends, respond to correction, and make decisions that honor God.</p>
+            <div class="book-guide-grid">
+                <div><strong>Read</strong><span>One chapter each day. Proverbs has 31 chapters, so you can follow the day of the month.</span></div>
+                <div><strong>Notice</strong><span>Look for repeated ideas about wisdom, humility, diligence, honesty, and kindness.</span></div>
+                <div><strong>Practice</strong><span>Choose one verse and put it into action before the day ends.</span></div>
+            </div>
+            <p class="reading-quote">“The fear of the Lord is the beginning of wisdom.”<br><strong>Proverbs 9:10</strong></p>
+            <a class="bible-continue" href="church.html?book=Genesis#bible">Open Genesis chapters and verses →</a>
+        </section>
+
+        <section class="bible-shelf" id="bible-books">
+            <span class="eyebrow">The complete library</span>
+            <h2>All books of the Bible</h2>
+            <p class="shelf-intro">Use this simple list to choose where you would like to read next. Start with one book and take your time.</p>
+            <div class="shelf-columns">
+                <div>
+                    <h3>Old Testament <span>39 books</span></h3>
+                    <p><strong>Law:</strong> Genesis · Exodus · Leviticus · Numbers · Deuteronomy</p>
+                    <p><strong>History:</strong> Joshua · Judges · Ruth · 1 Samuel · 2 Samuel · 1 Kings · 2 Kings · 1 Chronicles · 2 Chronicles · Ezra · Nehemiah · Esther</p>
+                    <p><strong>Wisdom:</strong> Job · Psalms · Proverbs · Ecclesiastes · Song of Solomon</p>
+                    <p><strong>Prophets:</strong> Isaiah · Jeremiah · Lamentations · Ezekiel · Daniel · Hosea · Joel · Amos · Obadiah · Jonah · Micah · Nahum · Habakkuk · Zephaniah · Haggai · Zechariah · Malachi</p>
+                </div>
+                <div>
+                    <h3>Deuterocanonical <span>7 books</span></h3>
+                    <p>Tobit · Judith · Wisdom of Solomon · Sirach · Baruch · 1 Maccabees · 2 Maccabees</p>
+                </div>
+                <div>
+                    <h3>New Testament <span>27 books</span></h3>
+                    <p><strong>Gospels:</strong> Matthew · Mark · Luke · John</p>
+                    <p><strong>History:</strong> Acts</p>
+                    <p><strong>Letters:</strong> Romans · 1 Corinthians · 2 Corinthians · Galatians · Ephesians · Philippians · Colossians · 1 Thessalonians · 2 Thessalonians · 1 Timothy · 2 Timothy · Titus · Philemon · Hebrews · James · 1 Peter · 2 Peter · 1 John · 2 John · 3 John · Jude</p>
+                    <p><strong>Hope:</strong> Revelation</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="reading-content" id="daily-rhythm">
+            <article class="wisdom-reading" id="be-still">
+                <span class="eyebrow">01 · Stillness</span>
+                <h2>Be still and remember who God is</h2>
+                <p class="reading-quote">“Be still, and know that I am God.”<br><strong>Psalm 46:10</strong></p>
+                <p>Many of us begin the day already carrying yesterday's concerns. We hurry from one task to another, and our minds keep speaking even when the room is quiet. Psalm 46:10 gives us a different invitation: stop, become still, and remember that God is God.</p>
+                <p>Being still does not mean that your responsibilities disappear. It means you refuse to let worry become your master. In quietness, you can tell God the truth about your fear, your plans, and your questions. You do not need impressive words. A sincere heart is enough.</p>
+                <p>As you practice stillness, you may begin to notice the difference between a thought that brings wisdom and a fear that only creates panic. Give yourself permission to wait before reacting. God can meet you in that small space between what happens and what you choose to do next.</p>
+                <h3>Try this today</h3>
+                <p>Put your phone away for two minutes. Sit comfortably, breathe slowly, and repeat: “God, You are here. Help me to trust You.” When thoughts come, notice them and gently return to the prayer.</p>
+                <div class="practice-box"><strong>Remember</strong> God's presence is not earned by perfect concentration. When you return to Him, even after distraction, that return is part of the practice.</div>
+            </article>
+
+            <article class="wisdom-reading" id="walk-with-courage">
+                <span class="eyebrow">02 · Courage</span>
+                <h2>Walk forward even when you feel afraid</h2>
+                <p class="reading-quote">“Be strong and of a good courage; fear not, nor be afraid.”<br><strong>Deuteronomy 31:6</strong></p>
+                <p>Courage is not pretending that everything is easy. The Bible speaks honestly about fear, uncertainty, and weakness. This passage gives courage a foundation: God does not abandon His people. You are not required to face a difficult day by your own strength.</p>
+                <p>Sometimes the courageous step is visible: applying for work, telling the truth, asking for help, or beginning again. Sometimes it is quiet: refusing bitterness, forgiving someone, or getting out of bed when hope feels far away. God can use small acts of faithfulness to shape a strong life.</p>
+                <p>Do not measure your courage by how quickly everything changes. Measure it by your willingness to remain faithful, ask for help, and keep your heart tender. A brave life is built one obedient decision at a time.</p>
+                <h3>Ask yourself</h3>
+                <p>What is the next right step, not the whole staircase? Write it down. Ask God for help, then take that one step with honesty and patience. You can be afraid and still move forward.</p>
+                <div class="practice-box"><strong>Remember</strong> Courage grows through practice. You do not have to feel fearless before you obey what is good.</div>
+            </article>
+
+            <article class="wisdom-reading" id="live-generously">
+                <span class="eyebrow">03 · Giving</span>
+                <h2>Let your life become a blessing</h2>
+                <p class="reading-quote">“God loveth a cheerful giver.”<br><strong>2 Corinthians 9:7</strong></p>
+                <p>Generosity begins in the heart before it reaches the hand. It is not a competition and it is not a way to purchase God's love. God cares about the spirit in which we give: freely, thoughtfully, and without pretending to have more than we do.</p>
+                <p>You can live generously with money, but also with time, attention, patience, skill, and encouragement. A kind message can strengthen someone. Listening without interrupting can restore dignity. Sharing a meal can make a lonely person feel remembered.</p>
+                <p>Financial wisdom is part of generosity too. Giving should be thoughtful, never forced, and never used to impress people. Plan your spending, care for your responsibilities, and share from a willing heart. Even when your resources are small, you can still offer kindness, prayer, knowledge, or practical help.</p>
+                <p>Generosity also protects us from believing that possessions are the measure of our worth. What we own is temporary, but the love we show can remain in another person's memory for years. Ask God to make you observant enough to notice a need and humble enough to respond in a helpful way.</p>
+                <h3>Practice generosity</h3>
+                <p>Choose one person today and ask, “What would help them feel seen?” Then offer something within your ability. Give without demanding praise, and receive the joy of becoming useful in love. You could share a meal, call someone who is lonely, help with a task, or set aside a small amount for someone in need.</p>
+                <div class="practice-box"><strong>Remember</strong> Generosity is not measured only by size. A small gift given with love can carry a great deal of grace.</div>
+            </article>
+        </section>
+
+        <section class="night-prayer" id="good-night-prayer">
+            <span class="eyebrow">End the day gently</span>
+            <h2>Good Night Prayer</h2>
+            <p>Before you sleep, release the day's work and worries into God's care. You do not have to carry everything into tomorrow.</p>
+            <p class="prayer-text"><strong>Heavenly Father,</strong><br>Thank You for bringing me through this day. Thank You for every blessing, every lesson, and every person who gave me kindness. Please forgive my mistakes and help me to forgive others. Quiet my thoughts, calm my heart, and protect my home through the night. Give me peaceful rest and renew my strength for tomorrow. Help me wake with wisdom, courage, and a generous heart. I trust You with what I cannot control.<br><br><strong>Amen.</strong></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="shell">THE LIVING WORD · Keep growing one faithful day at a time.</div>
+    </footer>
+
+    <script>
+      const date = new Date();
+      const todayEl = document.getElementById('today');
+      if (todayEl) {
+        todayEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      }
+    </script>
+        <script type="module" src="/src/siteNavigation.js"></script>
+</body>
+</html>
