@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="church.css">
     <link rel="stylesheet" href="/site-navigation.css">
     <style>
-        .reading-page { min-height: 100vh; background: linear-gradient(180deg, #f4f0e5 0%, #e8eee7 58%, #f7f6f0 100%); }
+        .reading-page { position: relative; isolation: isolate; min-height: 100vh; background: #1c3029; }
+        .reading-page::before { position: fixed; z-index: -1; inset: 0; content: ""; background: linear-gradient(180deg, rgba(18, 37, 31, .58), rgba(25, 48, 40, .72)), url('/st-paul-preaching-athens.png') center 38% / cover no-repeat; pointer-events: none; }
         .reading-header { padding: 22px 0; border-bottom: 1px solid rgba(49, 87, 74, .12); background: rgba(255, 254, 250, .82); }
         .reading-nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
         .reading-links { display: flex; align-items: center; gap: 18px; }
@@ -32,14 +33,14 @@
         .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
         .hero-badges span { padding: 7px 12px; border: 1px solid rgba(255, 254, 250, .35); border-radius: 4px; color: #fffefa; background: rgba(24, 46, 39, .25); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
         .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 0 0 28px; }
-        .feature-card { padding: 22px 22px 20px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
-        .feature-highlight { background: linear-gradient(180deg, #fffaf0, #f6efe1); border-color: #e8d7b4; }
+        .feature-card { padding: 22px 22px 20px; border: 1px solid rgba(255, 254, 250, .7); background: rgba(255, 254, 250, .94); box-shadow: var(--shadow); backdrop-filter: blur(8px); }
+        .feature-highlight { background: linear-gradient(180deg, rgba(255, 250, 240, .96), rgba(246, 239, 225, .94)); border-color: #e8d7b4; }
         .feature-icon { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; color: var(--deep-sage); background: var(--sage); font-size: 21px; }
         .feature-tag { display: inline-block; margin-top: 12px; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .feature-card h3 { margin: 12px 0 10px; font-size: 26px; }
         .feature-card p { margin: 0; color: var(--muted); font-size: 14px; }
         .reading-content { display: grid; gap: 28px; padding-bottom: 80px; }
-        .book-guide { max-width: 850px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid #d7c7a8; background: #fffaf0; box-shadow: 7px 7px 0 #eadfc8; }
+        .book-guide { max-width: 850px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid #d7c7a8; background: rgba(255, 250, 240, .94); box-shadow: 7px 7px 0 rgba(234, 223, 200, .65); backdrop-filter: blur(8px); }
         .book-guide h2 { margin: 10px 0 12px; font-size: 34px; }
         .book-guide > p { max-width: 700px; margin: 0 0 22px; color: var(--muted); }
         .book-guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
@@ -47,7 +48,7 @@
         .book-guide-grid strong { display: block; margin-bottom: 5px; color: var(--deep-sage); }
         .book-gui de-grid span { display: block; color: var(--muted); font-size: 13px; }
         .book-guide .reading-quote { margin-bottom: 0; }
-        .bible-shelf { max-width: 1000px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid var(--line); background: var(--white); }
+        .bible-shelf { max-width: 1000px; padding: 34px 40px; margin-bottom: 28px; border: 1px solid rgba(255, 254, 250, .72); background: rgba(255, 254, 250, .93); backdrop-filter: blur(8px); }
         .bible-shelf h2 { margin: 10px 0 8px; font-size: 34px; }
         .shelf-intro { margin: 0 0 24px; color: var(--muted); }
         .shelf-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
@@ -56,7 +57,7 @@
         .shelf-columns h3 span { color: var(--gold); font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
         .shelf-columns p { margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.75; }
         .shelf-columns strong { color: var(--deep-sage); }
-        .wisdom-reading { max-width: none; padding: 42px clamp(24px, 5vw, 60px); border: 0; border-top: 1px solid var(--line); background: rgba(255, 254, 250, .72); box-shadow: none; scroll-margin-top: 25px; }
+        .wisdom-reading { max-width: none; padding: 42px clamp(24px, 5vw, 60px); border: 0; border-top: 1px solid rgba(255, 254, 250, .58); background: rgba(255, 254, 250, .93); box-shadow: none; backdrop-filter: blur(8px); scroll-margin-top: 25px; }
         .wisdom-reading:nth-child(2) { border-top: 3px solid var(--gold); }
         .wisdom-reading h2 { margin: 10px 0 22px; font-size: 35px; }
         .wisdom-reading h3 { margin: 27px 0 8px; font: 700 15px/1.2 "DM Sans", sans-serif; color: var(--deep-sage); text-transform: uppercase; letter-spacing: .08em; }
@@ -64,7 +65,7 @@
         .reading-quote { padding: 20px 24px; margin: 0 0 23px; border-left: 3px solid var(--gold); color: var(--ink) !important; background: #fbf3e5; font: 22px/1.5 "Playfair Display", serif; }
         .practice-box { padding: 18px 21px; margin-top: 24px; border-left: 3px solid var(--gold); color: var(--deep-sage); background: #e7eee7; font-size: 14px; }
         .practice-box strong { display: block; margin-bottom: 5px; }
-        .night-prayer { max-width: 850px; padding: 38px 48px; margin: 0 0 75px; color: var(--white); background: var(--sage); box-shadow: 10px 10px 0 #dfeadd; scroll-margin-top: 25px; }
+        .night-prayer { max-width: 850px; padding: 38px 48px; margin: 0 0 75px; color: var(--white); background: rgba(49, 87, 74, .94); box-shadow: 10px 10px 0 rgba(223, 234, 221, .45); backdrop-filter: blur(8px); scroll-margin-top: 25px; }
         .night-prayer h2 { margin: 10px 0 18px; color: var(--white); font-size: 35px; }
         .night-prayer p { max-width: 720px; margin: 0 0 15px; color: #e2eee4; font-size: 16px; }
         .night-prayer .prayer-text { padding: 20px 24px; margin-top: 24px; color: var(--ink); background: var(--white); font: 19px/1.7 "Playfair Display", serif; }
@@ -72,6 +73,11 @@
         .today-pill { display: inline-flex; align-items: center; margin-bottom: 8px; padding: 6px 11px; border-radius: 999px; color: var(--deep-sage); background: rgba(49, 87, 74, .08); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
         @media (max-width: 720px) { .reading-header { padding-top: 16px; } .reading-nav { flex-wrap: wrap; } .reading-links { order: 3; width: 100%; justify-content: space-between; } .reading-hero { min-height: 460px; padding: 38px 24px; } .reading-hero h1 { font-size: 43px; } .feature-grid { grid-template-columns: 1fr; } .wisdom-reading, .book-guide, .bible-shelf { padding: 30px 24px; } .wisdom-reading h2, .book-guide h2, .bible-shelf h2 { font-size: 30px; } .book-guide-grid, .shelf-columns { grid-template-columns: 1fr; gap: 18px; } .shelf-columns h3 { display: block; } .shelf-columns h3 span { display: block; margin-top: 8px; } }
     </style>
+    <link rel="stylesheet" href="seminar.css">
+    <meta name="theme-color" content="#0b4a33">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/app-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body class="reading-page">
     <header class="reading-header">

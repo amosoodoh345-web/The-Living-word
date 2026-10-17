@@ -1,0 +1,176 @@
+/* Life in the Spirit Seminar page: emerald, ivory and gold design.
+   Loaded after the page's inline styles so it refines them without removing them. */
+
+:root {
+  --ink: #1f2d27;
+  --muted: #55655d;
+  --paper: #f8f5ea;
+  --white: #fffdf7;
+  --sage: #dcefe4;
+  --deep-sage: #0f5a3f;
+  --emerald-950: #07261b;
+  --emerald-800: #0b4a33;
+  --emerald-600: #137a54;
+  --gold: #a8801f;
+  --gold-bright: #d9b45a;
+  --gold-soft: #f3e6bd;
+  --line: #e2dcc4;
+  --shadow: 0 18px 45px rgba(7, 38, 27, .14);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+.reading-page [id] { scroll-margin-top: 110px; }
+
+body.reading-page {
+  margin: 0;
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, sans-serif;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+
+.reading-page h1,
+.reading-page h2,
+.reading-page h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.15; color: var(--emerald-950); }
+.reading-page .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+.reading-page main { padding: 36px 0 0; }
+.reading-page .eyebrow { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.reading-page a:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 3px; border-radius: 6px; }
+
+/* Background: St Paul image under a deep emerald wash */
+.reading-page::before {
+  background:
+    linear-gradient(180deg, rgba(7, 38, 27, .82), rgba(11, 74, 51, .88)),
+    url('/st-paul-preaching-athens.png') center 38% / cover no-repeat;
+}
+
+/* Header and navigation */
+.reading-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 6px 0 0;
+  border-bottom: 2px solid var(--gold-bright);
+  background: rgba(255, 253, 247, .94);
+  backdrop-filter: blur(10px);
+}
+.reading-header .lifeos-site-nav { min-height: 54px; }
+.reading-header .lifeos-site-brand { color: var(--emerald-800); }
+.reading-header .lifeos-site-mark { background: var(--emerald-800); color: var(--gold-bright); box-shadow: 0 0 0 2px var(--gold-bright); }
+.reading-header .lifeos-site-nav-links a { color: var(--muted); }
+.reading-header .lifeos-site-nav-links a:hover,
+.reading-header .lifeos-site-nav-links a[aria-current='page'] { background: var(--emerald-800); color: var(--gold-soft); }
+.reading-links { gap: 6px; padding: 4px 0 10px; overflow-x: auto; scrollbar-width: none; }
+.reading-links::-webkit-scrollbar { display: none; }
+.reading-links a { padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--emerald-800); background: var(--white); font-size: 12px; white-space: nowrap; }
+.reading-links a:hover { color: var(--emerald-950); background: var(--gold-soft); border-color: var(--gold-bright); }
+
+/* Hero */
+.reading-hero {
+  position: relative;
+  min-height: 520px;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  background-image:
+    linear-gradient(100deg, rgba(7, 38, 27, .96) 0%, rgba(11, 74, 51, .84) 52%, rgba(11, 74, 51, .4) 100%),
+    url('/st-paul-preaching-athens.png');
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .35), inset 0 0 0 5px rgba(217, 180, 90, .14);
+  overflow: hidden;
+}
+.reading-hero::after { content: ""; position: absolute; left: clamp(34px, 7vw, 78px); bottom: 0; width: 90px; height: 4px; background: var(--gold-bright); }
+.reading-hero .eyebrow { color: var(--gold-bright); }
+.reading-hero h1 { color: #fffdf7; font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
+.reading-hero > p { color: rgba(255, 253, 247, .9); }
+.today-pill { align-self: flex-start; color: var(--gold-soft); background: rgba(217, 180, 90, .16); border: 1px solid rgba(217, 180, 90, .45); }
+.primary-btn { min-height: 48px; padding: 0 24px; color: var(--emerald-950); background: linear-gradient(180deg, #e6c46e, #c9a02f); box-shadow: 0 12px 26px rgba(0, 0, 0, .3); }
+.secondary-btn { min-height: 48px; padding: 0 24px; color: #fffdf7; border: 1px solid rgba(255, 253, 247, .55); background: rgba(255, 253, 247, .08); }
+.secondary-btn:hover { background: rgba(255, 253, 247, .18); }
+.hero-badges span { border-color: rgba(217, 180, 90, .5); border-radius: 999px; color: var(--gold-soft); background: rgba(7, 38, 27, .45); }
+
+/* Cards */
+.feature-grid { margin-top: 28px; }
+.feature-card,
+.book-guide,
+.bible-shelf,
+.wisdom-reading {
+  border-radius: var(--radius);
+  background: rgba(255, 253, 247, .96);
+}
+.feature-card { border: 1px solid var(--gold-soft); border-top: 3px solid var(--gold-bright); transition: transform .25s ease, box-shadow .25s ease; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(0, 0, 0, .22); }
+.feature-highlight { background: linear-gradient(180deg, #fffaf0, #f6ebcc); }
+.feature-icon { color: var(--gold-bright); background: var(--emerald-800); box-shadow: 0 0 0 2px var(--gold-bright) inset; }
+.feature-tag { color: var(--gold); }
+
+.book-guide { border: 1px solid var(--gold-bright); box-shadow: 0 18px 45px rgba(0, 0, 0, .22); }
+.book-guide-grid div { border-top-color: var(--gold-bright); }
+.book-guide-grid strong { color: var(--emerald-800); }
+.book-guide-grid span { display: block; color: var(--muted); font-size: 13px; }
+.bible-continue { display: inline-block; margin-top: 20px; padding: 10px 18px; border-radius: 999px; color: var(--gold-soft); background: var(--emerald-800); font-size: 14px; font-weight: 700; text-decoration: none; transition: background .2s ease, transform .2s ease; }
+.bible-continue:hover { background: var(--emerald-950); transform: translateY(-1px); }
+
+.bible-shelf { border: 1px solid var(--gold-soft); box-shadow: 0 18px 45px rgba(0, 0, 0, .18); }
+.shelf-columns > div { border-top-color: var(--gold-bright); }
+.shelf-columns strong { color: var(--emerald-800); }
+
+.reading-content { gap: 22px; }
+.wisdom-reading { max-width: none; border: 1px solid var(--gold-soft); border-top: 4px solid var(--gold-bright); box-shadow: 0 18px 45px rgba(0, 0, 0, .18); }
+.wisdom-reading:nth-child(2) { border-top: 4px solid var(--gold-bright); }
+.wisdom-reading > * { max-width: 760px; }
+.wisdom-reading h3 { color: var(--emerald-800); }
+.wisdom-reading p { color: #3f4f47; font-size: 17px; line-height: 1.8; }
+.reading-quote { border-left: 4px solid var(--gold-bright); border-radius: 0 var(--radius) var(--radius) 0; background: linear-gradient(90deg, #fbf1d4, #fffaf0); }
+.reading-quote strong { color: var(--gold); font: 700 12px/1.4 "DM Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.practice-box { border-left: 4px solid var(--emerald-600); border-radius: 0 10px 10px 0; color: var(--emerald-800); background: #e3f2ea; }
+
+/* Night prayer */
+.night-prayer { max-width: none; border: 1px solid var(--gold-bright); border-radius: 18px; background: linear-gradient(160deg, rgba(7, 38, 27, .97), rgba(11, 74, 51, .95)); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+.night-prayer .eyebrow { color: var(--gold-bright); }
+.night-prayer h2 { color: #fffdf7; }
+.night-prayer p { color: #dcefe4; }
+.night-prayer .prayer-text { border-left: 4px solid var(--gold-bright); border-radius: 0 12px 12px 0; color: var(--ink); background: #fffaf0; }
+.night-prayer .prayer-text strong { color: var(--gold); }
+
+/* Footer */
+.reading-page footer { padding: 30px 0 40px; border-top: 2px solid var(--gold-bright); color: var(--gold-soft); background: var(--emerald-950); font-size: 13px; letter-spacing: .08em; text-align: center; }
+
+/* Tablet */
+@media (max-width: 960px) {
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+  .feature-highlight { grid-column: 1 / -1; }
+  .book-guide-grid { grid-template-columns: 1fr 1fr; }
+  .shelf-columns { grid-template-columns: 1fr 1fr; }
+}
+
+/* Phone */
+@media (max-width: 720px) {
+  .reading-page .shell { width: calc(100% - 28px); }
+  .reading-page main { padding-top: 20px; }
+  .reading-header .lifeos-site-nav-links { display: flex; max-width: 100%; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .reading-header .lifeos-site-nav-links::-webkit-scrollbar { display: none; }
+  .reading-hero { min-height: 480px; border-radius: 16px; padding: 38px 22px; }
+  .reading-hero::after { left: 22px; }
+  .reading-hero h1 { font-size: clamp(36px, 11vw, 46px); }
+  .hero-actions { flex-direction: column; }
+  .hero-actions a { width: 100%; }
+  .feature-grid,
+  .book-guide-grid,
+  .shelf-columns { grid-template-columns: 1fr; }
+  .night-prayer { padding: 30px 22px; }
+  .night-prayer .prayer-text { padding: 18px; font-size: 17px; }
+  .reading-quote { font-size: 19px; padding: 16px 18px; }
+  .wisdom-reading p { font-size: 16px; }
+  .reading-links { margin: 0 -2px; justify-content: flex-start; }
+  .reading-header { position: static; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .feature-card,
+  .bible-continue,
+  .primary-btn,
+  .secondary-btn { transition: none; }
+  .feature-card:hover { transform: none; }
+}
