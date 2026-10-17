@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   DEFAULT_REMINDERS,
+  formatCountdown,
   getDueReminders,
   getNextReminder,
   normalizeReminders,
@@ -39,6 +40,14 @@ test('preserves valid settings and falls back from invalid saved values', () => 
 
 test('creates a once-per-local-day delivery key', () => {
   assert.equal(reminderFiredKey(DEFAULT_REMINDERS[0], new Date(2026, 9, 19, 18, 30)), 'monday-prayer:2026-10-19');
+});
+
+test('formats countdowns for minutes, hours, and days', () => {
+  assert.equal(formatCountdown(20 * 1000), '1 min');
+  assert.equal(formatCountdown(25 * 60000), '25 min');
+  assert.equal(formatCountdown((3 * 60 + 12) * 60000), '3h 12m');
+  assert.equal(formatCountdown((2 * 1440 + 4 * 60 + 5) * 60000), '2d 4h');
+  assert.equal(formatCountdown(0), 'less than a minute');
 });
 
 test('finds the next enabled reminder using the device local time', () => {

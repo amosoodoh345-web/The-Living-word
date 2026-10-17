@@ -23,14 +23,17 @@ import {
 } from './LifeOSPages';
 import RemindersPage from './RemindersPage';
 import SpiritualGrowthPage from './SpiritualGrowthPage';
+import HomeDashboard from './HomeDashboard';
+import ProfilePage from './ProfilePage';
+import { Icon } from './Icons';
 import {
   DEFAULT_REMINDERS,
   getDueReminders,
-  getNextReminder,
   normalizeReminders,
   reminderFiredKey
 } from './lib/reminders';
-import { getGrowthSummary, localDateKey, toggleDailyPractice } from './lib/spiritualGrowth';
+import { getGrowthSummary, toggleDailyPractice } from './lib/spiritualGrowth';
+import { SEMINAR_SESSIONS } from './data/lifeosContent';
 
 const translations = [
   { id: 'kjv', label: 'KJV', fullName: 'King James Version (with Apocrypha)' },
@@ -51,13 +54,22 @@ const storageKeys = {
 };
 
 const navItems = [
-  { id: 'home', label: 'Home', icon: '⌂' },
-  { id: 'bible', label: 'Bible', icon: '▤' },
-  { id: 'explore', label: 'Explore', icon: '⌕' },
-  { id: 'prayer', label: 'Prayer', icon: '✧' },
-  { id: 'journal', label: 'Journal', icon: '✎' },
-  { id: 'saved', label: 'Saved', icon: '♡' }
+  { id: 'home', label: 'Home', icon: <Icon name="home" /> },
+  { id: 'bible', label: 'Bible', icon: <Icon name="book" /> },
+  { id: 'explore', label: 'Learn', icon: <Icon name="learn" /> },
+  { id: 'prayer', label: 'Prayer', icon: <Icon name="prayer" /> },
+  { id: 'profile', label: 'Profile', icon: <Icon name="user" /> }
 ];
+
+// Pages opened from the dashboard keep their parent tab highlighted.
+const navGroups = {
+  bible: ['bible', 'wisdom', 'encouragement'],
+  explore: ['explore', 'seminar', 'devotional', 'ministries', 'songs', 'testimonies'],
+  prayer: ['prayer', 'novena', 'rosary', 'chaplet', 'journal'],
+  profile: ['profile', 'reminders', 'growth', 'saved']
+};
+
+const isNavItemActive = (itemId, currentPage) => (navGroups[itemId] || [itemId]).includes(currentPage);
 
 function SiteNavigation() {
   return (
@@ -128,6 +140,7 @@ function App() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [notice, setNotice] = useState('');
+  const [pendingSessionId, setPendingSessionId] = useState(null);
 
   const currentBookInfo = useMemo(() => getBookInfo(selectedBook), [selectedBook]);
   const totalChapters = useMemo(() => getBookChapterCount(selectedBook), [selectedBook]);
@@ -233,6 +246,16 @@ function App() {
   useEffect(() => {
     localStorage.setItem(storageKeys.prayer, JSON.stringify(prayerFocus));
   }, [prayerFocus]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [page]);
+
+  useEffect(() => {
+    if (page !== 'seminar' || !pendingSessionId) return;
+    document.getElementById(`session-${pendingSessionId}`)?.scrollIntoView({ block: 'center' });
+    setPendingSessionId(null);
+  }, [page, pendingSessionId]);
 
   useEffect(() => {
     localStorage.setItem(storageKeys.reminders, JSON.stringify(reminders));
@@ -354,6 +377,11 @@ function App() {
   };
 
   const addTestimonyDraft = (draft) => setTestimonyDrafts((previous) => [draft, ...previous]);
+
+  const openSeminarSession = (sessionId) => {
+    setPendingSessionId(sessionId);
+    setPage('seminar');
+  };
 
   const toggleFavorite = () => {
     if (!currentVerseData) return;
@@ -512,11 +540,8 @@ function App() {
   const isFavorite = currentVerseData && favourites.some(
     (item) => item.id === `${selectedBook}-${selectedChapter}-${currentVerseData.verse}`
   );
-  const timeGreeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
-  const formattedDate = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
-  const nextReminder = getNextReminder(reminders, new Date());
   const growthSummary = getGrowthSummary(growthActivity);
-  const todayPracticeCount = growthSummary.todayCompleted;
+  const seminarComplete = SEMINAR_SESSIONS.filter((session) => seminarProgress[session.id]).length;
 
   const testamentBadge = useMemo(() => {
     if (currentBookInfo.testament === 'DC') return 'Deuterocanonical (Apocrypha)';
@@ -525,6 +550,28 @@ function App() {
   }, [currentBookInfo]);
 
   const renderPage = () => {
+    if (page === 'profile') {
+      return (
+        <ProfilePage
+          theme={theme}
+          onToggleTheme={() => setTheme((previous) => previous === 'light' ? 'dark' : 'light')}
+          isInstalled={isInstalled}
+          onInstall={installApp}
+          isOnline={isOnline}
+          reminders={reminders}
+          notificationPermission={notificationPermission}
+          counts={{
+            journal: journal.length,
+            favourites: favourites.length,
+            streak: growthSummary.currentStreak,
+            seminarComplete,
+            seminarTotal: SEMINAR_SESSIONS.length
+          }}
+          onNavigate={setPage}
+        />
+      );
+    }
+
     if (page === 'reminders') {
       return (
         <RemindersPage
@@ -1027,100 +1074,33 @@ function App() {
     }
 
     return (
-      <main className="home-page">
-        <section className="dashboard-hero">
-          <div className="dashboard-welcome">
-            <p className="hero-brand"><span className="hero-flame" aria-hidden="true">🔥</span> LIFEOS <span>· The Living Word</span></p>
-            <p className="eyebrow">{formattedDate}</p>
-            <h2>{timeGreeting}, friend.</h2>
-            <p className="hero-lede">Make space for what matters. A few quiet minutes in Scripture can change the shape of your day.</p>
-            <div className="hero-actions">
-              <button className="primary-btn" onClick={() => setPage('bible')}>Begin reading <span aria-hidden="true">→</span></button>
-              <button className="secondary-btn" onClick={() => setPage('seminar')}>Life in the Spirit</button>
-              <button className="secondary-btn" onClick={() => setPage('prayer')}>Take a breath</button>
-            </div>
-          </div>
-          <div className="hero-verse">
-            <span className="verse-mark" aria-hidden="true">“</span>
-            <p className="mini-label">Verse for this moment</p>
-            <blockquote>“The Lord is my shepherd; I shall not want.”</blockquote>
-            <span className="verse-reference">Psalm 23:1 <span>·</span> KJV</span>
-          </div>
-        </section>
-
-        <section className="dashboard-stats" aria-label="Your spiritual rhythm">
-          <div className="stat-card"><span className="stat-icon">◷</span><div><strong>{history.length || 0}</strong><span>Recent reads</span></div></div>
-          <div className="stat-card"><span className="stat-icon">♡</span><div><strong>{favourites.length || 0}</strong><span>Saved verses</span></div></div>
-          <div className="stat-card"><span className="stat-icon">✎</span><div><strong>{journal.length || 0}</strong><span>Reflections</span></div></div>
-          <div className="stat-card stat-card-accent"><span className="stat-icon">✦</span><div><strong>{growthSummary.currentStreak}</strong><span>Day streak</span></div></div>
-        </section>
-
-        <section className="dashboard-grid">
-          <article className="continue-card reading-card">
-            <div className="reading-art" aria-hidden="true"><span>✦</span></div>
-            <div className="reading-copy"><p className="mini-label">Continue your journey</p><h3>{history[0]?.reference || 'John 1:1'}</h3><p>{history[0] ? 'Return to the passage you were sitting with.' : 'Start with a quiet moment in the Gospel of John.'}</p><button className="text-button" onClick={() => { if (history[0]) goToReference(history[0]); else setPage('bible'); }}>Open Scripture <span aria-hidden="true">→</span></button></div>
-          </article>
-          <article className="daily-prayer-card">
-            <div className="card-topline"><span className="mini-label">A prayer for today</span><span className="prayer-dot">✧</span></div>
-            <h3>{prayerFocus.title}</h3>
-            <p>{prayerFocus.text}</p>
-            <button className="secondary-btn small" onClick={() => setPage('prayer')}>Open prayer <span aria-hidden="true">→</span></button>
-          </article>
-        </section>
-
-        <section className="home-support-grid" aria-label="Your weekly rhythm and growth">
-          <article className="panel home-support-card">
-            <p className="mini-label">Next reminder</p>
-            {nextReminder ? (
-              <>
-                <h3>{nextReminder.reminder.message}</h3>
-                <p>{new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(nextReminder.at)}</p>
-              </>
-            ) : (
-              <><h3>No reminders are enabled</h3><p>Turn on a weekly reminder whenever you are ready.</p></>
-            )}
-            <button className="secondary-btn small" onClick={() => setPage('reminders')}>Manage reminders</button>
-          </article>
-          <article className="panel home-support-card">
-            <p className="mini-label">Spiritual growth</p>
-            <h3>{todayPracticeCount} practice{todayPracticeCount === 1 ? '' : 's'} marked today</h3>
-            <p>{growthSummary.activeDaysThisWeek} active day{growthSummary.activeDaysThisWeek === 1 ? '' : 's'} this week. Notice the small steps, without pressure.</p>
-            <button className="secondary-btn small" onClick={() => setPage('growth')}>Open growth tracker</button>
-          </article>
-        </section>
-
-        <section className="home-section dashboard-actions">
-          <div className="section-heading"><div><p className="mini-label">Your daily rhythm</p><h3>Make it meaningful</h3></div><span className="subtle-label">Everything stays on this device</span></div>
-          <div className="feature-grid">
-            <button className="feature-card feature-action" onClick={() => setPage('bible')}><span className="feature-icon">▤</span><span className="feature-tag">Scripture</span><h3>Bible Reader</h3><p>Browse the passages bundled for offline reading.</p><span className="card-link">Open reader →</span></button>
-            <button className="feature-card feature-action highlight fire" onClick={() => setPage('seminar')}><span className="feature-icon">✧</span><span className="feature-tag">Seven sessions</span><h3>Life in the Spirit Seminar</h3><p>Explore the seminar outline and track your progress on this device.</p><span className="card-link">View sessions →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('devotional')}><span className="feature-icon">☼</span><span className="feature-tag">Today</span><h3>Daily Devotional</h3><p>Read a daily prompt and make a note in your journal.</p><span className="card-link">Open today's reading →</span></button>
-            <button className="feature-card feature-action highlight" onClick={() => setPage('prayer')}><span className="feature-icon">🕊</span><span className="feature-tag">Prayer</span><h3>Prayer and Intercession</h3><p>Bring an intention to a moment of stillness.</p><span className="card-link">Find a prayer →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('journal')}><span className="feature-icon">✎</span><span className="feature-tag">Reflection</span><h3>Reflections</h3><p>Keep a private prayer and reflection journal.</p><span className="card-link">Write a note →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('testimonies')}><span className="feature-icon">✝</span><span className="feature-tag">Community</span><h3>Testimonies</h3><p>Share and read what God has done in people's lives.</p><span className="card-link">Read testimonies →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('explore')}><span className="feature-icon">⌕</span><span className="feature-tag">The Living Word</span><h3>Catholic Resources</h3><p>Find ministries, hymns, prayer guides, and the rosary and novena.</p><span className="card-link">Explore resources →</span></button>
-          </div>
-        </section>
-
-        <section className="encouragement-promo">
-          <div><p className="mini-label">1,000 devotional reflections</p><h3>Find a steady word for the moment you are in.</h3></div>
-          <button className="primary-btn" onClick={() => { setPage('encouragement'); setEncouragementCursor(0); }}>Explore encouragement <span aria-hidden="true">→</span></button>
-        </section>
-      </main>
+      <HomeDashboard
+        onNavigate={setPage}
+        onOpenScripture={openScriptureReference}
+        onOpenSession={openSeminarSession}
+        reminders={reminders}
+        notificationPermission={notificationPermission}
+        seminarProgress={seminarProgress}
+        growthSummary={growthSummary}
+        journalCount={journal.length}
+        lastRead={history[0] || null}
+        onContinueReading={() => { if (history[0]) goToReference(history[0]); else setPage('bible'); }}
+        onOpenEncouragement={() => { setPage('encouragement'); setEncouragementCursor(0); }}
+      />
     );
   };
 
   return (
-    <div className="app-shell">
+    <div className={page === 'home' ? 'app-shell is-home' : 'app-shell'}>
       <SiteNavigation />
       <header className="topbar">
-        <button className="brand-wrap" onClick={() => setPage('home')} aria-label="The Living Word home">
+        <button className="brand-wrap" onClick={() => setPage('home')} aria-label="Life in the Spirit home">
           <span className="brand-mark">✦</span>
-          <span className="brand-name"><span className="brand-eyebrow">Daily devotion</span><strong>The Living Word</strong></span>
+          <span className="brand-name"><span className="brand-eyebrow">The Living Word</span><strong>Life in the Spirit</strong></span>
         </button>
         <nav className="top-navigation" aria-label="Main navigation">
           {navItems.map((item) => (
-            <button key={item.id} className={page === item.id ? 'top-navigation-item active' : 'top-navigation-item'} onClick={() => setPage(item.id)}>{item.label}</button>
+            <button key={item.id} className={isNavItemActive(item.id, page) ? 'top-navigation-item active' : 'top-navigation-item'} aria-current={page === item.id ? 'page' : undefined} onClick={() => setPage(item.id)}>{item.label}</button>
           ))}
         </nav>
         <div className="topbar-actions">
@@ -1133,7 +1113,7 @@ function App() {
       {renderPage()}
       <nav className="bottom-nav" aria-label="Main navigation">
         {navItems.map((item) => (
-          <button key={item.id} className={page === item.id ? 'bottom-nav-item active' : 'bottom-nav-item'} onClick={() => { setPage(item.id); setNotice(''); }} aria-label={item.label} aria-current={page === item.id ? 'page' : undefined}>
+          <button key={item.id} className={isNavItemActive(item.id, page) ? 'bottom-nav-item active' : 'bottom-nav-item'} onClick={() => { setPage(item.id); setNotice(''); }} aria-label={item.label} aria-current={isNavItemActive(item.id, page) ? 'page' : undefined}>
             <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span><span>{item.mobileLabel || item.label}</span>
           </button>
         ))}

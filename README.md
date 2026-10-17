@@ -28,6 +28,10 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 
 Vite is configured to include all six HTML files in the production build. The legacy standalone pages are preserved alongside the React app.
 
+### Home dashboard and navigation
+
+The home page (`src/HomeDashboard.jsx`) is a mobile-first dashboard: verse of the day (rotating curated KJV passages, loaded from the Bible library), weekly reminder card with countdown, the seven seminar sessions with progress, devotional, shortcuts, and an informational "coming later" premium card. The mobile bottom bar is Home, Bible, Learn (the Explore page), Prayer, and Profile (`src/ProfilePage.jsx`, settings and library). The premium card is informational only; no payment system exists and every feature remains free.
+
 ## Run on your computer
 
 Install [Node.js](https://nodejs.org/) first, then open a terminal in this folder and run:

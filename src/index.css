@@ -3260,7 +3260,7 @@ body[data-theme='dark'] .reader-card {
     bottom: 0;
     left: 0;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--line);
     background: var(--panel-strong);

@@ -64,6 +64,17 @@ export function getNextReminder(reminders, date) {
     .sort((a, b) => a.at - b.at)[0] || null;
 }
 
+export function formatCountdown(milliseconds) {
+  const totalMinutes = Math.max(0, Math.ceil(milliseconds / 60000));
+  if (totalMinutes < 1) return 'less than a minute';
+  if (totalMinutes < 60) return `${totalMinutes} min`;
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h ${minutes}m`;
+}
+
 export function reminderFiredKey(reminder, date) {
   const localDate = [
     date.getFullYear(),

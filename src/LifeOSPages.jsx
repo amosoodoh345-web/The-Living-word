@@ -13,7 +13,7 @@ import {
 import { WISDOM_BOOKS, WISDOM_READINGS } from './data/wisdomReadings';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
-const todayIndex = () => Math.floor(Date.now() / 86400000) % DEVOTIONALS.length;
+export const todayIndex = () => Math.floor(Date.now() / 86400000) % DEVOTIONALS.length;
 
 export function ExplorePage({ onNavigate }) {
   const destinations = [
@@ -24,6 +24,7 @@ export function ExplorePage({ onNavigate }) {
     ['ministries', 'Ministries', 'Explore four ways to serve in parish life.'],
     ['songs', 'Songs and hymns', 'Search titles and creators; lyrics are not reproduced.'],
     ['encouragement', 'Encouragement library', 'Browse the existing collection of original devotional reflections.'],
+    ['growth', 'Spiritual growth tracker', 'Mark daily Scripture, prayer, and reflection, and see your streak. Saved on this device.'],
     ['testimonies', 'Testimonies and praise reports', 'Keep a private draft on this device. Community publishing is not connected yet.']
   ];
 
@@ -69,7 +70,7 @@ export function SeminarPage({ progress, onToggle }) {
       </div>
       <section className="seminar-session-list">
         {SEMINAR_SESSIONS.map((session, index) => (
-          <article className={progress[session.id] ? 'seminar-session complete' : 'seminar-session'} key={session.id}>
+          <article className={progress[session.id] ? 'seminar-session complete' : 'seminar-session'} key={session.id} id={`session-${session.id}`}>
             <div className="seminar-session-index">{String(index + 1).padStart(2, '0')}</div>
             <div className="seminar-session-copy">
               <p className="mini-label">Session {index + 1} · <span>{session.scripture}</span></p>

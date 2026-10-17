@@ -245,6 +245,187 @@ body[data-theme='dark'] .lifeos-site-nav-links a[aria-current='page'] { color: v
 .feature-card:nth-child(6) { animation-delay: 0.25s; }
 .feature-card:nth-child(7) { animation-delay: 0.3s; }
 
+/* ---------- Home dashboard ---------- */
+.dash {
+  --dash-navy: #0b1b4a;
+  --dash-royal: #1d3fa6;
+  --dash-gold: #d4af37;
+  --dash-gold-soft: #f3e3a6;
+  --dash-card: #ffffff;
+  --dash-ink: #14214d;
+  --dash-muted: #55618a;
+  --dash-line: rgba(20, 33, 77, 0.12);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 16px 112px;
+  display: grid;
+  gap: 18px;
+  color: var(--dash-ink);
+}
+body[data-theme='dark'] .dash {
+  --dash-card: #14224f;
+  --dash-ink: #eef1fb;
+  --dash-muted: #b5bedd;
+  --dash-line: rgba(255, 255, 255, 0.14);
+}
+.dash h2, .dash h3, .dash p { margin: 0; }
+.dash > section, .dash > header { animation: rise 0.5s ease both; }
+.dash > section:nth-of-type(2) { animation-delay: 0.05s; }
+.dash > section:nth-of-type(3) { animation-delay: 0.1s; }
+
+.dash-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dash-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.dash-logo { width: 48px; height: 48px; flex: none; }
+.dash-app-name { font-size: 0.78rem; letter-spacing: 0.16em; font-weight: 800; color: var(--dash-royal); }
+body[data-theme='dark'] .dash-app-name { color: var(--dash-gold); }
+.dash-greeting { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.25rem, 4.5vw, 1.8rem); line-height: 1.2; }
+.dash-header-actions { display: flex; gap: 10px; }
+.dash-icon-button {
+  position: relative; width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--dash-line); background: var(--dash-card); color: var(--dash-navy);
+  display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 14px rgba(11, 27, 74, 0.1);
+  transition: transform 0.2s ease;
+}
+body[data-theme='dark'] .dash-icon-button { color: var(--dash-gold); }
+.dash-icon-button:hover { transform: translateY(-2px); }
+.dash-avatar { background: linear-gradient(135deg, var(--dash-navy), var(--dash-royal)); color: #fff; }
+.dash-bell-dot { position: absolute; top: 11px; right: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--dash-gold); border: 2px solid var(--dash-card); }
+
+.dash-scripture {
+  position: relative; overflow: hidden; border-radius: 26px; padding: 26px 22px;
+  color: #fff; background: radial-gradient(circle at 85% 10%, rgba(212, 175, 55, 0.28), transparent 45%), linear-gradient(145deg, #0b1b4a 0%, #1d3fa6 100%);
+  box-shadow: 0 18px 40px rgba(11, 27, 74, 0.3);
+  display: grid; gap: 14px;
+}
+.dash-scripture-cross { position: absolute; right: 18px; top: 8px; font-size: 5rem; opacity: 0.1; color: var(--dash-gold); }
+.dash-kicker { font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--dash-gold); }
+.dash-verse, .dash-verse-fallback { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.15rem, 3.8vw, 1.6rem); line-height: 1.55; margin: 0; max-width: 46rem; }
+.dash-verse-fallback { font-size: 1rem; }
+.dash-reference { font-weight: 700; color: var(--dash-gold-soft); }
+.dash-reference span { opacity: 0.75; font-weight: 500; }
+.dash-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.dash-skeleton { display: grid; gap: 10px; }
+.dash-skeleton span { height: 16px; border-radius: 8px; background: rgba(255, 255, 255, 0.2); animation: dash-pulse 1.4s ease-in-out infinite; }
+.dash-skeleton span:nth-child(2) { width: 85%; }
+.dash-skeleton span:nth-child(3) { width: 60%; }
+@keyframes dash-pulse { 50% { opacity: 0.4; } }
+
+.dash-button {
+  min-height: 48px; padding: 12px 20px; border-radius: 999px; border: 2px solid transparent;
+  font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.dash-button:hover { transform: translateY(-2px); }
+.dash-button:focus-visible, .dash-session:focus-visible, .dash-shortcut:focus-visible, .dash-icon-button:focus-visible { outline: 3px solid var(--dash-gold); outline-offset: 2px; }
+.dash-button-gold { background: linear-gradient(135deg, #f0cf5f, #d4af37); color: #0b1b4a; box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35); }
+.dash-button-navy { background: var(--dash-navy); color: #fff; }
+body[data-theme='dark'] .dash-button-navy { background: var(--dash-royal); }
+.dash-button-outline { background: transparent; border-color: var(--dash-royal); color: var(--dash-royal); }
+body[data-theme='dark'] .dash-button-outline { border-color: var(--dash-gold); color: var(--dash-gold); }
+.dash-button-ghost { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.4); color: #fff; }
+
+.dash-card, .dash-premium, .dash-seminar {
+  background: var(--dash-card); border: 1px solid var(--dash-line); border-radius: 24px; padding: 22px;
+  box-shadow: 0 10px 28px rgba(11, 27, 74, 0.08); display: grid; gap: 14px;
+}
+.dash-card-head { display: flex; align-items: center; gap: 12px; }
+.dash-card-head .dash-kicker { color: var(--dash-royal); }
+body[data-theme='dark'] .dash-card-head .dash-kicker { color: var(--dash-gold); }
+.dash-card-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--dash-navy), var(--dash-royal)); color: var(--dash-gold-soft); flex: none; }
+.dash-card h3 { font-family: Georgia, serif; font-size: 1.25rem; }
+
+.dash-next { border-radius: 18px; padding: 16px; background: linear-gradient(135deg, rgba(29, 63, 166, 0.1), rgba(212, 175, 55, 0.16)); border: 1px solid var(--dash-line); display: grid; gap: 6px; }
+.dash-next-soon { border-color: var(--dash-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25); }
+.dash-next-label { font-size: 0.85rem; color: var(--dash-muted); font-weight: 600; }
+.dash-next-message { font-family: Georgia, serif; font-size: 1.2rem; font-weight: 700; }
+.dash-countdown { color: var(--dash-muted); }
+.dash-countdown strong { color: var(--dash-ink); font-size: 1.1rem; }
+.dash-schedule { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.dash-schedule li { display: flex; justify-content: space-between; padding: 10px 14px; border-radius: 12px; background: rgba(29, 63, 166, 0.06); font-weight: 600; font-size: 0.95rem; }
+.dash-schedule li.is-off { opacity: 0.55; }
+.dash-fineprint { font-size: 0.85rem; line-height: 1.5; color: var(--dash-muted); }
+
+.dash-seminar { gap: 16px; }
+.dash-seminar-banner {
+  border-radius: 18px; padding: 20px; color: #fff; display: grid; gap: 14px; align-items: end;
+  background: linear-gradient(100deg, rgba(11, 27, 74, 0.95) 0%, rgba(11, 27, 74, 0.8) 55%, rgba(11, 27, 74, 0.45) 100%), url('/st-paul-preaching-athens.png') center / cover;
+}
+.dash-seminar-banner h3 { color: #fff; }
+.dash-seminar-progress-text { font-size: 0.9rem; margin: 6px 0 10px !important; color: var(--dash-gold-soft); }
+.dash-progress { height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.25); overflow: hidden; max-width: 360px; }
+.dash-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f0cf5f, #d4af37); transition: width 0.5s ease; }
+.dash-sessions { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: 1fr; }
+.dash-session {
+  width: 100%; min-height: 64px; padding: 12px 14px; border-radius: 16px; border: 1px solid var(--dash-line); background: var(--dash-card); color: var(--dash-ink);
+  display: grid; grid-template-columns: 40px 1fr; grid-template-areas: 'n t' 'n s'; column-gap: 12px; align-items: center; text-align: left; font: inherit; cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.dash-session:hover { transform: translateY(-2px); border-color: var(--dash-gold); }
+.dash-session-number { grid-area: n; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--dash-navy); color: var(--dash-gold-soft); }
+.dash-session.is-complete .dash-session-number { background: var(--dash-gold); color: var(--dash-navy); }
+.dash-session-title { grid-area: t; font-weight: 700; }
+.dash-session-scripture { grid-area: s; font-size: 0.82rem; color: var(--dash-muted); }
+.dash-art-credit { font-size: 0.75rem; color: var(--dash-muted); }
+.dash-art-credit a { color: inherit; }
+
+.dash-scripture-ref { font-weight: 700; color: var(--dash-royal); }
+body[data-theme='dark'] .dash-scripture-ref { color: var(--dash-gold); }
+.dash-devotional-text { line-height: 1.65; }
+.dash-prayer { border-left: 4px solid var(--dash-gold); padding: 6px 0 6px 14px; display: grid; gap: 4px; font-style: italic; }
+.dash-prayer .dash-kicker { font-style: normal; color: var(--dash-muted); }
+
+.dash-section-title { font-family: Georgia, serif; font-size: 1.3rem; margin-bottom: 12px !important; }
+.dash-shortcuts { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+.dash-shortcut {
+  min-height: 112px; padding: 16px; border-radius: 20px; border: 1px solid var(--dash-line); background: var(--dash-card); color: var(--dash-ink);
+  display: grid; gap: 4px; align-content: start; text-align: left; font: inherit; cursor: pointer; box-shadow: 0 8px 20px rgba(11, 27, 74, 0.07);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.dash-shortcut:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(11, 27, 74, 0.14); }
+.dash-shortcut:last-child { grid-column: 1 / -1; }
+.dash-shortcut-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--dash-navy), var(--dash-royal)); color: var(--dash-gold-soft); margin-bottom: 6px; }
+.dash-shortcut-title { font-weight: 700; }
+.dash-shortcut-note { font-size: 0.82rem; color: var(--dash-muted); }
+
+.dash-encourage { grid-template-columns: 1fr; align-items: center; }
+.dash-premium { border: 2px dashed var(--dash-gold); background: linear-gradient(180deg, rgba(212, 175, 55, 0.1), transparent), var(--dash-card); }
+.dash-premium h3 { font-family: Georgia, serif; }
+.dash-premium-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.dash-premium-list li { display: flex; gap: 12px; align-items: flex-start; }
+.dash-premium-list strong { display: block; }
+.dash-premium-list span { font-size: 0.9rem; color: var(--dash-muted); }
+.dash-premium-tag { justify-self: start; display: inline-flex; gap: 6px; align-items: center; padding: 6px 12px; border-radius: 999px; background: var(--dash-navy); color: var(--dash-gold-soft); font-size: 0.8rem; font-weight: 700; }
+
+/* Profile page */
+.profile-section { display: grid; gap: 12px; margin-bottom: 16px; }
+.profile-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(20, 33, 77, 0.1); }
+.profile-row small { display: block; opacity: 0.75; margin-top: 2px; }
+.profile-links { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.profile-links a { display: flex; justify-content: space-between; align-items: center; min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 1px solid rgba(20, 33, 77, 0.15); text-decoration: none; color: inherit; font-weight: 600; }
+.profile-premium { border: 2px dashed var(--gold-bright, #d4af37); }
+
+/* Hide duplicate chrome on the mobile dashboard, which has its own header */
+@media (max-width: 768px) {
+  .is-home .topbar, .is-home .lifeos-site-nav { display: none; }
+}
+@media (min-width: 640px) {
+  .dash-sessions { grid-template-columns: repeat(2, 1fr); }
+  .dash-shortcuts { grid-template-columns: repeat(3, 1fr); }
+  .dash-shortcut:last-child { grid-column: auto; }
+  .dash-seminar-banner { grid-template-columns: 1fr auto; }
+  .dash-encourage { grid-template-columns: 1fr auto; }
+}
+@media (min-width: 960px) {
+  .dash { padding: 28px 24px 56px; grid-template-columns: repeat(12, 1fr); gap: 22px; }
+  .dash > * { grid-column: 1 / -1; }
+  .dash-scripture { grid-column: 1 / 8; }
+  .dash-reminder { grid-column: 8 / -1; }
+  .dash-devotional { grid-column: 1 / 8; }
+  .dash-premium { grid-column: 8 / -1; }
+  .dash-sessions { grid-template-columns: repeat(4, 1fr); }
+  .dash-shortcuts { grid-template-columns: repeat(5, 1fr); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
