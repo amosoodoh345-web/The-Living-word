@@ -1,21 +1,21 @@
-/* Life in the Spirit Seminar page: emerald, ivory and gold design.
+/* Life in the Spirit Seminar page: Design D navy, purple and Holy Spirit gold.
    Loaded after the page's inline styles so it refines them without removing them. */
 
 :root {
-  --ink: #1f2d27;
-  --muted: #55655d;
-  --paper: #f8f5ea;
-  --white: #fffdf7;
-  --sage: #dcefe4;
-  --deep-sage: #0f5a3f;
-  --emerald-950: #07261b;
-  --emerald-800: #0b4a33;
-  --emerald-600: #137a54;
-  --gold: #a8801f;
-  --gold-bright: #d9b45a;
-  --gold-soft: #f3e6bd;
-  --line: #e2dcc4;
-  --shadow: 0 18px 45px rgba(7, 38, 27, .14);
+  --ink: #101b3d;
+  --muted: #566082;
+  --paper: #f5f6fb;
+  --white: #ffffff;
+  --sage: #e8eaf5;
+  --deep-sage: #101b3d;
+  --emerald-950: #101b3d;
+  --emerald-800: #1a2a5e;
+  --emerald-600: #673ab7;
+  --gold: #9c7a12;
+  --gold-bright: #d4af37;
+  --gold-soft: #f3e9c5;
+  --line: #e2e5f1;
+  --shadow: 0 18px 45px rgba(16, 27, 61, .18);
   --radius: 14px;
 }
 
@@ -25,6 +25,7 @@ html { scroll-behavior: smooth; }
 
 body.reading-page {
   margin: 0;
+  background: #101b3d;
   color: var(--ink);
   font-family: "DM Sans", system-ui, sans-serif;
   line-height: 1.65;
@@ -39,10 +40,10 @@ body.reading-page {
 .reading-page .eyebrow { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .reading-page a:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 3px; border-radius: 6px; }
 
-/* Background: St Paul image under a deep emerald wash */
+/* Background: St Paul image under a calm navy wash */
 .reading-page::before {
   background:
-    linear-gradient(180deg, rgba(7, 38, 27, .82), rgba(11, 74, 51, .88)),
+    linear-gradient(180deg, rgba(16, 27, 61, .84), rgba(26, 42, 94, .88)),
     url('/st-paul-preaching-athens.png') center 38% / cover no-repeat;
 }
 
@@ -57,11 +58,11 @@ body.reading-page {
   backdrop-filter: blur(10px);
 }
 .reading-header .lifeos-site-nav { min-height: 54px; }
-.reading-header .lifeos-site-brand { color: var(--emerald-800); }
-.reading-header .lifeos-site-mark { background: var(--emerald-800); color: var(--gold-bright); box-shadow: 0 0 0 2px var(--gold-bright); }
+.reading-header .lifeos-site-brand { color: var(--emerald-950); }
+.reading-header .lifeos-site-mark { background: var(--emerald-950); color: var(--gold-bright); box-shadow: 0 0 0 2px var(--gold-bright); }
 .reading-header .lifeos-site-nav-links a { color: var(--muted); }
 .reading-header .lifeos-site-nav-links a:hover,
-.reading-header .lifeos-site-nav-links a[aria-current='page'] { background: var(--emerald-800); color: var(--gold-soft); }
+.reading-header .lifeos-site-nav-links a[aria-current='page'] { background: var(--emerald-950); color: var(--gold-soft); }
 .reading-links { gap: 6px; padding: 4px 0 10px; overflow-x: auto; scrollbar-width: none; }
 .reading-links::-webkit-scrollbar { display: none; }
 .reading-links a { padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--emerald-800); background: var(--white); font-size: 12px; white-space: nowrap; }
@@ -71,12 +72,14 @@ body.reading-page {
 .reading-hero {
   position: relative;
   min-height: 520px;
-  border: 1px solid var(--gold);
+  border-color: var(--gold-bright);
+  border: 1px solid var(--gold-bright);
   border-radius: 20px;
   background-image:
-    linear-gradient(100deg, rgba(7, 38, 27, .96) 0%, rgba(11, 74, 51, .84) 52%, rgba(11, 74, 51, .4) 100%),
+    radial-gradient(circle at 86% 10%, rgba(255, 107, 53, .22), transparent 28%),
+    linear-gradient(100deg, rgba(16, 27, 61, .96) 0%, rgba(26, 42, 94, .84) 52%, rgba(26, 42, 94, .4) 100%),
     url('/st-paul-preaching-athens.png');
-  box-shadow: 0 28px 70px rgba(0, 0, 0, .35), inset 0 0 0 5px rgba(217, 180, 90, .14);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .35), inset 0 0 0 5px rgba(212, 175, 55, .14);
   overflow: hidden;
 }
 .reading-hero::after { content: ""; position: absolute; left: clamp(34px, 7vw, 78px); bottom: 0; width: 90px; height: 4px; background: var(--gold-bright); }
@@ -84,7 +87,7 @@ body.reading-page {
 .reading-hero h1 { color: #fffdf7; font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
 .reading-hero > p { color: rgba(255, 253, 247, .9); }
 .today-pill { align-self: flex-start; color: var(--gold-soft); background: rgba(217, 180, 90, .16); border: 1px solid rgba(217, 180, 90, .45); }
-.primary-btn { min-height: 48px; padding: 0 24px; color: var(--emerald-950); background: linear-gradient(180deg, #e6c46e, #c9a02f); box-shadow: 0 12px 26px rgba(0, 0, 0, .3); }
+.primary-btn { min-height: 48px; padding: 0 24px; color: var(--emerald-950); background: linear-gradient(180deg, #e6cb68, var(--gold-bright)); box-shadow: 0 12px 26px rgba(0, 0, 0, .3); }
 .secondary-btn { min-height: 48px; padding: 0 24px; color: #fffdf7; border: 1px solid rgba(255, 253, 247, .55); background: rgba(255, 253, 247, .08); }
 .secondary-btn:hover { background: rgba(255, 253, 247, .18); }
 .hero-badges span { border-color: rgba(217, 180, 90, .5); border-radius: 999px; color: var(--gold-soft); background: rgba(7, 38, 27, .45); }
@@ -101,15 +104,15 @@ body.reading-page {
 .feature-card { border: 1px solid var(--gold-soft); border-top: 3px solid var(--gold-bright); transition: transform .25s ease, box-shadow .25s ease; }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(0, 0, 0, .22); }
 .feature-highlight { background: linear-gradient(180deg, #fffaf0, #f6ebcc); }
-.feature-icon { color: var(--gold-bright); background: var(--emerald-800); box-shadow: 0 0 0 2px var(--gold-bright) inset; }
+.feature-icon { color: var(--gold-bright); background: var(--emerald-950); box-shadow: 0 0 0 2px var(--gold-bright) inset; }
 .feature-tag { color: var(--gold); }
 
 .book-guide { border: 1px solid var(--gold-bright); box-shadow: 0 18px 45px rgba(0, 0, 0, .22); }
 .book-guide-grid div { border-top-color: var(--gold-bright); }
 .book-guide-grid strong { color: var(--emerald-800); }
 .book-guide-grid span { display: block; color: var(--muted); font-size: 13px; }
-.bible-continue { display: inline-block; margin-top: 20px; padding: 10px 18px; border-radius: 999px; color: var(--gold-soft); background: var(--emerald-800); font-size: 14px; font-weight: 700; text-decoration: none; transition: background .2s ease, transform .2s ease; }
-.bible-continue:hover { background: var(--emerald-950); transform: translateY(-1px); }
+.bible-continue { display: inline-block; margin-top: 20px; padding: 10px 18px; border-radius: 999px; color: var(--emerald-950); background: linear-gradient(180deg, #e6cb68, var(--gold-bright)); font-size: 14px; font-weight: 700; text-decoration: none; transition: background .2s ease, transform .2s ease; }
+.bible-continue:hover { background: #e6cb68; transform: translateY(-1px); }
 
 .bible-shelf { border: 1px solid var(--gold-soft); box-shadow: 0 18px 45px rgba(0, 0, 0, .18); }
 .shelf-columns > div { border-top-color: var(--gold-bright); }
@@ -123,13 +126,13 @@ body.reading-page {
 .wisdom-reading p { color: #3f4f47; font-size: 17px; line-height: 1.8; }
 .reading-quote { border-left: 4px solid var(--gold-bright); border-radius: 0 var(--radius) var(--radius) 0; background: linear-gradient(90deg, #fbf1d4, #fffaf0); }
 .reading-quote strong { color: var(--gold); font: 700 12px/1.4 "DM Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
-.practice-box { border-left: 4px solid var(--emerald-600); border-radius: 0 10px 10px 0; color: var(--emerald-800); background: #e3f2ea; }
+.practice-box { border-left: 4px solid var(--emerald-600); border-radius: 0 10px 10px 0; color: var(--emerald-800); background: #f0eafa; }
 
 /* Night prayer */
-.night-prayer { max-width: none; border: 1px solid var(--gold-bright); border-radius: 18px; background: linear-gradient(160deg, rgba(7, 38, 27, .97), rgba(11, 74, 51, .95)); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+.night-prayer { max-width: none; border: 1px solid var(--gold-bright); border-radius: 18px; background: radial-gradient(circle at 90% 10%, rgba(255, 107, 53, .18), transparent 28%), linear-gradient(160deg, rgba(16, 27, 61, .98), rgba(26, 42, 94, .96)); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
 .night-prayer .eyebrow { color: var(--gold-bright); }
 .night-prayer h2 { color: #fffdf7; }
-.night-prayer p { color: #dcefe4; }
+.night-prayer p { color: #e1e5f5; }
 .night-prayer .prayer-text { border-left: 4px solid var(--gold-bright); border-radius: 0 12px 12px 0; color: var(--ink); background: #fffaf0; }
 .night-prayer .prayer-text strong { color: var(--gold); }
 

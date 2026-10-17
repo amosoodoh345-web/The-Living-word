@@ -916,11 +916,13 @@ function App() {
       <main className="home-page">
         <section className="dashboard-hero">
           <div className="dashboard-welcome">
+            <p className="hero-brand"><span className="hero-flame" aria-hidden="true">🔥</span> LIFEOS <span>· The Living Word</span></p>
             <p className="eyebrow">{formattedDate}</p>
             <h2>{timeGreeting}, friend.</h2>
             <p className="hero-lede">Make space for what matters. A few quiet minutes in Scripture can change the shape of your day.</p>
             <div className="hero-actions">
               <button className="primary-btn" onClick={() => setPage('bible')}>Begin reading <span aria-hidden="true">→</span></button>
+              <button className="secondary-btn" onClick={() => setPage('seminar')}>Life in the Spirit</button>
               <button className="secondary-btn" onClick={() => setPage('prayer')}>Take a breath</button>
             </div>
           </div>
@@ -955,12 +957,13 @@ function App() {
         <section className="home-section dashboard-actions">
           <div className="section-heading"><div><p className="mini-label">Your daily rhythm</p><h3>Make it meaningful</h3></div><span className="subtle-label">Everything stays on this device</span></div>
           <div className="feature-grid">
-            <button className="feature-card feature-action" onClick={() => setPage('devotional')}><span className="feature-icon">☼</span><span className="feature-tag">Today</span><h3>Daily devotional</h3><p>Read a daily prompt and make a note in your journal.</p><span className="card-link">Open today's reading →</span></button>
-            <button className="feature-card feature-action highlight" onClick={() => setPage('seminar')}><span className="feature-icon">✧</span><span className="feature-tag">Seven sessions</span><h3>Life in the Spirit</h3><p>Explore the seminar outline and track your progress on this device.</p><span className="card-link">View sessions →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('bible')}><span className="feature-icon">▤</span><span className="feature-tag">Scripture</span><h3>Read the Bible</h3><p>Browse the passages bundled for offline reading.</p><span className="card-link">Open reader →</span></button>
-            <button className="feature-card feature-action highlight" onClick={() => setPage('prayer')}><span className="feature-icon">✧</span><span className="feature-tag">Prayer</span><h3>Pause and pray</h3><p>Bring an intention to a moment of stillness.</p><span className="card-link">Find a prayer →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('journal')}><span className="feature-icon">✎</span><span className="feature-tag">Reflection</span><h3>Write it down</h3><p>Keep a private prayer and reflection journal.</p><span className="card-link">Write a note →</span></button>
-            <button className="feature-card feature-action" onClick={() => setPage('explore')}><span className="feature-icon">⌕</span><span className="feature-tag">The Living Word</span><h3>Explore more</h3><p>Find ministries, hymns, prayer guides, and private testimony drafts.</p><span className="card-link">Explore pathways →</span></button>
+            <button className="feature-card feature-action" onClick={() => setPage('bible')}><span className="feature-icon">▤</span><span className="feature-tag">Scripture</span><h3>Bible Reader</h3><p>Browse the passages bundled for offline reading.</p><span className="card-link">Open reader →</span></button>
+            <button className="feature-card feature-action highlight fire" onClick={() => setPage('seminar')}><span className="feature-icon">✧</span><span className="feature-tag">Seven sessions</span><h3>Life in the Spirit Seminar</h3><p>Explore the seminar outline and track your progress on this device.</p><span className="card-link">View sessions →</span></button>
+            <button className="feature-card feature-action" onClick={() => setPage('devotional')}><span className="feature-icon">☼</span><span className="feature-tag">Today</span><h3>Daily Devotional</h3><p>Read a daily prompt and make a note in your journal.</p><span className="card-link">Open today's reading →</span></button>
+            <button className="feature-card feature-action highlight" onClick={() => setPage('prayer')}><span className="feature-icon">🕊</span><span className="feature-tag">Prayer</span><h3>Prayer and Intercession</h3><p>Bring an intention to a moment of stillness.</p><span className="card-link">Find a prayer →</span></button>
+            <button className="feature-card feature-action" onClick={() => setPage('journal')}><span className="feature-icon">✎</span><span className="feature-tag">Reflection</span><h3>Reflections</h3><p>Keep a private prayer and reflection journal.</p><span className="card-link">Write a note →</span></button>
+            <button className="feature-card feature-action" onClick={() => setPage('testimonies')}><span className="feature-icon">✝</span><span className="feature-tag">Community</span><h3>Testimonies</h3><p>Share and read what God has done in people's lives.</p><span className="card-link">Read testimonies →</span></button>
+            <button className="feature-card feature-action" onClick={() => setPage('explore')}><span className="feature-icon">⌕</span><span className="feature-tag">The Living Word</span><h3>Catholic Resources</h3><p>Find ministries, hymns, prayer guides, and the rosary and novena.</p><span className="card-link">Explore resources →</span></button>
           </div>
         </section>
 

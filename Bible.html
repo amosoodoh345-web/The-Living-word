@@ -427,6 +427,11 @@
             .verse-list { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="/theme.css">
+    <meta name="theme-color" content="#101b3d">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/app-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body class="bible-page">
     <header class="page-header">
@@ -619,7 +624,7 @@
 
         function toggleTheme() {
             const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-            writeStorage(STORAGE.theme, JSON.stringify(nextTheme));
+            writeStorage(STORAGE.theme, nextTheme);
             applyTheme();
         }
 
