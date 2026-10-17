@@ -1121,6 +1121,129 @@ body[data-theme='dark'] .secondary-btn:hover {
   gap: 16px;
 }
 
+.home-support-grid,
+.growth-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.home-support-card h3 {
+  margin: 0 0 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+}
+
+.home-support-card > p:not(.mini-label) {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.home-support-card .secondary-btn {
+  margin-top: 4px;
+}
+
+.growth-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.growth-summary-card {
+  display: grid;
+  gap: 6px;
+  text-align: center;
+}
+
+.growth-summary-card strong {
+  color: var(--green);
+  font-size: 2rem;
+}
+
+.growth-summary-card span,
+.growth-privacy-note {
+  color: var(--muted);
+}
+
+.growth-practices,
+.reminder-list {
+  display: grid;
+}
+
+.growth-practice,
+.reminder-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  border-top: 1px solid var(--line);
+}
+
+.growth-practice input,
+.reminder-enable input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand);
+}
+
+.growth-practice span,
+.reminder-enable span {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.growth-privacy-note {
+  margin: 14px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.reminder-row {
+  justify-content: space-between;
+}
+
+.reminder-enable {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reminder-time input {
+  min-height: 42px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-strong);
+  color: var(--ink);
+}
+
+.reminder-time input:disabled {
+  opacity: 0.55;
+}
+
+.reminder-notification-panel > p:not(.mini-label) {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.reminder-limit-note {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .reading-card {
   display: flex;
   align-items: stretch;
@@ -1188,7 +1311,8 @@ body[data-theme='dark'] .secondary-btn:hover {
 
 @media (max-width: 920px) {
   .dashboard-hero,
-  .dashboard-grid {
+  .dashboard-grid,
+  .home-support-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2892,6 +3016,11 @@ body[data-theme='dark'] .reader-card {
 
   .dashboard-stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .growth-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .stat-card {

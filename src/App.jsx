@@ -21,6 +21,16 @@ import {
   TestimoniesPage,
   WisdomReadingsPage
 } from './LifeOSPages';
+import RemindersPage from './RemindersPage';
+import SpiritualGrowthPage from './SpiritualGrowthPage';
+import {
+  DEFAULT_REMINDERS,
+  getDueReminders,
+  getNextReminder,
+  normalizeReminders,
+  reminderFiredKey
+} from './lib/reminders';
+import { getGrowthSummary, localDateKey, toggleDailyPractice } from './lib/spiritualGrowth';
 
 const translations = [
   { id: 'kjv', label: 'KJV', fullName: 'King James Version (with Apocrypha)' },
@@ -35,7 +45,9 @@ const storageKeys = {
   prayer: 'life-in-the-spirit-prayer',
   journal: 'life-in-the-spirit-journal',
   seminarProgress: 'lifeos-seminar-progress',
-  testimonyDrafts: 'lifeos-testimony-drafts'
+  testimonyDrafts: 'lifeos-testimony-drafts',
+  reminders: 'lifeos-reminders',
+  growthActivity: 'lifeos-growth-activity'
 };
 
 const navItems = [
@@ -100,6 +112,11 @@ function App() {
   const [journal, setJournal] = useState(() => readStored(storageKeys.journal, []));
   const [seminarProgress, setSeminarProgress] = useState(() => readStored(storageKeys.seminarProgress, {}));
   const [testimonyDrafts, setTestimonyDrafts] = useState(() => readStored(storageKeys.testimonyDrafts, []));
+  const [reminders, setReminders] = useState(() => normalizeReminders(readStored(storageKeys.reminders, DEFAULT_REMINDERS)));
+  const [growthActivity, setGrowthActivity] = useState(() => readStored(storageKeys.growthActivity, {}));
+  const [notificationPermission, setNotificationPermission] = useState(() => (
+    'Notification' in window ? Notification.permission : 'unsupported'
+  ));
   const [theme, setTheme] = useState(() => localStorage.getItem(storageKeys.theme) || 'light');
   const [prayerFocus, setPrayerFocus] = useState(() => readStored(storageKeys.prayer, defaultPrayerFocuses[0]));
   const [searchTerm, setSearchTerm] = useState('');
@@ -216,6 +233,65 @@ function App() {
   useEffect(() => {
     localStorage.setItem(storageKeys.prayer, JSON.stringify(prayerFocus));
   }, [prayerFocus]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKeys.reminders, JSON.stringify(reminders));
+  }, [reminders]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKeys.growthActivity, JSON.stringify(growthActivity));
+  }, [growthActivity]);
+
+  useEffect(() => {
+    const checkReminders = () => {
+      const now = new Date();
+      const due = getDueReminders(reminders, now).filter(
+        (reminder) => localStorage.getItem(reminderFiredKey(reminder, now)) !== 'sent'
+      );
+      if (due.length === 0) return;
+
+      due.forEach((reminder) => localStorage.setItem(reminderFiredKey(reminder, now), 'sent'));
+      const message = due.map((reminder) => reminder.message).join(' ');
+      setNotice(message);
+
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const showNotifications = async () => {
+          try {
+            const registration = 'serviceWorker' in navigator
+              ? await navigator.serviceWorker.getRegistration()
+              : null;
+            if (registration && 'showNotification' in registration) {
+              await registration.showNotification('LIFEOS reminder', {
+                body: message,
+                icon: '/spirit-icon-192.png',
+                tag: due.map((reminder) => reminder.id).join('-')
+              });
+            } else {
+              new Notification('LIFEOS reminder', { body: message });
+            }
+          } catch (error) {
+            console.error('Could not show the reminder notification:', error);
+            setNotice(`${message} Browser notification could not be shown.`);
+          }
+        };
+        void showNotifications();
+      }
+    };
+
+    const syncPermission = () => {
+      setNotificationPermission('Notification' in window ? Notification.permission : 'unsupported');
+      checkReminders();
+    };
+    checkReminders();
+    const interval = window.setInterval(checkReminders, 15_000);
+    window.addEventListener('focus', syncPermission);
+    document.addEventListener('visibilitychange', syncPermission);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', syncPermission);
+      document.removeEventListener('visibilitychange', syncPermission);
+    };
+  }, [reminders]);
 
   useEffect(() => {
     const onInstallPrompt = (event) => {
@@ -396,6 +472,21 @@ function App() {
     setInstallPrompt(null);
   };
 
+  const requestReminderPermission = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      if (permission !== 'granted') {
+        setNotice(permission === 'denied'
+          ? 'Notifications were blocked. You can allow them in your browser settings.'
+          : 'Notification permission was not granted.');
+      }
+    } catch (error) {
+      console.error('Could not request notification permission:', error);
+      setNotice('Could not request notification permission in this browser.');
+    }
+  };
+
   const changeBook = (book) => {
     setSelectedBook(book);
     setSelectedChapter(1);
@@ -423,6 +514,9 @@ function App() {
   );
   const timeGreeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
   const formattedDate = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
+  const nextReminder = getNextReminder(reminders, new Date());
+  const growthSummary = getGrowthSummary(growthActivity);
+  const todayPracticeCount = growthSummary.todayCompleted;
 
   const testamentBadge = useMemo(() => {
     if (currentBookInfo.testament === 'DC') return 'Deuterocanonical (Apocrypha)';
@@ -431,6 +525,26 @@ function App() {
   }, [currentBookInfo]);
 
   const renderPage = () => {
+    if (page === 'reminders') {
+      return (
+        <RemindersPage
+          reminders={reminders}
+          onChange={setReminders}
+          permission={notificationPermission}
+          onRequestPermission={requestReminderPermission}
+        />
+      );
+    }
+
+    if (page === 'growth') {
+      return (
+        <SpiritualGrowthPage
+          activity={growthActivity}
+          onToggle={(practiceId) => setGrowthActivity((previous) => toggleDailyPractice(previous, practiceId))}
+        />
+      );
+    }
+
     if (page === 'bible') {
       return (
         <main className="content-page bible-page">
@@ -938,7 +1052,7 @@ function App() {
           <div className="stat-card"><span className="stat-icon">◷</span><div><strong>{history.length || 0}</strong><span>Recent reads</span></div></div>
           <div className="stat-card"><span className="stat-icon">♡</span><div><strong>{favourites.length || 0}</strong><span>Saved verses</span></div></div>
           <div className="stat-card"><span className="stat-icon">✎</span><div><strong>{journal.length || 0}</strong><span>Reflections</span></div></div>
-          <div className="stat-card stat-card-accent"><span className="stat-icon">✦</span><div><strong>1</strong><span>Day of devotion</span></div></div>
+          <div className="stat-card stat-card-accent"><span className="stat-icon">✦</span><div><strong>{growthSummary.currentStreak}</strong><span>Day streak</span></div></div>
         </section>
 
         <section className="dashboard-grid">
@@ -951,6 +1065,27 @@ function App() {
             <h3>{prayerFocus.title}</h3>
             <p>{prayerFocus.text}</p>
             <button className="secondary-btn small" onClick={() => setPage('prayer')}>Open prayer <span aria-hidden="true">→</span></button>
+          </article>
+        </section>
+
+        <section className="home-support-grid" aria-label="Your weekly rhythm and growth">
+          <article className="panel home-support-card">
+            <p className="mini-label">Next reminder</p>
+            {nextReminder ? (
+              <>
+                <h3>{nextReminder.reminder.message}</h3>
+                <p>{new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(nextReminder.at)}</p>
+              </>
+            ) : (
+              <><h3>No reminders are enabled</h3><p>Turn on a weekly reminder whenever you are ready.</p></>
+            )}
+            <button className="secondary-btn small" onClick={() => setPage('reminders')}>Manage reminders</button>
+          </article>
+          <article className="panel home-support-card">
+            <p className="mini-label">Spiritual growth</p>
+            <h3>{todayPracticeCount} practice{todayPracticeCount === 1 ? '' : 's'} marked today</h3>
+            <p>{growthSummary.activeDaysThisWeek} active day{growthSummary.activeDaysThisWeek === 1 ? '' : 's'} this week. Notice the small steps, without pressure.</p>
+            <button className="secondary-btn small" onClick={() => setPage('growth')}>Open growth tracker</button>
           </article>
         </section>
 

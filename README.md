@@ -8,17 +8,18 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 - Responsive phone, tablet, and desktop layouts
 - Bible reading with KJV, WEB, and BBE selection; the reader does not silently substitute translations
 - Seven-session Life in the Spirit formation outline with locally saved progress
+- Editable weekly prayer meeting and Bible study reminders, plus a simple personal practice tracker
 - Daily devotional prompts, prayer intentions, Holy Spirit novena, Rosary, and Divine Mercy Chaplet guides
 - Searchable set of 75 original wisdom reflections linked to Proverbs, Ecclesiastes, and Psalms
 - Ministries directory starter and searchable song/hymn metadata catalogue
 - Wide reflection journal and daily reflection page, private testimony drafts, saved verses, and recent reading history
 - St Paul preaching artwork in the Bible, seminar, and daily reflection heroes (Wikimedia Commons, public domain)
 - Dark mode and offline app shell
-- Personal preferences and notes saved locally on the device
+- Personal preferences, reminder settings, growth check-ins, and notes saved locally on the device
 
 ## Pages
 
-- `index.html` is the main React app. Its Bible, prayer, seminar, devotional, ministry, song, testimony, journal, and saved-content views use in-app navigation.
+- `index.html` is the main React app. Its Bible, prayer, seminar, devotional, reminder, growth, ministry, song, testimony, journal, and saved-content views use in-app navigation.
 - `church.html` is the daily reflection and Bible navigator page.
 - `Bible.html` is the standalone Bible library.
 - `genesis-1.html` is the standalone Genesis 1 reading page.
@@ -50,6 +51,14 @@ The production files are generated in `dist`.
 To install it on a phone, publish the production build (`dist`) to a static web host that serves the app over HTTPS. Open that HTTPS link on the phone and select **Install app** or **Add to Home Screen** in the browser. A project folder on its own is not a phone installer (APK); this PWA install flow is the downloadable, home-screen version.
 
 After opening the installed app online once, the app shell and bundled content can load offline. Browser storage is device-specific; notes and saved verses do not sync between devices.
+
+## Reminders and future mobile support
+
+The default local schedule is Monday and Saturday at 6:30 PM for Prayer Meeting, and Wednesday at 6:30 PM for Bible Study. Times use the device's local timezone (West Africa Time for devices set to Nigeria). Reminder settings and basic Scripture/prayer/reflection check-ins are stored locally and are not synced.
+
+Browser reminders are best-effort while the website or installed PWA is open. Browsers can throttle background tabs, and JavaScript timers cannot deliver a reminder after the website has closed. Reliable closed-site web reminders would need Web Push and a server-side scheduler. The future Android direction is Capacitor with OS-scheduled local notifications; Capacitor has not been added yet.
+
+This release does not implement premium access, payments, or subscriptions. For future Nigeria-first website purchases, Paystack can be evaluated with payment verification performed on a trusted server. Digital purchases in a Play Store Android app must follow Google Play's billing policies; Google Play Billing is the planned Android route. Neither payment route is wired in this project.
 
 ## Scripture content note
 
