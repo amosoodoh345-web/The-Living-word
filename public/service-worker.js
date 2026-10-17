@@ -1,5 +1,5 @@
-const CACHE_NAME = 'life-in-the-spirit-v3';
-const APP_SHELL = ['/', '/manifest.webmanifest', '/app-icon.svg'];
+const CACHE_NAME = 'life-in-the-spirit-v4';
+const APP_SHELL = ['/', '/manifest.webmanifest', '/spirit-icon-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
