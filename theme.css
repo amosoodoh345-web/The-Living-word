@@ -183,9 +183,31 @@ body.dark-mode textarea {
   .lifeos-site-nav { align-items: flex-start; flex-direction: column; gap: 8px; }
   .lifeos-site-nav-links { display: flex; max-width: 100%; gap: 4px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
   .lifeos-site-nav-links::-webkit-scrollbar { display: none; }
-  .lifeos-site-nav-links a { min-height: 40px; padding: 10px 12px; white-space: nowrap; }
+  .lifeos-site-nav-links a { min-height: 44px; padding: 10px 12px; white-space: nowrap; }
+  body .seminar-card .teaching,
+  body .seminar-card .practice,
+  body .book p,
+  body .book-names { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation: none !important; transition: none !important; }
+}
+
+button {
+  min-height: 44px !important;
+}
+
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  min-height: 44px !important;
+  font-size: 16px !important;
+}
+
+.text-button,
+.bible-continue {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }

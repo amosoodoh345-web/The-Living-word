@@ -367,6 +367,7 @@ body[data-theme='dark'] .dash-card-head .dash-kicker { color: var(--dash-gold); 
 .dash-session-scripture { grid-area: s; font-size: 0.82rem; color: var(--dash-muted); }
 .dash-art-credit { font-size: 0.75rem; color: var(--dash-muted); }
 .dash-art-credit a { color: inherit; }
+.dash-art-credit a, .bible-art-credit { display: inline-flex; align-items: center; min-height: 44px; }
 
 .dash-scripture-ref { font-weight: 700; color: var(--dash-royal); }
 body[data-theme='dark'] .dash-scripture-ref { color: var(--dash-gold); }

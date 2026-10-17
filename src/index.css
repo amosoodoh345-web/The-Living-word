@@ -3425,3 +3425,14 @@ body[data-theme='dark'] .reader-card {
     transition-duration: 0.01ms !important;
   }
 }
+
+#root button {
+  min-height: 44px;
+}
+
+#root input:not([type='checkbox']):not([type='radio']),
+#root select,
+#root textarea {
+  min-height: 44px;
+  font-size: 16px;
+}

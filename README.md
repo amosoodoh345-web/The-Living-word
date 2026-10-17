@@ -5,7 +5,7 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 ## Features
 
 - Installable home-screen app experience on supported browsers
-- Responsive phone, tablet, and desktop layouts
+- Mobile-first layouts with scrollable small-screen navigation and 44px touch targets; checked at 360px, 390px, 768px, and 1440px
 - Bible reading with KJV, WEB, and BBE selection; the reader does not silently substitute translations
 - Seven-session Life in the Spirit formation outline with locally saved progress
 - Editable weekly prayer meeting and Bible study reminders, plus a simple personal practice tracker

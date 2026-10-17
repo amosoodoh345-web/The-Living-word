@@ -40,6 +40,9 @@
 }
 
 .lifeos-site-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   flex: 0 0 auto;
   padding: 8px 11px;
   border-radius: 6px;
@@ -58,23 +61,33 @@
 
 @media (max-width: 760px) {
   .lifeos-site-nav {
-    align-items: flex-start;
+    align-items: stretch;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     padding: 8px 0;
+    min-width: 0;
   }
 
   .lifeos-site-nav-links {
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
-    gap: 2px 4px;
-    overflow: visible;
-    padding-bottom: 0;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 0 4px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
+  .lifeos-site-nav-links::-webkit-scrollbar { display: none; }
+
   .lifeos-site-nav-links a {
-    padding: 8px 9px;
-    font-size: 11px;
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
   }
 }
 
