@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Selah is a gentle space for Bible study, reflection and encouragement." />
+  <title>Selah — Bible study & encouragement</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#home"><span class="brand-mark"><i data-lucide="sprout"></i></span><span>selah</span></a>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#home"><i data-lucide="house"></i> Today</a>
+        <a class="nav-item" href="#study"><i data-lucide="book-open"></i> Bible study</a>
+        <a class="nav-item" href="#encouragement"><i data-lucide="heart"></i> Encouragement</a>
+        <a class="nav-item" href="#journal"><i data-lucide="notebook-pen"></i> My journal</a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="tiny-leaf"><i data-lucide="leaf"></i></div>
+        <p>Make space. Hear His voice.</p>
+      </div>
+    </aside>
+
+    <main id="home" class="content">
+      <header class="topbar">
+        <button class="menu-button" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+        <div><p class="eyebrow">SUNDAY, SEPTEMBER 13</p><h1>Good morning, Ada <span>☀</span></h1></div>
+        <button class="avatar" aria-label="Profile">A</button>
+      </header>
+
+      <section class="welcome-card">
+        <div class="sun-doodle" aria-hidden="true"><i data-lucide="sun-medium"></i></div>
+        <div>
+          <p class="scripture-label">A quiet moment with God</p>
+          <blockquote>“Be still, and know that I am God.”</blockquote>
+          <p class="verse-ref">Psalm 46:10 <span>•</span> NIV</p>
+        </div>
+        <button class="save-verse" aria-label="Save verse"><i data-lucide="bookmark"></i></button>
+        <div class="vine vine-one">~</div><div class="vine vine-two">⌇</div>
+      </section>
+
+      <section class="daily-grid" id="study">
+        <article class="study-card">
+          <div class="card-top"><span class="section-kicker"><i data-lucide="book-open"></i> DAILY STUDY</span><button class="plain-button" id="nextStudy">New passage <i data-lucide="arrow-right"></i></button></div>
+          <div class="study-copy">
+            <p class="study-day">DAY 4 OF 7</p>
+            <h2 id="studyTitle">Finding peace in the waiting</h2>
+            <p id="studyText">When answers feel distant, God is still near. Let’s look at what it means to trust Him in the in-between.</p>
+          </div>
+          <div class="progress-wrap"><div class="progress-label"><span>This week’s journey</span><strong id="progressText">4 / 7 days</strong></div><div class="progress"><span id="progressBar"></span></div></div>
+          <button class="primary-button" id="startStudy">Continue study <i data-lucide="arrow-up-right"></i></button>
+        </article>
+
+        <article class="reflection-card" id="encouragement">
+          <div class="reflection-art"><div class="arch"></div><div class="hill hill-a"></div><div class="hill hill-b"></div><span class="cross">✦</span></div>
+          <div class="reflection-content"><span class="section-kicker">TAKE A BREATH</span><h2>A word for your heart</h2><p id="encouragementText">You don’t have to carry tomorrow today. Grace meets you right where you are.</p><button class="text-button" id="newEncouragement">Receive another word <i data-lucide="refresh-cw"></i></button></div>
+        </article>
+      </section>
+
+      <section class="section-block" id="journal">
+        <div class="section-heading"><div><p class="section-kicker">REFLECT & GROW</p><h2>Where is God meeting you today?</h2></div><p class="heading-note">A few gentle prompts to help you pause.</p></div>
+        <div class="prompt-grid">
+          <button class="prompt-card" data-prompt="What is one thing you are grateful for today?"><span class="prompt-icon peach"><i data-lucide="heart-handshake"></i></span><span><strong>Gratitude</strong><small>Notice the good around you</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="prompt-card" data-prompt="What are you holding that you can place in God’s hands?"><span class="prompt-icon lavender"><i data-lucide="cloud-sun"></i></span><span><strong>Release</strong><small>Let go of what feels heavy</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="prompt-card" data-prompt="What truth from Scripture do you need to remember today?"><span class="prompt-icon green"><i data-lucide="sparkles"></i></span><span><strong>Truth</strong><small>Hold on to His promises</small></span><i data-lucide="arrow-up-right"></i></button>
+        </div>
+      </section>
+
+      <section class="journal-panel" aria-live="polite">
+        <div class="journal-header"><div><p class="section-kicker">YOUR QUIET PLACE</p><h2 id="journalTitle">Write a little prayer</h2></div><span id="saveState">Private to you</span></div>
+        <textarea id="journalEntry" placeholder="God, today I am feeling..."></textarea>
+        <div class="journal-actions"><span><i data-lucide="lock-keyhole"></i> Saved only on this device</span><button class="primary-button small" id="saveJournal">Save reflection</button></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" role="status"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
