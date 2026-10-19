@@ -1,4 +1,4 @@
-# Jonas Webworks — Local build & preview
+# Amos Webworks — Local build & preview
 
 This project contains a simple build script that injects `components/header.html` and `components/footer.html` into each top-level HTML page and writes the result to `dist/`.
 
