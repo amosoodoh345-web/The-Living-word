@@ -1,5 +1,5 @@
 {
-    "name": "jonas-webworks-website",
+    "name": "Amos-webworks-website",
     "version": "1.0.0",
     "description": "Local build script to inject header and footer into HTML pages",
     "scripts": {
