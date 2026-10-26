@@ -12,11 +12,18 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 - Daily devotional prompts, prayer intentions, Holy Spirit novena, Rosary, and Divine Mercy Chaplet guides
 - Searchable set of 75 original wisdom reflections linked to Proverbs, Ecclesiastes, and Psalms
 - Ministries directory starter and searchable song/hymn metadata catalogue
-- Wide reflection journal and daily reflection page, private testimony drafts, saved verses, and recent reading history
+- Wide reflection journal and daily reflection page, publicestimony drafts, saved verses, and recent reading history
 - St Paul preaching artwork in the Bible, seminar, and daily reflection heroes (Wikimedia Commons, public domain)
 - Dark mode and offline app shell
 - Personal preferences, reminder settings, growth check-ins, and notes saved locally on the device
+## Launch readiness and content boundaries
 
+- Seminar and devotional materials in this project are original learning aids and drafts. They have not been reviewed or approved as official Catholic formation. Obtain pastoral review before presenting them as parish or diocesan teaching.
+- The prayer pages provide devotional prompts and sequence guides; they do not reproduce complete liturgical prayer texts.
+- The song catalogue contains titles and creator metadata only. It does not include lyrics or recordings. Verify rights for each translation, arrangement, recording, and intended distribution before adding media.
+- Seminar progress, journal entries, and testimony drafts are stored in the current browser only. Testimony drafts are private and are not submitted or visible to other users.
+- Public community features require a hosted backend, authentication and authorization, privacy and retention policies, moderation, and a reporting process. Testimony and comment drafts remain pending until moderator approval.
+- Public release still requires an HTTPS deployment target, production configuration, review of Scripture/content licenses, and testing on supported devices and browsers.
 ## Pages
 
 - `index.html` is the main React app. Its Bible, prayer, seminar, devotional, reminder, growth, ministry, song, testimony, journal, and saved-content views use in-app navigation.
