@@ -75,6 +75,8 @@ export default function ProfilePage({
         <h3>Optional premium study tools</h3>
         <p>Advanced courses and downloadable study materials may be offered in the future. Every feature in the app today remains free, and no payment system is active.</p>
       </section>
+
+      <p className="local-data-note"><a href="./privacy.html">Privacy policy</a></p>
     </main>
   );
 }

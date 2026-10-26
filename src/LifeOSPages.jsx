@@ -10,6 +10,8 @@ import {
   SEMINAR_SESSIONS,
   SONGS
 } from './data/lifeosContent';
+import { SEMINAR_DETAILS } from './data/seminarDetails';
+import { CHAPLET_PRAYER_SETS, PRAYER_LABELS, PRAYER_TEXTS, ROSARY_MYSTERY_REFERENCES, ROSARY_PRAYER_SETS } from './data/prayerTexts';
 import { WISDOM_BOOKS, WISDOM_READINGS } from './data/wisdomReadings';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
@@ -25,7 +27,7 @@ export function ExplorePage({ onNavigate }) {
     ['songs', 'Songs and hymns', 'Search titles and creators; lyrics are not reproduced.'],
     ['encouragement', 'Encouragement library', 'Browse the existing collection of original devotional reflections.'],
     ['growth', 'Spiritual growth tracker', 'Mark daily Scripture, prayer, and reflection, and see your streak. Saved on this device.'],
-    ['testimonies', 'Testimonies and praise reports', 'Keep a private draft on this device. Community publishing is not connected yet.']
+    ['testimonies', 'Testimonies and praise reports', 'Read approved community testimonies, or submit your own for moderator review.']
   ];
 
   return (
@@ -47,7 +49,7 @@ export function ExplorePage({ onNavigate }) {
         <article className="lifeos-pathway community-notice">
           <p className="mini-label">Launch requirement</p>
           <h3>Shared community features</h3>
-          <p>Public testimony publishing needs a hosted backend, account and privacy decisions, and moderation before it can be enabled.</p>
+          <p>Public testimonies are reviewed by moderators before they appear. Comments and reports are moderated too.</p>
         </article>
       </section>
     </main>
@@ -77,6 +79,16 @@ export function SeminarPage({ progress, onToggle }) {
               <h3>{session.title}</h3>
               <p>{session.focus}</p>
               <p className="seminar-question"><strong>Reflect:</strong> {session.question}</p>
+              {SEMINAR_DETAILS[session.id] && (
+                <details className="seminar-details">
+                  <summary>Open full session</summary>
+                  {SEMINAR_DETAILS[session.id].teaching.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  <p><strong>Prayer:</strong> {SEMINAR_DETAILS[session.id].prayer}</p>
+                  <p><strong>Activity:</strong> {SEMINAR_DETAILS[session.id].activity}</p>
+                  <p><strong>Sharing questions:</strong></p>
+                  <ul>{SEMINAR_DETAILS[session.id].sharing.map((question) => <li key={question}>{question}</li>)}</ul>
+                </details>
+              )}
             </div>
             <label className="session-complete-control">
               <input type="checkbox" checked={Boolean(progress[session.id])} onChange={() => onToggle(session.id)} />
@@ -252,7 +264,7 @@ export function PrayerGuidePage({ kind }) {
       <section className="page-intro">
         <p className="eyebrow">Interactive prayer guide</p>
         <h2>{isRosary ? 'The Holy Rosary' : 'Divine Mercy Chaplet'}</h2>
-        <p>Follow one step at a time. This guide offers sequence prompts; it does not reproduce full prayer texts.</p>
+        <p>Follow one step at a time. Traditional prayers are shown in full; confirm the wording your parish prefers. Original guide text is not an official liturgical book.</p>
       </section>
       {isRosary && (
         <section className="mystery-picker" aria-label="Choose Rosary mysteries">
@@ -260,12 +272,18 @@ export function PrayerGuidePage({ kind }) {
             <button className={selectedMystery === index ? 'tab-pill active' : 'tab-pill'} key={entry.name} onClick={() => { setSelectedMystery(index); setStep(0); }} aria-pressed={selectedMystery === index}>{entry.name}</button>
           ))}
           <p className="subtle-label">Customarily prayed {mystery.days}.</p>
-          <ol className="mystery-list">{mystery.mysteries.map((name) => <li key={name}>{name}</li>)}</ol>
+          <ol className="mystery-list">{mystery.mysteries.map((name, index) => <li key={name}>{name}{ROSARY_MYSTERY_REFERENCES[mystery.name]?.[index] ? ` (${ROSARY_MYSTERY_REFERENCES[mystery.name][index]})` : ''}</li>)}</ol>
         </section>
       )}
       <article className="devotional-reading guide-step" aria-live="polite">
         <p className="mini-label">Step {currentStep + 1} of {steps.length}</p>
         <p>{steps[currentStep]}</p>
+        {(isRosary ? ROSARY_PRAYER_SETS : CHAPLET_PRAYER_SETS)[currentStep]?.map((key) => (
+          <details className="prayer-text" key={key}>
+            <summary>{PRAYER_LABELS[key]}</summary>
+            <p>{PRAYER_TEXTS[key]}</p>
+          </details>
+        ))}
         <div className="devotional-actions">
           <button className="secondary-btn small" onClick={() => setStep((currentStep + steps.length - 1) % steps.length)}>Previous step</button>
           <button className="primary-btn small" onClick={() => setStep((currentStep + 1) % steps.length)}>Next step</button>

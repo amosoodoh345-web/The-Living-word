@@ -95,8 +95,30 @@ const readStored = (key, fallback) => {
   }
 };
 
+const ROUTABLE_PAGES = ['home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries', 'songs', 'novena', 'rosary', 'chaplet', 'testimonies', 'prayer', 'journal', 'saved', 'profile', 'reminders', 'growth', 'encouragement'];
+
+function pageFromLocation() {
+  const hashPage = window.location.hash.replace(/^#\/?/, '');
+  if (ROUTABLE_PAGES.includes(hashPage)) return hashPage;
+  return new URLSearchParams(window.location.search).get('view') === 'testimonies' ? 'testimonies' : 'home';
+}
+
 function App() {
-  const [page, setPage] = useState(() => new URLSearchParams(window.location.search).get('view') === 'testimonies' ? 'testimonies' : 'home');
+  const [page, setPage] = useState(pageFromLocation);
+
+  // Mirror the in-app page in the URL hash so the browser and Android back buttons work.
+  useEffect(() => {
+    const target = `#/${page}`;
+    if (window.location.hash === target) return;
+    if (!window.location.hash) window.history.replaceState(null, '', target);
+    else window.history.pushState(null, '', target);
+  }, [page]);
+
+  useEffect(() => {
+    const onNavigate = () => setPage(pageFromLocation());
+    window.addEventListener('popstate', onNavigate);
+    return () => window.removeEventListener('popstate', onNavigate);
+  }, []);
   const [sharedExperience, setSharedExperience] = useState(() => {
     try {
       const experience = sessionStorage.getItem('living-word-experience-to-share') || '';

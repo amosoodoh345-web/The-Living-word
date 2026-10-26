@@ -24,6 +24,7 @@ export default defineConfig({
         'genesis-1': resolve(rootDirectory, 'genesis-1.html'),
         'Life in the spirit': resolve(rootDirectory, 'Life in the spirit.html'),
         reflection: resolve(rootDirectory, 'reflection.html'),
+        privacy: resolve(rootDirectory, 'privacy.html'),
       },
       output: {
         manualChunks(id) {

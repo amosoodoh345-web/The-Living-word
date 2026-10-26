@@ -1,3 +1,5 @@
+import { EXTRA_DEVOTIONALS } from './extraDevotionals';
+
 export const SEMINAR_SESSIONS = [
   { id: 'gods-love', title: "God's Love", scripture: '1 John 4:7-12', focus: 'Consider the Christian belief that God loves first and invites a response of faith and love.', question: 'Where do you see love expressed in this passage?' },
   { id: 'salvation', title: 'Salvation', scripture: 'Ephesians 2:4-10', focus: 'Read about grace, faith, and the good works Christians are invited to practice.', question: 'What does this passage say is gift, and what response follows?' },
@@ -15,7 +17,8 @@ export const DEVOTIONALS = [
   { title: 'Serve with your gifts', scripture: '1 Corinthians 12:4-7', reflection: 'Different gifts can serve one community. Your contribution need not look like someone else’s.', prompt: 'What ability could you offer for another person’s good?' },
   { title: 'Practice the fruit', scripture: 'Galatians 5:22-23', reflection: 'Spiritual growth becomes visible through qualities practiced in daily relationships.', prompt: 'Which fruit of the Spirit will guide one interaction today?' },
   { title: 'Renew your mind', scripture: 'Romans 12:1-2', reflection: 'A renewed mind learns to notice what is good and choose it with care.', prompt: 'What habit helps you recognize the good?' },
-  { title: 'Keep unity', scripture: 'Ephesians 4:1-6', reflection: 'Unity does not require sameness. Patience and humility help people remain connected through difference.', prompt: 'Where could you make room for another person’s perspective?' }
+  { title: 'Keep unity', scripture: 'Ephesians 4:1-6', reflection: 'Unity does not require sameness. Patience and humility help people remain connected through difference.', prompt: 'Where could you make room for another person’s perspective?' },
+  ...EXTRA_DEVOTIONALS
 ];
 
 export const DAILY_PRAYERS = [

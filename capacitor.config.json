@@ -1,0 +1,8 @@
+{
+  "appId": "org.livingword.app",
+  "appName": "The Living Word",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

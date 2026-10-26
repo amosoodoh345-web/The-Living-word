@@ -1,10 +1,18 @@
-const CACHE_NAME = 'life-in-the-spirit-v4';
-const APP_SHELL = ['/', '/manifest.webmanifest', '/spirit-icon-512.png'];
+const CACHE_NAME = 'life-in-the-spirit-v5';
+const APP_SHELL = [
+  '/',
+  '/manifest.webmanifest',
+  '/spirit-icon-512.png',
+  '/church.html',
+  '/Bible.html',
+  '/Life%20in%20the%20spirit.html',
+  '/reflection.html'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL))
+      .then((cache) => Promise.all(APP_SHELL.map((url) => cache.add(url).catch(() => undefined))))
       .then(() => self.skipWaiting())
   );
 });
@@ -25,11 +33,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put('/', copy));
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
           return response;
         })
-        .catch(() => caches.match('/'))
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('/')))
     );
     return;
   }

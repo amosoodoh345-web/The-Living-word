@@ -32,6 +32,18 @@ A phone-first devotional app for Scripture, prayer, and personal reflection. It 
 - `genesis-1.html` is the standalone Genesis 1 reading page.
 - `Life in the spirit.html` is the standalone devotional guide.
 - `reflection.html` is the standalone daily reflection page.
+- `privacy.html` is a draft privacy policy (replace the contact placeholder before publishing).
+
+## Android packaging (Capacitor) - preparation
+
+`capacitor.config.json` is prepared with a placeholder appId; set your final package ID before publishing, because it cannot change after release. Remaining steps, on a machine with Android Studio:
+
+1. `npm i @capacitor/core @capacitor/cli @capacitor/android`
+2. `npm run build`, then `npx cap add android` and `npx cap sync`
+3. Set versionCode/versionName, create an upload keystore (keep it out of git), build an AAB.
+4. Before Play submission: host the privacy policy, complete the Data Safety form, provide an account-deletion path for testimony accounts, compress `public/st-paul-preaching-athens.png` and the spirit icons, and obtain pastoral review of seminar and prayer content.
+
+`npm test` runs the unit tests in `src/lib`.
 
 Vite is configured to include all six HTML files in the production build. The legacy standalone pages are preserved alongside the React app.
 

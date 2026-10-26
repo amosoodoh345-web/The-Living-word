@@ -521,3 +521,9 @@ body[data-theme='dark'] .dash-feature-actions button { color: var(--dash-gold-so
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Seminar full sessions and prayer texts */
+.seminar-details, .prayer-text { margin-top: 12px; padding: 10px 14px; border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 12px; background: rgba(212, 175, 55, 0.08); }
+.seminar-details summary, .prayer-text summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
+.seminar-details ul { padding-left: 20px; }
+.prayer-text p { line-height: 1.7; }

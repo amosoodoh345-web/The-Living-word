@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test src/lib/dailyScripture.test.js src/lib/reminders.test.js src/lib/spiritualGrowth.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
