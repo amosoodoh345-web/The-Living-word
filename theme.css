@@ -1,0 +1,213 @@
+/* Shared Design D theme for the static pages
+   (Daily Word, Bible, Genesis, Reflection). Linked after each page's own styles. */
+
+:root {
+  --ink: #101b3d;
+  --muted: #566082;
+  --paper: #f5f6fb;
+  --white: #ffffff;
+  --sage: #e8eaf5;
+  --deep-sage: #101b3d;
+  --gold: #9c7a12;
+  --line: #e2e5f1;
+  --sand: #fbf5e1;
+  --shadow: 0 18px 45px rgba(16, 27, 61, .12);
+  --emerald-950: #101b3d;
+  --emerald-800: #1a2a5e;
+  --gold-bright: #d4af37;
+  --gold-soft: #f3e9c5;
+  --purple: #673ab7;
+  --fire: #ff6b35;
+  --navy: #101b3d;
+}
+
+body.dark-mode {
+  --ink: #f4f6ff;
+  --muted: #b8c0e0;
+  --paper: #0a1130;
+  --white: #121c47;
+  --sage: #1d2656;
+  --deep-sage: #e4dcfa;
+  --gold: #e6c65a;
+  --line: rgba(212, 175, 55, .22);
+  --sand: #1d2656;
+  --emerald-950: #f4f6ff;
+  --emerald-800: #25366f;
+  --gold-bright: #d4af37;
+  --gold-soft: #f3e9c5;
+  --shadow: 0 20px 50px rgba(0, 0, 0, .4);
+}
+
+html { scroll-behavior: smooth; }
+body { -webkit-text-size-adjust: 100%; }
+h1, h2, h3 { color: var(--emerald-950); text-wrap: balance; }
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: var(--ink); }
+a:focus-visible, button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 2px; }
+
+/* Backgrounds */
+.bible-page, .reflection-page { background: radial-gradient(circle at 90% 0, rgba(103, 58, 183, .1), transparent 34%), radial-gradient(circle at 0 30%, rgba(212, 175, 55, .1), transparent 36%), var(--paper); }
+body:not([class]) { background: radial-gradient(circle at 90% 0, rgba(103, 58, 183, .1), transparent 34%), var(--paper); }
+
+/* Header */
+header, .page-header { position: sticky; top: 0; z-index: 30; border-bottom: 2px solid var(--gold-bright); background: rgba(255, 253, 247, .94); backdrop-filter: blur(10px); }
+header, .page-header { padding: 8px 0; }
+.lifeos-site-nav { color: var(--ink); }
+.lifeos-site-brand { color: var(--ink); }
+.lifeos-site-mark { background: var(--navy, #101b3d); color: var(--gold-bright); box-shadow: 0 0 0 2px var(--gold-bright); }
+.lifeos-site-nav-links a { color: var(--muted); }
+.lifeos-site-nav-links a:hover, .lifeos-site-nav-links a[aria-current='page'] { color: var(--ink); background: rgba(212, 175, 55, .2); }
+
+/* Heroes */
+.hero, .bible-hero {
+  position: relative;
+  color: #fffdf7;
+  background-color: #101b3d;
+  background-image: radial-gradient(circle at 84% 12%, rgba(255, 107, 53, .2), transparent 26%), linear-gradient(100deg, rgba(16, 27, 61, .97) 0%, rgba(26, 42, 94, .86) 52%, rgba(26, 42, 94, .42) 100%), url('/st-paul-preaching-athens.png');
+  box-shadow: inset 0 -4px 0 var(--gold-bright);
+}
+.bible-hero { border: 1px solid var(--gold); border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(16, 27, 61, .28), inset 0 0 0 5px rgba(212, 175, 55, .14); }
+.hero .eyebrow, .bible-hero .eyebrow { color: var(--gold-bright); }
+.hero h1, .bible-hero h1 { color: #fffdf7; letter-spacing: -.02em; }
+.hero-copy, .bible-hero .lead { color: rgba(255, 253, 247, .9); }
+.date-card { border: 1px solid rgba(212, 175, 55, .5); border-radius: 16px; background: rgba(16, 27, 61, .55); }
+.date-card p { color: var(--gold-bright); }
+.eyebrow { color: var(--gold); letter-spacing: .18em; }
+h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; }
+
+/* Quick navigation */
+.quick-button { min-height: 48px; border-radius: 14px; border-color: var(--gold-soft); color: var(--emerald-800); transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
+.quick-button span { color: var(--gold); }
+.quick-button:hover { color: var(--gold-soft); background: var(--emerald-800); border-color: var(--emerald-800); box-shadow: 0 14px 28px rgba(16, 27, 61, .2); }
+.quick-button:hover span { color: var(--gold-bright); }
+
+/* Cards and panels */
+.scripture, .card, .journal, .passage, .reader, .side-card, .reflection-card, .app-shell, .reflection-intro {
+  border-radius: 16px;
+}
+.scripture { border: 1px solid var(--gold-soft); border-top: 4px solid var(--gold-bright); box-shadow: var(--shadow); }
+.scripture::before { color: var(--gold-soft); }
+.card { border: 1px solid var(--gold-soft); border-top: 3px solid var(--gold-bright); box-shadow: 0 10px 28px rgba(16, 27, 61, .07); transition: transform .25s ease, box-shadow .25s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px rgba(16, 27, 61, .16); }
+.card.gold { background: linear-gradient(180deg, #fffaf0, #f6ebcc); border-color: var(--gold-soft); }
+.icon { color: var(--purple); }
+.reflection-intro { color: #fffdf7; background: radial-gradient(circle at 88% 10%, rgba(255, 107, 53, .2), transparent 30%), linear-gradient(160deg, #101b3d, #1a2a5e 75%, #673ab7); border-bottom: 3px solid var(--gold-bright); }
+.reflection-intro p { color: #e1e5f5; }
+.journal { border-color: var(--gold-soft); box-shadow: var(--shadow); }
+textarea { border-radius: 12px; border-color: var(--line); background: #fffaf0; }
+textarea:focus { border-color: var(--gold); }
+.saved { color: var(--deep-sage); font-weight: 700; }
+
+/* Buttons */
+.button, .action-btn, .theme-toggle, .back-link {
+  border-radius: 999px;
+  transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.button, .action-btn { border-color: var(--emerald-800); color: var(--emerald-800); }
+.button:hover, .button.active, .action-btn:hover { color: var(--gold-soft); background: var(--emerald-800); transform: translateY(-1px); }
+.action-btn.primary, #save-daily-note { color: #101b3d; border-color: #b69322; background: linear-gradient(180deg, #e6cb68, #d4af37); box-shadow: 0 10px 22px rgba(16, 27, 61, .2); }
+.action-btn.primary:hover, #save-daily-note:hover { color: #101b3d; background: linear-gradient(180deg, #efd983, #d4af37); }
+.theme-toggle { border-color: var(--emerald-800); color: var(--emerald-800); }
+
+/* Bible reader */
+.app-shell { border-color: var(--gold-soft); box-shadow: var(--shadow); }
+.sidebar { border-radius: 14px; background: linear-gradient(180deg, #fbf6e6, #ebeef8); }
+body.dark-mode .sidebar { background: var(--sage); }
+.version-option, .book-item, .verse-button, .search-field { border-radius: 10px; border-color: var(--line); transition: transform .18s ease, background .18s ease, border-color .18s ease; }
+.version-option { background: var(--sand); }
+.version-option:hover, .book-item:hover, .verse-button:hover { transform: translateY(-1px); border-color: var(--gold-bright); }
+.version-option.active, .book-item.active { color: var(--gold-soft); background: var(--emerald-800); border-color: var(--emerald-800); }
+body.dark-mode .version-option.active, body.dark-mode .book-item.active { color: #101b3d; background: var(--gold-bright); border-color: var(--gold-bright); }
+.chapter-button { border-radius: 10px; }
+.chapter-button.active { color: var(--gold-soft); background: var(--emerald-800); border-color: var(--emerald-800); }
+.verse-display { border-radius: 14px; border: 1px solid var(--gold-soft); border-left: 4px solid var(--gold-bright); background: linear-gradient(180deg, var(--sand), var(--white)); }
+.verse-text { font-family: "Playfair Display", Georgia, serif; line-height: 1.95; }
+.verse-badge { color: var(--emerald-800); background: var(--gold-soft); }
+body.dark-mode .verse-badge { color: var(--ink); background: rgba(212, 175, 55, .2); }
+.verse-button.active { border-color: var(--gold); background: var(--gold-soft); }
+body.dark-mode .verse-button.active { background: rgba(217, 180, 90, .2); }
+.verse-button strong { color: var(--gold); }
+.bible-art-credit { color: rgba(255, 253, 247, .75); }
+
+/* Genesis chapter */
+.passage { border: 1px solid var(--gold-bright); border-top: 4px solid var(--gold-bright); box-shadow: 0 18px 45px rgba(16, 27, 61, .14); }
+.verse { font-family: "Playfair Display", Georgia, serif; font-weight: 600; line-height: 1.85; }
+.number { color: var(--gold); font-family: "DM Sans", sans-serif; }
+
+/* Reflection */
+.reflection-card { border: 1px solid var(--gold-bright); box-shadow: 0 24px 60px rgba(16, 27, 61, .18); }
+.reflection-reading-pane { background: radial-gradient(circle at 85% 12%, rgba(255, 107, 53, .2), transparent 28%), linear-gradient(155deg, #101b3d, #1a2a5e 75%, #673ab7); box-shadow: inset -4px 0 0 var(--gold-bright); }
+.reflection-reading-pane .eyebrow { color: var(--gold-bright); }
+.reflection-prompt { border-left: 4px solid var(--gold-bright); border-radius: 0 12px 12px 0; background: #fffaf0; }
+.reflection-card textarea:focus-visible { box-shadow: inset 0 -2px 0 var(--gold); }
+
+/* Footer */
+footer { border-top: 2px solid var(--gold-bright); color: var(--gold-soft); background: #101b3d; text-align: center; letter-spacing: .08em; }
+footer .shell { color: var(--gold-soft); }
+
+body.dark-mode header,
+body.dark-mode .page-header {
+  background: rgba(10, 17, 48, .95);
+}
+body.dark-mode .journal,
+body.dark-mode .scripture,
+body.dark-mode .card,
+body.dark-mode .passage,
+body.dark-mode .reflection-card {
+  background-color: var(--white);
+}
+body.dark-mode textarea {
+  color: var(--ink);
+  background-color: var(--paper);
+}
+
+/* Gentle entrance animation */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.hero, .bible-hero, .scripture, .card, .reflection-card, .passage, .app-shell, .quick-button { animation: rise .6s ease both; }
+.card:nth-child(2) { animation-delay: .08s; }
+.card:nth-child(3) { animation-delay: .16s; }
+.card:nth-child(4) { animation-delay: .24s; }
+
+/* Tablet and phone */
+@media (max-width: 960px) {
+  .app-shell { grid-template-columns: 1fr; min-height: 0; }
+  .book-list { max-height: 260px; }
+}
+@media (max-width: 720px) {
+  header, .page-header { position: static; }
+  .quick-nav { grid-template-columns: 1fr 1fr; margin-top: -24px; }
+  .bible-hero { border-radius: 16px; }
+  .bible-main { padding-top: 32px; }
+  .reflection-card, .scripture, .card { border-radius: 14px; }
+  .toolbar { align-items: stretch; }
+  .verse-actions .action-btn { flex: 1 1 140px; }
+  .lifeos-site-nav { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .lifeos-site-nav-links { display: flex; max-width: 100%; gap: 4px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .lifeos-site-nav-links::-webkit-scrollbar { display: none; }
+  .lifeos-site-nav-links a { min-height: 44px; padding: 10px 12px; white-space: nowrap; }
+  body .seminar-card .teaching,
+  body .seminar-card .practice,
+  body .book p,
+  body .book-names { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+button {
+  min-height: 44px !important;
+}
+
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  min-height: 44px !important;
+  font-size: 16px !important;
+}
+
+.text-button,
+.bible-continue {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

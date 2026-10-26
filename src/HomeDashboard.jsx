@@ -5,8 +5,30 @@ import { todayIndex } from './LifeOSPages';
 import { CrossLogo, Icon } from './Icons';
 import { extractPassageText, getDailyScripture } from './lib/dailyScripture';
 import { formatCountdown, getNextReminder } from './lib/reminders';
+import { SITE_NAVIGATION } from './siteNavigation';
 
 const DAY_MS = 86400000;
+
+const MENU_PAGES = [
+  { page: 'home', label: 'Home' },
+  { page: 'bible', label: 'Bible Reading' },
+  { page: 'seminar', label: 'Life in the Spirit Seminar' },
+  { page: 'devotional', label: 'Daily Devotionals' },
+  { page: 'prayer', label: 'Prayer, Rosary & Chaplet' },
+  { page: 'encouragement', label: 'Spiritual Reflections' },
+  { page: 'testimonies', label: 'Testimonies' },
+  { page: 'ministries', label: 'Church & Ministries' }
+];
+
+const FEATURES = [
+  { id: 'bible', icon: 'book', title: 'Bible Reading', text: 'Read Scripture in KJV, WEB or BBE and keep your place as you go.', actions: [{ label: 'Open the Bible', page: 'bible' }] },
+  { id: 'seminar', icon: 'learn', title: 'Life in the Spirit Seminar', text: 'Seven guided sessions to open your heart to the Holy Spirit.', actions: [{ label: 'Start learning', page: 'seminar' }] },
+  { id: 'devotional', icon: 'heart', title: 'Daily Devotionals', text: 'A short reflection and prayer to begin each day with God.', actions: [{ label: 'Read today’s devotional', page: 'devotional' }] },
+  { id: 'rosary', icon: 'prayer', title: 'Rosary and Chaplet', text: 'Pray along with guided Rosary and Divine Mercy Chaplet sequences.', actions: [{ label: 'Rosary', page: 'rosary' }, { label: 'Chaplet', page: 'chaplet' }] },
+  { id: 'reflections', icon: 'journal', title: 'Spiritual Reflections', text: 'Browse devotional reflections and write in your private prayer journal.', actions: [{ label: 'Find a reflection', page: 'encouragement' }, { label: 'Journal', page: 'journal' }] },
+  { id: 'testimonies', icon: 'testimony', title: 'Testimonies', text: 'Record what God has done in your life and be encouraged by His faithfulness.', actions: [{ label: 'Share a testimony', page: 'testimonies' }] },
+  { id: 'ministries', icon: 'home', title: 'Church and Ministries', text: 'Discover ministries, worship songs and ways to belong to the Church.', actions: [{ label: 'Ministries', page: 'ministries' }, { label: 'Worship songs', page: 'songs' }] }
+];
 
 const formatClock = (time) => {
   const [hours, minutes] = time.split(':').map(Number);
@@ -68,6 +90,19 @@ export default function HomeDashboard({
   onOpenEncouragement
 }) {
   const now = useNow(30000);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const closeOnEscape = (event) => { if (event.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [menuOpen]);
+
+  const goTo = (page) => {
+    setMenuOpen(false);
+    onNavigate(page);
+  };
   const scripture = getDailyScripture(now);
   const verse = useDailyVerse(scripture);
 
@@ -104,6 +139,15 @@ export default function HomeDashboard({
         </div>
         <div className="dash-header-actions">
           <button
+            className="dash-icon-button dash-menu-toggle"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="dash-menu"
+          >
+            <span className={menuOpen ? 'dash-burger is-open' : 'dash-burger'} aria-hidden="true"><span /><span /><span /></span>
+          </button>
+          <button
             className="dash-icon-button"
             onClick={() => onNavigate('reminders')}
             aria-label={bellHasDot ? 'Reminders: one is coming up within 24 hours' : 'Reminders'}
@@ -116,6 +160,62 @@ export default function HomeDashboard({
           </button>
         </div>
       </header>
+
+      {menuOpen && (
+        <>
+          <div className="dash-menu-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+          <nav className="dash-menu" id="dash-menu" aria-label="Explore LIFEOS">
+            <p className="dash-menu-heading">In the app</p>
+            <ul>
+              {MENU_PAGES.map((item) => (
+                <li key={item.page}><button onClick={() => goTo(item.page)}>{item.label}</button></li>
+              ))}
+            </ul>
+            <p className="dash-menu-heading">Full pages</p>
+            <ul>
+              {SITE_NAVIGATION.filter((item) => item.id !== 'home').map((item) => (
+                <li key={item.id}><a href={item.href}>{item.label}</a></li>
+              ))}
+            </ul>
+          </nav>
+        </>
+      )}
+
+      <section className="dash-hero" aria-labelledby="dash-hero-title">
+        <div className="dash-hero-glow" aria-hidden="true" />
+        <p className="dash-hero-eyebrow">Life in the Spirit</p>
+        <h1 id="dash-hero-title">LIFEOS</h1>
+        <p className="dash-hero-lead">“Come to me, all you who are weary and burdened, and I will give you rest.” Walk closer to God each day through Scripture, prayer and learning.</p>
+        <p className="dash-hero-ref">Matthew 11:28</p>
+        <div className="dash-actions">
+          <button className="dash-button dash-button-gold" onClick={() => onNavigate('bible')}>Read the Bible <Icon name="arrow" size={18} /></button>
+          <button className="dash-button dash-button-ghost" onClick={() => (nextSession ? onOpenSession(nextSession.id) : onNavigate('seminar'))}>
+            {completedSessions > 0 && nextSession ? 'Continue the Seminar' : 'Begin the Seminar'}
+          </button>
+          <button className="dash-button dash-button-ghost" onClick={() => onNavigate('devotional')}>Daily Devotional</button>
+        </div>
+      </section>
+
+      <section className="dash-features" aria-labelledby="dash-features-title">
+        <div className="dash-features-head">
+          <p className="dash-kicker">Everything in one place</p>
+          <h2 id="dash-features-title">Grow closer to God</h2>
+        </div>
+        <div className="dash-feature-grid">
+          {FEATURES.map((feature) => (
+            <article className="dash-feature" key={feature.id}>
+              <span className="dash-feature-icon"><Icon name={feature.icon} /></span>
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+              <div className="dash-feature-actions">
+                {feature.actions.map((action) => (
+                  <button key={action.page} onClick={() => onNavigate(action.page)}>{action.label} <Icon name="arrow" size={16} /></button>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="dash-scripture" aria-labelledby="dash-scripture-title">
         <span className="dash-scripture-cross" aria-hidden="true">✝</span>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A quiet daily space for Scripture, wisdom, worship, and reflection.">
+    <title>The Living Word | Daily Reflection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="church.css">
+    <link rel="stylesheet" href="/site-navigation.css">
+    <style>
+        :root {
+            --ink: #24332e;
+            --muted: #68746d;
+            --paper: #f7f6f0;
+            --white: #fffefa;
+            --sage: #dce7dd;
+            --deep-sage: #31574a;
+            --gold: #c6964a;
+            --line: #dfe4dc;
+            --shadow: 0 18px 45px rgba(36, 51, 46, .08);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "DM Sans", sans-serif;
+            line-height: 1.6;
+        }
+        button, textarea { font: inherit; }
+        button { cursor: pointer; }
+        .shell { width: min(1160px, calc(100% - 40px)); margin: auto; }
+        header {
+            padding: 22px 0;
+            border-bottom: 1px solid rgba(49, 87, 74, .12);
+            background: rgba(255, 254, 250, .82);
+        }
+        .nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; font-weight: 700; letter-spacing: .04em; }
+        .brand-mark { display: grid; place-items: center; width: 39px; height: 39px; color: var(--white); background: var(--deep-sage); border-radius: 50%; font-size: 20px; }
+        nav { display: flex; gap: 26px; color: var(--muted); font-size: 14px; }
+        nav a { color: inherit; text-decoration: none; }
+        nav a:hover { color: var(--deep-sage); }
+        .hero { padding: 74px 0 58px; color: var(--white); background-color: #21473d; background-image: linear-gradient(90deg, rgba(24, 46, 39, .94) 0%, rgba(24, 46, 39, .82) 48%, rgba(24, 46, 39, .34) 100%), url('/st-paul-preaching-athens.png'); background-position: center, center 42%; background-size: cover; }
+        .hero .eyebrow { color: #e3c17e; }
+        .hero h1 { color: var(--white); }
+        .hero-copy { color: rgba(255, 254, 250, .86); }
+        .hero-grid { display: grid; grid-template-columns: 1.25fr .75fr; align-items: end; gap: 70px; }
+        .eyebrow { color: var(--gold); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+        h1, h2, h3 { margin: 0; font-family: "Playfair Display", serif; line-height: 1.12; }
+        h1 { max-width: 680px; margin-top: 14px; font-size: clamp(44px, 7vw, 76px); letter-spacing: -.03em; }
+        .hero-copy { max-width: 530px; margin: 22px 0 0; color: var(--muted); font-size: 17px; }
+        .date-card { padding: 28px; background: rgba(255, 254, 250, .12); color: var(--white); border: 1px solid rgba(255, 254, 250, .3); border-radius: 4px; backdrop-filter: blur(8px); }
+        .date-card p { margin: 0 0 8px; color: #e3c17e; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; }
+        .date-card strong { display: block; font-family: "Playfair Display", serif; font-size: 28px; }
+        main { padding: 58px 0 80px; }
+        .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 23px; }
+        h2 { font-size: 34px; }
+        .section-heading p { max-width: 390px; margin: 0; color: var(--muted); font-size: 14px; text-align: right; }
+        .scripture { position: relative; padding: 40px 46px; margin-bottom: 48px; overflow: hidden; background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow); }
+        .scripture::before { content: "“"; position: absolute; top: -28px; left: 20px; color: var(--sage); font: 170px/1 "Playfair Display", serif; }
+        .scripture blockquote { position: relative; max-width: 820px; margin: 0; font: 26px/1.45 "Playfair Display", serif; }
+        .reference { position: relative; display: block; margin-top: 18px; color: var(--deep-sage); font-size: 14px; font-weight: 700; }
+        .scripture-actions { display: flex; gap: 10px; margin-top: 26px; }
+        .button { border: 1px solid var(--deep-sage); padding: 10px 15px; color: var(--deep-sage); background: transparent; font-size: 13px; font-weight: 700; }
+        .button:hover, .button.active { color: var(--white); background: var(--deep-sage); }
+        .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { min-height: 220px; padding: 28px; border: 1px solid var(--line); background: var(--white); }
+        .card.gold { background: #fbf3e5; border-color: #efdfc4; }
+        .card h3 { margin: 13px 0 10px; font-size: 28px; }
+        .card p { margin: 0; color: var(--muted); }
+        .icon { color: var(--gold); font-size: 24px; }
+        .reflection-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 20px; margin-top: 58px; }
+        .reflection-intro { padding: 30px; background: var(--deep-sage); color: var(--white); }
+        .reflection-intro p { color: #c5d7ca; }
+        .reflection-intro h2 { margin-top: 10px; }
+        .journal { padding: 30px; background: var(--white); border: 1px solid var(--line); }
+        label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 13px; font-weight: 700; }
+        textarea { width: 100%; min-height: 140px; resize: vertical; padding: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); outline: none; }
+        textarea:focus { border-color: var(--deep-sage); }
+        .journal-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 15px; }
+        .saved { color: var(--deep-sage); font-size: 13px; }
+        footer { padding: 25px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+        @media (max-width: 720px) {
+            .shell { width: min(100% - 28px, 560px); }
+            nav { display: none; }
+            .hero { padding: 52px 0 42px; }
+            .hero-grid, .reflection-layout { grid-template-columns: 1fr; gap: 28px; }
+            .section-heading { display: block; }
+            .section-heading p { margin-top: 10px; text-align: left; }
+            .scripture { padding: 31px 24px; }
+            .scripture blockquote { font-size: 23px; }
+            .cards { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+    <meta name="theme-color" content="#101b3d">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/spirit-icon-512.png" type="image/png">
+    <link rel="apple-touch-icon" href="/spirit-apple-touch-icon.png">
+</head>
+<body>
+    <header><div class="shell" data-site-navigation data-current-page="daily"></div></header>
+
+    <section class="hero" id="top">
+        <div class="shell hero-grid">
+            <div><span class="eyebrow">A daily place to be still</span><h1>Let the word shape your day.</h1><p class="hero-copy">Begin with Scripture. Make room for wisdom. Carry a little more peace into the ordinary moments.</p></div>
+            <div class="date-card"><p>Today's reflection</p><strong id="today"></strong><span>Take a few quiet minutes for what matters most.</span></div>
+        </div>
+    </section>
+
+    <div class="quick-nav shell" aria-label="Quick navigation">
+        <a class="quick-button" href="Bible.html"><span>▤</span> Bible</a>
+        <a class="quick-button" href="reflection.html"><span>✎</span> Reflection</a>
+        <a class="quick-button" href="#scripture"><span>✦</span> Today's Word</a>
+        <a class="quick-button" href="#wisdom"><span>◌</span> Wisdom</a>
+    </div>
+
+    <main class="shell">
+        <section id="scripture">
+            <div class="section-heading"><div><span class="eyebrow">The word of God</span><h2>Today's Scripture</h2></div><p id="daily-caption">A promise to return to throughout the day.</p></div>
+            <article class="scripture">
+                <blockquote id="verse"></blockquote><span class="reference" id="reference"></span>
+                <div class="scripture-actions"><button class="button" id="favorite" type="button">♡ Save verse</button><button class="button" id="new-verse" type="button">Next verse</button></div>
+            </article>
+        </section>
+
+        <section id="wisdom">
+            <div class="section-heading"><div><span class="eyebrow">For the journey</span><h2>Words to carry</h2></div><p>Small reminders can become steady anchors.</p></div>
+            <div class="cards">
+                <article class="card"><span class="icon">✧</span><h3>Exaltation</h3><p>Lift your eyes above today's noise. God is worthy of your praise in every season, and His goodness is never out of reach.</p></article>
+                <article class="card gold"><span class="icon">◌</span><h3>Wisdom</h3><p>Choose the patient answer, the honest step, and the generous interpretation. Quiet faithfulness is still powerful.</p></article>
+            </div>
+        </section>
+
+        <section class="spirit-section" id="seminar">
+            <div class="section-heading"><div><span class="eyebrow">Grow in grace</span><h2>Life in the Spirit</h2></div><p>A simple everyday guide to hearing God's word, growing in character, and letting faith shape the way you live.</p></div>
+            <div class="seminar-grid">
+                <article class="seminar-card"><span class="seminar-number">01 · STILLNESS</span><h3>Be still</h3><p class="passage">“Be still, and know that I am God.” <strong>Psalm 46:10</strong></p><p class="teaching">Stillness is not wasting time. It is making room to notice God's presence before the noise of the day takes over. You can bring your worries to Him without having every answer.</p><p class="practice"><strong>Today:</strong> Sit quietly for two minutes and breathe a simple prayer: “Lord, I am here.”</p><a class="text-button" href="Life%20in%20the%20spirit.html#be-still">Begin practice →</a></article>
+                <article class="seminar-card featured"><span class="seminar-number">02 · COURAGE</span><h3>Walk with courage</h3><p class="passage">“Be strong and of a good courage; fear not, nor be afraid.” <strong>Deuteronomy 31:6</strong></p><p class="teaching">Courage does not mean that fear disappears. It means you continue to do what is right while trusting that God goes with you through difficult conversations, new beginnings, and uncertain days.</p><p class="practice"><strong>Today:</strong> Take one honest, faithful step toward the thing you have been avoiding.</p><a class="text-button" href="Life%20in%20the%20spirit.html#walk-with-courage">Read lesson →</a></article>
+                <article class="seminar-card"><span class="seminar-number">03 · GIVING</span><h3>Live generously</h3><p class="passage">“God loveth a cheerful giver.” <strong>2 Corinthians 9:7</strong></p><p class="teaching">Generosity is more than money. It can be patience, encouragement, hospitality, time, or forgiveness. What we have becomes a blessing when we hold it with an open heart.</p><p class="practice"><strong>Today:</strong> Give someone your full attention and encourage them with sincere words.</p><a class="text-button" href="Life%20in%20the%20spirit.html#live-generously">Reflect →</a></article>
+            </div>
+        </section>
+
+        <section class="books-section" id="books">
+            <div class="section-heading"><div><span class="eyebrow">Read and be renewed</span><h2>Books of wisdom</h2></div><p>Ideas for a deeper inner life, thoughtful faith, and steady encouragement.</p></div>
+            <div class="book-list">
+                <article class="book"><div class="book-cover cover-olive">HOLY<br>WISDOM</div><div><span class="book-type">The book of Proverbs</span><h3>Proverbs</h3><p>Practical wisdom for speech, work, friendship, discipline, and a life that honors God. <strong>Key thought:</strong> wisdom begins with reverence for the Lord.</p></div></article>
+                <article class="book"><div class="book-cover cover-sunrise">MEANING<br>UNDER<br>THE SUN</div><div><span class="book-type">The book of Ecclesiastes</span><h3>Ecclesiastes</h3><p>An honest search for meaning in a busy world. It teaches us to receive ordinary joys as gifts and to trust God with what we cannot control.</p></div></article>
+                <article class="book"><div class="book-cover cover-ink">SONGS<br>FOR<br>THE SOUL</div><div><span class="book-type">The book of Psalms</span><h3>Psalms</h3><p>Prayers and songs for every season: praise, grief, gratitude, fear, and hope. Bring your whole heart to God and find encouragement there.</p></div></article>
+            </div>
+        </section>
+
+        <section class="bible-section" id="bible">
+            <div class="section-heading"><div><span class="eyebrow">Explore Scripture</span><h2>The whole Bible</h2></div><p>All 73 books, including the Deuterocanonical books, arranged for a first journey through God's story.</p></div>
+            <div class="bible-intro"><strong>For a new reader:</strong> Start with John to meet Jesus, then read Psalms when you need prayer and Proverbs when you need practical wisdom.</div>
+            <div class="bible-book-strip" id="bible-book-strip" aria-label="Choose a Bible book"></div>
+            <div class="bible-groups">
+                <article class="bible-group"><h3>Old Testament <span>39 books</span></h3><p class="book-names"><strong>Law:</strong> Genesis · Exodus · Leviticus · Numbers · Deuteronomy<br><strong>History:</strong> Joshua · Judges · Ruth · 1 Samuel · 2 Samuel · 1 Kings · 2 Kings · 1 Chronicles · 2 Chronicles · Ezra · Nehemiah · Esther<br><strong>Poetry and Wisdom:</strong> Job · Psalms · Proverbs · Ecclesiastes · Song of Solomon<br><strong>Prophets:</strong> Isaiah · Jeremiah · Lamentations · Ezekiel · Daniel · Hosea · Joel · Amos · Obadiah · Jonah · Micah · Nahum · Habakkuk · Zephaniah · Haggai · Zechariah · Malachi</p></article>
+                <article class="bible-group"><h3>Deuterocanonical <span>7 books</span></h3><p class="book-names">Tobit · Judith · Wisdom of Solomon · Sirach · Baruch · 1 Maccabees · 2 Maccabees</p></article>
+                <article class="bible-group"><h3>New Testament <span>27 books</span></h3><p class="book-names"><strong>Gospels:</strong> Matthew · Mark · Luke · John<br><strong>Early Church:</strong> Acts<br><strong>Letters:</strong> Romans · 1 Corinthians · 2 Corinthians · Galatians · Ephesians · Philippians · Colossians · 1 Thessalonians · 2 Thessalonians · 1 Timothy · 2 Timothy · Titus · Philemon · Hebrews · James · 1 Peter · 2 Peter · 1 John · 2 John · 3 John · Jude<br><strong>Hope:</strong> Revelation</p></article>
+            </div>
+            <div class="bible-navigator">
+                <div class="navigator-heading"><div><span class="eyebrow">Book, chapter, verse</span><h3>Find a Bible reference</h3></div><span class="navigator-count">73 books</span></div>
+                <div class="navigator-controls"><label>Book<select id="bible-book"></select></label><label>Chapter<select id="bible-chapter"></select></label><label>Verse<input id="bible-verse" type="number" min="1" value="1"></label></div>
+                <div class="chapter-label">Chapters in this book</div><div class="chapter-grid" id="chapter-grid"></div>
+                <p class="reference-result" id="reference-result" aria-live="polite"></p><div class="verse-list" id="verse-list"></div>
+            </div>
+        </section>
+
+        <section class="experience-section" id="experience">
+            <div class="section-heading"><div><span class="eyebrow">Your walk with God</span><h2>My experience notebook</h2></div><p>Keep a private note or prepare your experience to share with the community. Shared stories are reviewed before publication.</p></div>
+            <div class="experience-notebook"><label for="experience-note">Write what you are learning</label><textarea id="experience-note" placeholder="Date:&#10;&#10;What happened...&#10;&#10;What I learned about God, myself, or others..."></textarea><div class="journal-footer"><span class="saved" id="experience-status" aria-live="polite"></span><div class="experience-actions"><button class="button" id="save-experience" type="button">Save privately</button><button class="button" id="share-experience" type="button">Share experience</button></div></div></div>
+        </section>
+
+        <section class="reflection-layout" id="reflection">
+            <div class="reflection-intro"><span class="eyebrow">Be present</span><h2>Daily reflection</h2><p>What is this Scripture inviting you to notice, release, or practice today?</p></div>
+            <div class="journal"><label for="note">Write a prayer or thought</label><textarea id="note" placeholder="Today I am grateful for...\n\nI want to remember..."></textarea><div class="journal-footer"><span class="saved" id="saved-status" aria-live="polite"></span><button class="button" id="save-note" type="button">Save reflection</button></div></div>
+        </section>
+    </main>
+    <footer><div class="shell">ABIDE · A quiet daily practice of faith and reflection.</div></footer>
+
+    <div class="welcome-modal" id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-card"><button class="modal-close" type="button" aria-label="Close welcome message" data-close-modal>×</button><span class="modal-symbol">✦</span><span class="eyebrow">Welcome to The Living Word</span><h2 id="welcome-title">A little room for your soul.</h2><p>Come here each day for a word of Scripture, a thought for the journey, and a moment to meet God in the stillness.</p><button class="button" type="button" data-close-modal>Enter today's reflection</button></div>
+    </div>
+    <script>
+        const verseSets = [
+            { theme: "Financial wisdom", verses: [
+                { text: "The blessing of the Lord, it maketh rich, and he addeth no sorrow with it.", reference: "Proverbs 10:22" },
+                { text: "Honour the Lord with thy substance, and with the firstfruits of all thine increase.", reference: "Proverbs 3:9" },
+                { text: "The plans of the diligent lead surely to abundance.", reference: "Proverbs 21:5" },
+                { text: "He that is faithful in that which is least is faithful also in much.", reference: "Luke 16:10" },
+                { text: "It is more blessed to give than to receive.", reference: "Acts 20:35" }
+            ] },
+            { theme: "Courage and encouragement", verses: [
+                { text: "Be strong and of a good courage; fear not, nor be afraid.", reference: "Deuteronomy 31:6" },
+                { text: "The Lord is my light and my salvation; whom shall I fear?", reference: "Psalm 27:1" },
+                { text: "I can do all things through Christ which strengtheneth me.", reference: "Philippians 4:13" },
+                { text: "Cast thy burden upon the Lord, and he shall sustain thee.", reference: "Psalm 55:22" },
+                { text: "My grace is sufficient for thee: for my strength is made perfect in weakness.", reference: "2 Corinthians 12:9" }
+            ] },
+            { theme: "Peace and prayer", verses: [
+                { text: "Be still, and know that I am God.", reference: "Psalm 46:10" },
+                { text: "The Lord is nigh unto all them that call upon him.", reference: "Psalm 145:18" },
+                { text: "Whatever ye do, do it heartily, as to the Lord, and not unto men.", reference: "Colossians 3:23" },
+                { text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee.", reference: "Isaiah 26:3" },
+                { text: "The peace of God, which passeth all understanding, shall keep your hearts and minds.", reference: "Philippians 4:7" }
+            ] },
+            { theme: "Wisdom for daily living", verses: [
+                { text: "The fear of the Lord is the beginning of wisdom.", reference: "Proverbs 9:10" },
+                { text: "A soft answer turneth away wrath: but grievous words stir up anger.", reference: "Proverbs 15:1" },
+                { text: "In all thy ways acknowledge him, and he shall direct thy paths.", reference: "Proverbs 3:6" },
+                { text: "Let every man be swift to hear, slow to speak, slow to wrath.", reference: "James 1:19" },
+                { text: "If any of you lack wisdom, let him ask of God.", reference: "James 1:5" }
+            ] },
+            { theme: "Hope and spiritual growth", verses: [
+                { text: "Those that wait upon the Lord shall renew their strength.", reference: "Isaiah 40:31" },
+                { text: "Your word is a lamp unto my feet, and a light unto my path.", reference: "Psalm 119:105" },
+                { text: "The fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith.", reference: "Galatians 5:22" },
+                { text: "If any man be in Christ, he is a new creature.", reference: "2 Corinthians 5:17" },
+                { text: "He which hath begun a good work in you will perform it until the day of Jesus Christ.", reference: "Philippians 1:6" }
+            ] },
+            { theme: "Love and relationships", verses: [
+                { text: "Let all your things be done with charity.", reference: "1 Corinthians 16:14" },
+                { text: "Be ye kind one to another, tenderhearted, forgiving one another.", reference: "Ephesians 4:32" },
+                { text: "A friend loveth at all times.", reference: "Proverbs 17:17" },
+                { text: "Bear ye one another's burdens, and so fulfil the law of Christ.", reference: "Galatians 6:2" },
+                { text: "Above all things have fervent charity among yourselves.", reference: "1 Peter 4:8" }
+            ] },
+            { theme: "Gratitude and worship", verses: [
+                { text: "O give thanks unto the Lord; for he is good: for his mercy endureth for ever.", reference: "Psalm 136:1" },
+                { text: "I will bless the Lord at all times: his praise shall continually be in my mouth.", reference: "Psalm 34:1" },
+                { text: "In every thing give thanks: for this is the will of God.", reference: "1 Thessalonians 5:18" },
+                { text: "Let us come before his presence with thanksgiving.", reference: "Psalm 95:2" },
+                { text: "Great is the Lord, and greatly to be praised.", reference: "Psalm 48:1" }
+            ] }
+        ];
+        const verse = document.querySelector('#verse');
+        const reference = document.querySelector('#reference');
+        const favorite = document.querySelector('#favorite');
+        const currentDate = new Date();
+        const dailySet = verseSets[currentDate.getDay()];
+        const verses = dailySet.verses;
+        let verseIndex = 0;
+
+        function showVerse() {
+            verse.textContent = verses[verseIndex].text;
+            reference.textContent = verses[verseIndex].reference;
+            favorite.classList.toggle('active', localStorage.getItem('abide-favorite') === String(verseIndex));
+            favorite.textContent = favorite.classList.contains('active') ? '♥ Saved verse' : '♡ Save verse';
+        }
+        document.querySelector('#today').textContent = new Intl.DateTimeFormat('en', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
+        document.querySelector('#daily-caption').textContent = dailySet.theme + ' · Five verses for today.';
+        document.querySelector('#new-verse').addEventListener('click', () => { verseIndex = (verseIndex + 1) % verses.length; showVerse(); document.dispatchEvent(new CustomEvent('verseChanged')); });
+        favorite.addEventListener('click', () => { localStorage.setItem('abide-favorite', String(verseIndex)); showVerse(); });
+        const note = document.querySelector('#note');
+        const savedStatus = document.querySelector('#saved-status');
+        note.value = localStorage.getItem('abide-note') || '';
+        document.querySelector('#save-note').addEventListener('click', () => { localStorage.setItem('abide-note', note.value); savedStatus.textContent = 'Reflection saved'; setTimeout(() => savedStatus.textContent = '', 2500); });
+        showVerse();
+    </script>
+    <script type="module" src="church.js"></script>
+    <script type="module" src="/src/siteNavigation.js"></script>
+</body>
+</html>

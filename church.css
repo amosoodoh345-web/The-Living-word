@@ -1,0 +1,73 @@
+.spirit-section, .books-section { margin-top: 68px; }
+.seminar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.seminar-card { position: relative; min-height: 390px; padding: 27px; border-top: 3px solid var(--gold); background: var(--white); box-shadow: var(--shadow); }
+.seminar-card.featured { color: var(--white); background: var(--deep-sage); border-top-color: #e0b96f; }
+.seminar-card.featured p { color: #c5d7ca; }
+.seminar-number { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: .13em; }
+.seminar-card h3 { margin: 20px 0 10px; font-size: 27px; }
+.seminar-card p { margin: 0; color: var(--muted); font-size: 14px; }
+.seminar-card .passage { min-height: 83px; color: var(--ink); font: 17px/1.45 "Playfair Display", serif; }
+.seminar-card .passage strong { display: block; margin-top: 8px; color: var(--deep-sage); font: 700 11px/1.2 "DM Sans", sans-serif; letter-spacing: .04em; }
+.seminar-card .teaching { min-height: 105px; margin-top: 12px; }
+.seminar-card .practice { padding-top: 13px; margin-top: 14px; border-top: 1px solid var(--line); font-size: 13px; }
+.seminar-card .practice strong { color: var(--deep-sage); }
+.text-button { margin-top: 17px; padding: 0; border: 0; color: var(--deep-sage); background: transparent; font-size: 13px; font-weight: 700; }
+.featured .text-button { color: #f0c879; }
+.text-button:hover { text-decoration: underline; }
+.book-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.book { display: flex; gap: 20px; align-items: center; padding: 20px; border: 1px solid var(--line); background: var(--white); }
+.book-cover { display: grid; flex: 0 0 86px; place-items: center; aspect-ratio: 3 / 4; color: white; font: 700 11px/1.25 "DM Sans", sans-serif; letter-spacing: .12em; text-align: center; box-shadow: 8px 8px 0 var(--sage); }
+.cover-olive { background: #68795f; } .cover-sunrise { background: #bd8755; } .cover-ink { background: #3d5360; }
+.book-type { color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.book h3 { margin: 7px 0; font-size: 21px; }
+.book p { margin: 0; color: var(--muted); font-size: 13px; }
+.verse-hint { margin: 13px 0 0; color: var(--muted); font-size: 12px; font-style: italic; }
+.quick-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: -28px; position: relative; z-index: 1; }
+.quick-button { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 53px; padding: 12px; color: var(--deep-sage); border: 1px solid var(--line); background: var(--white); box-shadow: 0 8px 20px rgba(36, 51, 46, .06); font-size: 13px; font-weight: 700; text-decoration: none; }
+.quick-button span { color: var(--gold); font-size: 19px; }
+.quick-button:hover { color: var(--white); background: var(--deep-sage); border-color: var(--deep-sage); transform: translateY(-2px); }
+.bible-section, .experience-section { margin-top: 68px; }
+.bible-intro { padding: 18px 22px; margin-bottom: 16px; color: var(--deep-sage); background: var(--sage); font-size: 14px; }
+.bible-book-strip { display: flex; gap: 8px; padding: 12px; margin-bottom: 16px; overflow-x: auto; border: 1px solid var(--line); background: var(--white); scrollbar-width: thin; }
+.bible-book-button { flex: 0 0 auto; padding: 9px 13px; border: 1px solid #dfcfb1; color: var(--deep-sage); background: #fffaf0; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.bible-book-button:hover, .bible-book-button.active { color: var(--white); background: var(--deep-sage); border-color: var(--deep-sage); }
+.bible-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.bible-group { padding: 25px; border: 1px solid var(--line); background: var(--white); }
+.bible-group h3 { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 18px; font-size: 25px; }
+.bible-group h3 span { color: var(--gold); font: 700 11px/1 "DM Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.book-names { margin: 0; color: var(--muted); font-size: 14px; line-height: 2; }
+.book-names strong { color: var(--deep-sage); }
+.bible-navigator { padding: 27px; margin-top: 16px; border: 1px solid #d7c7a8; background: #fffaf0; }
+.navigator-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; }
+.navigator-heading h3 { margin: 8px 0 0; font-size: 27px; }
+.navigator-count { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.navigator-controls { display: grid; grid-template-columns: 1.6fr 1fr .7fr; gap: 13px; margin-top: 23px; }
+.navigator-controls label { margin: 0; }
+.navigator-controls select, .navigator-controls input { width: 100%; min-height: 43px; margin-top: 7px; padding: 9px; color: var(--ink); background: var(--white); border: 1px solid #dfcfb1; }
+.chapter-label { margin-top: 21px; color: var(--deep-sage); font-size: 12px; font-weight: 700; }
+.chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 7px; max-height: 190px; margin-top: 10px; overflow-y: auto; }
+.chapter-button { min-height: 35px; border: 1px solid #dfcfb1; color: var(--deep-sage); background: var(--white); font-size: 12px; }
+.chapter-button:hover, .chapter-button.active { color: var(--white); background: var(--deep-sage); border-color: var(--deep-sage); }
+.reference-result { min-height: 25px; margin: 18px 0 0; color: var(--deep-sage); font: 700 19px "Playfair Display", serif; }
+.verse-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 7px; max-height: 220px; margin-top: 13px; overflow-y: auto; }
+.verse-button { padding: 8px 5px; border: 1px solid #dfcfb1; color: var(--deep-sage); background: var(--white); font-size: 11px; }
+.verse-button:hover { color: var(--white); background: var(--gold); border-color: var(--gold); }
+.verse-button { text-align: left; line-height: 1.45; }
+.verse-button strong { margin-right: 4px; color: var(--gold); }
+.verse-loading { grid-column: 1 / -1; margin: 5px 0; color: var(--muted); font-size: 13px; }
+.bible-continue { display: inline-block; margin-top: 18px; color: var(--deep-sage); font-size: 13px; font-weight: 700; text-decoration: none; }
+.bible-continue:hover { color: var(--gold); text-decoration: underline; }
+.experience-notebook { padding: 29px; border: 1px solid #d7c7a8; background: #fffaf0; box-shadow: 7px 7px 0 #eadfc8; }
+.experience-notebook textarea { min-height: 220px; background: #fffdf7; border-color: #e7d9bd; }
+.welcome-modal[hidden] { display: none; }
+.welcome-modal { position: fixed; z-index: 10; inset: 0; display: grid; place-items: center; padding: 20px; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(36, 51, 46, .58); backdrop-filter: blur(5px); }
+.modal-card { position: relative; width: min(470px, 100%); padding: 45px; background: var(--white); box-shadow: 0 25px 80px rgba(15, 30, 23, .25); animation: rise-in .35s ease-out; }
+.modal-symbol { display: block; margin-bottom: 20px; color: var(--gold); font-size: 30px; }
+.modal-card h2 { margin: 12px 0; font-size: 37px; }
+.modal-card p { margin: 0 0 25px; color: var(--muted); }
+.modal-close { position: absolute; top: 12px; right: 17px; border: 0; color: var(--muted); background: transparent; font-size: 28px; line-height: 1; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+body.modal-open { overflow: hidden; }
+@media (max-width: 850px) { .seminar-grid, .book-list { grid-template-columns: 1fr; } .bible-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } .book { align-items: flex-start; } }
+@media (max-width: 720px) { .spirit-section, .books-section, .bible-section, .experience-section { margin-top: 52px; } .quick-nav { grid-template-columns: repeat(2, 1fr); margin-top: -18px; } .modal-card { padding: 34px 27px; } .bible-groups { grid-template-columns: 1fr; } .bible-group h3 { display: block; } .bible-group h3 span { display: block; margin-top: 8px; } .navigator-controls { grid-template-columns: 1fr; } .bible-navigator { padding: 22px; } }
