@@ -14,8 +14,9 @@ import { SEMINAR_DETAILS } from './data/seminarDetails';
 import { CHAPLET_PRAYER_SETS, PRAYER_LABELS, PRAYER_TEXTS, ROSARY_MYSTERY_REFERENCES, ROSARY_PRAYER_SETS } from './data/prayerTexts';
 import { WISDOM_BOOKS, WISDOM_READINGS } from './data/wisdomReadings';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
+import { getDailyDevotionalIndex } from './lib/dailyDevotional';
 
-export const todayIndex = () => Math.floor(Date.now() / 86400000) % DEVOTIONALS.length;
+export const todayIndex = (date = new Date()) => getDailyDevotionalIndex(DEVOTIONALS.length, date);
 
 export function ExplorePage({ onNavigate }) {
   const destinations = [

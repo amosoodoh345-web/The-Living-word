@@ -33,6 +33,7 @@ import {
   reminderFiredKey
 } from './lib/reminders';
 import { getGrowthSummary, toggleDailyPractice } from './lib/spiritualGrowth';
+import { matchesReadingIntent } from './lib/readingHistory';
 import { SEMINAR_SESSIONS } from './data/lifeosContent';
 
 const translations = [
@@ -155,6 +156,7 @@ function App() {
   const [readingMode, setReadingMode] = useState('continuous');
   const [favourites, setFavourites] = useState(() => readStored(storageKeys.favorites, []));
   const [history, setHistory] = useState(() => readStored(storageKeys.history, []));
+  const [readingIntent, setReadingIntent] = useState(null);
   const [journal, setJournal] = useState(() => readStored(storageKeys.journal, []));
   const [seminarProgress, setSeminarProgress] = useState(() => readStored(storageKeys.seminarProgress, {}));
   const [testimonyDrafts, setTestimonyDrafts] = useState(() => readStored(storageKeys.testimonyDrafts, []));
@@ -377,7 +379,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentVerseData) return;
+    if (!matchesReadingIntent(readingIntent, {
+      book: selectedBook,
+      chapter: selectedChapter,
+      verse: currentVerseData?.verse
+    })) return;
+
     const entry = {
       id: `${selectedBook}-${selectedChapter}-${currentVerseData.verse}`,
       reference: `${selectedBook} ${selectedChapter}:${currentVerseData.verse}`,
@@ -386,13 +393,17 @@ function App() {
       verse: currentVerseData.verse
     };
     setHistory((previous) => [entry, ...previous.filter((item) => item.id !== entry.id)].slice(0, 8));
-    setSelectedVerse(currentVerseData.verse);
-  }, [currentVerseData, selectedBook, selectedChapter]);
+    setReadingIntent(null);
+  }, [currentVerseData, readingIntent, selectedBook, selectedChapter]);
 
   const goToReference = (item) => {
+    if (item.book !== selectedBook || item.chapter !== selectedChapter) {
+      setChapterVerses([]);
+    }
     setSelectedBook(item.book);
     setSelectedChapter(item.chapter);
     setSelectedVerse(item.verse);
+    setReadingIntent({ book: item.book, chapter: item.chapter, verse: item.verse });
     setPage('bible');
   };
 
@@ -419,6 +430,7 @@ function App() {
 
   const toggleFavorite = () => {
     if (!currentVerseData) return;
+    setReadingIntent({ book: selectedBook, chapter: selectedChapter, verse: currentVerseData.verse });
     const id = `${selectedBook}-${selectedChapter}-${currentVerseData.verse}`;
     setFavourites((previous) => {
       if (previous.some((item) => item.id === id)) {
@@ -438,6 +450,7 @@ function App() {
   const copyVerse = (v) => {
     const target = v || currentVerseData;
     if (!target) return;
+    setReadingIntent({ book: selectedBook, chapter: selectedChapter, verse: target.verse });
     const ref = `${selectedBook} ${selectedChapter}:${target.verse}`;
     const text = `${ref} (${activeTranslation.toUpperCase()})\n"${target.text}"`;
     if (navigator?.clipboard?.writeText) {
@@ -491,6 +504,9 @@ function App() {
     }
     const text = textToRead || (currentVerseData ? currentVerseData.text : '');
     if (!text) return;
+    if (currentVerseData) {
+      setReadingIntent({ book: selectedBook, chapter: selectedChapter, verse: currentVerseData.verse });
+    }
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 0.92;
@@ -504,6 +520,7 @@ function App() {
   const sendVerseToJournal = (v) => {
     const target = v || currentVerseData;
     if (!target) return;
+    setReadingIntent({ book: selectedBook, chapter: selectedChapter, verse: target.verse });
     setJournalText(`"${target.text}"\n— ${selectedBook} ${selectedChapter}:${target.verse} (${activeTranslation.toUpperCase()})\n\nReflection: `);
     setPage('journal');
   };
@@ -550,23 +567,42 @@ function App() {
   };
 
   const changeBook = (book) => {
+    if (book !== selectedBook || selectedChapter !== 1) {
+      setChapterVerses([]);
+    }
     setSelectedBook(book);
     setSelectedChapter(1);
     setSelectedVerse(1);
+    setReadingIntent({ book, chapter: 1, verse: 1 });
     setSearchTerm('');
   };
 
   const moveVerse = (direction) => {
     const currentIndex = chapterVerses.findIndex((entry) => entry.verse === selectedVerse);
     const next = chapterVerses[currentIndex + direction];
-    if (next) setSelectedVerse(next.verse);
+    if (next) {
+      selectVerse(next.verse);
+    }
+  };
+
+  const selectVerse = (verse) => {
+    setSelectedVerse(verse);
+    setReadingIntent({ book: selectedBook, chapter: selectedChapter, verse });
+  };
+
+  const selectChapter = (chapter) => {
+    if (chapter !== selectedChapter) {
+      setChapterVerses([]);
+    }
+    setSelectedChapter(chapter);
+    setSelectedVerse(1);
+    setReadingIntent({ book: selectedBook, chapter, verse: 1 });
   };
 
   const moveChapter = (direction) => {
     const next = selectedChapter + direction;
     if (next >= 1 && next <= totalChapters) {
-      setSelectedChapter(next);
-      setSelectedVerse(1);
+      selectChapter(next);
       setSearchTerm('');
     }
   };
@@ -728,7 +764,7 @@ function App() {
                   </label>
                   <label className="field">
                     <span>Chapter</span>
-                    <select value={selectedChapter} onChange={(event) => { setSelectedChapter(Number(event.target.value)); setSelectedVerse(1); }}>
+                    <select value={selectedChapter} onChange={(event) => selectChapter(Number(event.target.value))}>
                       {chapterOptions.map((chapter) => <option key={chapter} value={chapter}>{selectedBook} {chapter}</option>)}
                     </select>
                   </label>
@@ -769,7 +805,7 @@ function App() {
                   <button
                     key={chapter}
                     className={chapter === selectedChapter ? 'chapter-button active' : 'chapter-button'}
-                    onClick={() => { setSelectedChapter(chapter); setSelectedVerse(1); }}
+                    onClick={() => selectChapter(chapter)}
                   >{chapter}</button>
                 ))}
               </div>
@@ -904,7 +940,7 @@ function App() {
                         <span
                           key={`${selectedBook}-${selectedChapter}-${entry.verse}`}
                           className={isActive ? 'prose-verse active' : 'prose-verse'}
-                          onClick={() => setSelectedVerse(entry.verse)}
+                          onClick={() => selectVerse(entry.verse)}
                           title={`Click to select verse ${entry.verse}`}
                         >
                           <sup className="verse-num">{entry.verse}</sup>
@@ -923,7 +959,7 @@ function App() {
                       <button
                         key={`${selectedBook}-${selectedChapter}-${entry.verse}`}
                         className={entry.verse === selectedVerse ? 'verse-item active' : 'verse-item'}
-                        onClick={() => setSelectedVerse(entry.verse)}
+                        onClick={() => selectVerse(entry.verse)}
                       >
                         <strong>{entry.verse}</strong>{entry.text}
                       </button>
@@ -1039,9 +1075,13 @@ function App() {
           defaultPrayerFocuses={defaultPrayerFocuses}
           onNavigate={(destination) => {
             if (destination === 'bible') {
+              if (selectedBook !== 'Psalms' || selectedChapter !== 23) {
+                setChapterVerses([]);
+              }
               setSelectedBook('Psalms');
               setSelectedChapter(23);
               setSelectedVerse(1);
+              setReadingIntent({ book: 'Psalms', chapter: 23, verse: 1 });
             }
             setPage(destination);
           }}
