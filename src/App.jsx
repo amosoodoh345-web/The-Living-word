@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   BIBLE_BOOKS,
-  bibleBooks,
   defaultPrayerFocuses,
   getBookInfo,
   getBookChapterCount,
@@ -21,11 +20,12 @@ import {
   TestimoniesPage,
   WisdomReadingsPage
 } from './LifeOSPages';
+import AdminAccess from './AdminAccess';
+import HomeDashboard from './HomeDashboard';
+import { Icon } from './Icons';
+import ProfilePage from './ProfilePage';
 import RemindersPage from './RemindersPage';
 import SpiritualGrowthPage from './SpiritualGrowthPage';
-import HomeDashboard from './HomeDashboard';
-import ProfilePage from './ProfilePage';
-import { Icon } from './Icons';
 import {
   DEFAULT_REMINDERS,
   getDueReminders,
@@ -71,7 +71,7 @@ const navGroups = {
 
 const isNavItemActive = (itemId, currentPage) => (navGroups[itemId] || [itemId]).includes(currentPage);
 
-function SiteNavigation() {
+function SiteNavigation({ page }) {
   return (
     <nav className="lifeos-site-nav" aria-label="The Living Word pages">
       <a className="lifeos-site-brand" href="./index.html">
@@ -79,7 +79,7 @@ function SiteNavigation() {
       </a>
       <div className="lifeos-site-nav-links">
         {SITE_NAVIGATION.map((item) => (
-          <a key={item.id} href={item.href} aria-current={item.id === 'home' ? 'page' : undefined}>{item.label}</a>
+          <a key={item.id} href={item.href} className={item.id === page ? 'active' : undefined} aria-current={item.id === page ? 'page' : undefined}>{item.label}</a>
         ))}
       </div>
     </nav>
@@ -95,12 +95,24 @@ const readStored = (key, fallback) => {
   }
 };
 
-const ROUTABLE_PAGES = ['home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries', 'songs', 'novena', 'rosary', 'chaplet', 'testimonies', 'prayer', 'journal', 'saved', 'profile', 'reminders', 'growth', 'encouragement'];
-
+const ROUTABLE_PAGES = [
+  'home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries',
+  'songs', 'novena', 'rosary', 'chaplet', 'testimonies', 'prayer', 'journal',
+  'saved', 'profile', 'reminders', 'growth', 'admin', 'encouragement'
+];
 function pageFromLocation() {
-  const hashPage = window.location.hash.replace(/^#\/?/, '');
-  if (ROUTABLE_PAGES.includes(hashPage)) return hashPage;
-  return new URLSearchParams(window.location.search).get('view') === 'testimonies' ? 'testimonies' : 'home';
+  const hashPage = window.location.hash
+    .slice(1)
+    .replace(/^\/+/, '')
+    .trim();
+
+  if (ROUTABLE_PAGES.includes(hashPage)) {
+    return hashPage;
+  }
+
+  return new URLSearchParams(window.location.search).get('view') === 'testimonies'
+    ? 'testimonies'
+    : 'home';
 }
 
 function App() {
@@ -572,6 +584,9 @@ function App() {
   }, [currentBookInfo]);
 
   const renderPage = () => {
+    if (page === 'admin') {
+      return <AdminAccess />;
+    }
     if (page === 'profile') {
       return (
         <ProfilePage
@@ -1114,7 +1129,7 @@ function App() {
 
   return (
     <div className={page === 'home' ? 'app-shell is-home' : 'app-shell'}>
-      <SiteNavigation />
+      <SiteNavigation page={page} />
       <header className="topbar">
         <button className="brand-wrap" onClick={() => setPage('home')} aria-label="Life in the Spirit home">
           <span className="brand-mark">✦</span>
