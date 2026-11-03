@@ -1701,6 +1701,32 @@ body[data-theme='dark'] .secondary-btn:hover {
   font-size: 22px;
 }
 
+.pwa-update-notice {
+  position: fixed;
+  z-index: 90;
+  right: 20px;
+  bottom: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  width: min(560px, calc(100vw - 32px));
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-strong);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.pwa-update-copy strong { color: var(--green-deep); }
+.pwa-update-copy p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.pwa-update-actions { display: flex; align-items: center; gap: 8px; }
+.pwa-update-actions button { min-height: 42px; padding: 0 12px; border-radius: 7px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.pwa-update-later { border: 1px solid var(--line); background: transparent; color: var(--muted); }
+.pwa-update-now { border: 1px solid var(--brand); background: var(--brand); color: var(--on-brand); }
+.pwa-update-actions button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
 .page-intro {
   max-width: 760px;
   padding: 24px 0 2px;
@@ -3301,6 +3327,17 @@ body[data-theme='dark'] .reader-card {
     left: 10px;
     max-width: none;
   }
+
+  .pwa-update-notice {
+    right: 10px;
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    left: 10px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: auto;
+  }
+
+  .pwa-update-actions { justify-content: flex-end; }
 
   .journal-form {
     padding: 17px;

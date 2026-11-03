@@ -4,14 +4,6 @@ import App from './App';
 import './index.css';
 import './theme.css';
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').catch((error) => {
-      console.error('Offline app setup failed:', error);
-    });
-  });
-}
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

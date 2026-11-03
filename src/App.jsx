@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BIBLE_BOOKS,
   defaultPrayerFocuses,
@@ -1204,12 +1204,107 @@ function LifeOSApp() {
   );
 }
 
-function App() {
-  if (window.location.pathname.replace(/\/+$/, '') === '/admin') {
-    return <AdminAccess />;
-  }
+function PwaUpdatePrompt() {
+  const [registration, setRegistration] = useState(null);
+  const [waitingWorker, setWaitingWorker] = useState(null);
+  const reloadAfterUpdate = useRef(false);
 
-  return <LifeOSApp />;
+  useEffect(() => {
+    if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return undefined;
+
+    let active = true;
+    let updateInterval;
+    let currentRegistration;
+
+    const checkForUpdate = () => {
+      if (document.visibilityState === 'visible') {
+        currentRegistration?.update().catch(() => undefined);
+      }
+    };
+
+    const handleUpdateFound = () => {
+      const installingWorker = currentRegistration?.installing;
+      if (!installingWorker) return;
+
+      installingWorker.addEventListener('statechange', () => {
+        if (active && installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          setWaitingWorker(currentRegistration.waiting);
+        }
+      });
+    };
+
+    const handleControllerChange = () => {
+      if (reloadAfterUpdate.current) window.location.reload();
+    };
+
+    navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+
+    navigator.serviceWorker.register(`/service-worker.js?build=${__LIFEOS_BUILD_ID__}`, {
+      updateViaCache: 'none'
+    }).then((serviceWorkerRegistration) => {
+      if (!active) return;
+
+      currentRegistration = serviceWorkerRegistration;
+      setRegistration(serviceWorkerRegistration);
+      serviceWorkerRegistration.addEventListener('updatefound', handleUpdateFound);
+
+      if (serviceWorkerRegistration.waiting && navigator.serviceWorker.controller) {
+        setWaitingWorker(serviceWorkerRegistration.waiting);
+      }
+
+      checkForUpdate();
+      window.addEventListener('focus', checkForUpdate);
+      document.addEventListener('visibilitychange', checkForUpdate);
+      updateInterval = window.setInterval(checkForUpdate, 30 * 60 * 1000);
+    }).catch((error) => {
+      console.error('Offline app setup failed:', error);
+    });
+
+    return () => {
+      active = false;
+      navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
+      window.removeEventListener('focus', checkForUpdate);
+      document.removeEventListener('visibilitychange', checkForUpdate);
+      window.clearInterval(updateInterval);
+      currentRegistration?.removeEventListener('updatefound', handleUpdateFound);
+    };
+  }, []);
+
+  const applyUpdate = () => {
+    const worker = registration?.waiting || waitingWorker;
+    if (!worker) return;
+
+    reloadAfterUpdate.current = true;
+    worker.postMessage({ type: 'LIFEOS_SKIP_WAITING' });
+  };
+
+  if (!waitingWorker) return null;
+
+  return (
+    <aside className="pwa-update-notice" role="status" aria-live="polite">
+      <div className="pwa-update-copy">
+        <strong>A LIFEOS update is ready</strong>
+        <p>Refresh to use the latest version.</p>
+      </div>
+      <div className="pwa-update-actions">
+        <button className="pwa-update-later" type="button" onClick={() => setWaitingWorker(null)}>Later</button>
+        <button className="pwa-update-now" type="button" onClick={applyUpdate}>Refresh now</button>
+      </div>
+    </aside>
+  );
+}
+
+function App() {
+  const app = window.location.pathname.replace(/\/+$/, '') === '/admin'
+    ? <AdminAccess />
+    : <LifeOSApp />;
+
+  return (
+    <>
+      {app}
+      <PwaUpdatePrompt />
+    </>
+  );
 }
 
 export default App;
