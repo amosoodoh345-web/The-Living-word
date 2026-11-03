@@ -13,9 +13,9 @@ const NAV_ITEMS = [
 
 const INITIAL_STATS = [
   { label: 'Total Testimonies', value: '...', icon: '📖', note: 'Community stories' },
-  { label: 'Pending Review', value: '...', icon: '⏳', note: 'Awaiting moderation' },
-  { label: 'Comments', value: '...', icon: '💬', note: 'Community discussions' },
-  { label: 'Total Reports', value: '...', icon: '🛡️', note: 'Community reports' },
+  { label: 'Pending Testimonies', value: '...', icon: '⏳', note: 'Awaiting moderation' },
+  { label: 'Community Comments', value: '...', icon: '💬', note: 'Community discussions' },
+  { label: 'Open Reports', value: '...', icon: '🛡️', note: 'Awaiting resolution' },
 ];
 
 export default function AdminDashboard() {
@@ -32,6 +32,13 @@ export default function AdminDashboard() {
   const [successMessage, setSuccessMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [comments, setComments] = useState([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentsError, setCommentsError] = useState('');
+  const [reports, setReports] = useState([]);
+  const [reportsLoading, setReportsLoading] = useState(false);
+  const [reportsError, setReportsError] = useState('');
+  const [reportStatusFilter, setReportStatusFilter] = useState('open');
 
   const pageTitles = {
     overview: 'Dashboard Overview',
@@ -58,7 +65,7 @@ export default function AdminDashboard() {
         supabase.from('testimonies').select('id', { count: 'exact', head: true }),
         supabase.from('testimonies').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('testimony_comments').select('id', { count: 'exact', head: true }),
-        supabase.from('testimony_reports').select('id', { count: 'exact', head: true }),
+        supabase.from('testimony_reports').select('id', { count: 'exact', head: true }).eq('status', 'open'),
       ]);
 
       const error =
@@ -103,7 +110,7 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from('testimonies')
-        .select('*')
+        .select('id, title, body, category, status, created_at')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -116,6 +123,56 @@ export default function AdminDashboard() {
     }
   }
 
+  async function loadComments() {
+    if (!supabase) {
+      setCommentsError('Supabase is not configured.');
+      return;
+    }
+
+    setCommentsLoading(true);
+    setCommentsError('');
+
+    try {
+      const { data, error } = await supabase
+        .from('testimony_comments')
+        .select('id, testimony_id, user_id, body, status, created_at')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setComments(data || []);
+    } catch (error) {
+      setCommentsError(error.message || 'Unable to load comments.');
+    } finally {
+      setCommentsLoading(false);
+    }
+  }
+
+  async function loadReports() {
+    if (!supabase) {
+      setReportsError('Supabase is not configured.');
+      return;
+    }
+
+    setReportsLoading(true);
+    setReportsError('');
+
+    try {
+      const { data, error } = await supabase
+        .from('testimony_reports')
+        .select('id, testimony_id, reporter_id, reason, created_at, status, resolved_by, resolved_at')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setReports(data || []);
+    } catch (error) {
+      setReportsError(error.message || 'Unable to load reports.');
+    } finally {
+      setReportsLoading(false);
+    }
+  }
+
   useEffect(() => {
     loadStats();
   }, []);
@@ -124,6 +181,11 @@ export default function AdminDashboard() {
     if (activeView === 'testimonies') {
       loadTestimonies();
     }
+  }, [activeView]);
+
+  useEffect(() => {
+    if (activeView === 'comments') loadComments();
+    if (activeView === 'reports') loadReports();
   }, [activeView]);
 
   async function updateTestimonyStatus(id, newStatus) {
@@ -155,6 +217,57 @@ export default function AdminDashboard() {
       setTestimoniesError(
         error.message || 'Unable to update testimony status.'
       );
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function updateCommentStatus(id, newStatus) {
+    setActionLoading(`comment-${id}`);
+    setSuccessMessage('');
+    setCommentsError('');
+
+    try {
+      const { error } = await supabase
+        .from('testimony_comments')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setSuccessMessage(`Comment ${newStatus} successfully.`);
+      await Promise.all([loadComments(), loadStats()]);
+    } catch (error) {
+      setCommentsError(error.message || 'Unable to update comment status.');
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function updateReportStatus(report, newStatus) {
+    setActionLoading(`report-${report.id}`);
+    setSuccessMessage('');
+    setReportsError('');
+
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error('Your administrator session has expired. Sign in again.');
+
+      const resolution = newStatus === 'resolved'
+        ? { status: newStatus, resolved_by: user.id, resolved_at: new Date().toISOString() }
+        : { status: newStatus, resolved_by: null, resolved_at: null };
+      const { error } = await supabase
+        .from('testimony_reports')
+        .update(resolution)
+        .eq('id', report.id);
+
+      if (error) throw error;
+
+      setSuccessMessage(`Report ${newStatus} successfully.`);
+      await Promise.all([loadReports(), loadStats()]);
+    } catch (error) {
+      setReportsError(error.message || 'Unable to update report status.');
     } finally {
       setActionLoading(null);
     }
@@ -440,22 +553,107 @@ export default function AdminDashboard() {
           )}
 
           {activeView === 'comments' && (
-            <div className="admin-placeholder">
-              <span>💬</span>
-              <h2>Community Comments</h2>
-              <p>
-                This section is reserved for managing community discussions.
-              </p>
+            <div className="admin-records">
+              <div className="admin-section-heading">
+                <div>
+                  <h2>Community Comments</h2>
+                  <p>Review and moderate comments on testimonies.</p>
+                </div>
+                <button className="admin-refresh" onClick={loadComments} disabled={commentsLoading}>
+                  ↻ {commentsLoading ? 'Loading...' : 'Refresh'}
+                </button>
+              </div>
+
+              {successMessage && <div className="admin-success" role="status">{successMessage}</div>}
+              {commentsError && <div className="admin-error" role="alert">{commentsError}</div>}
+
+              {commentsLoading ? (
+                <div className="admin-placeholder"><h2>Loading comments...</h2></div>
+              ) : comments.length === 0 ? (
+                <div className="admin-placeholder"><span>💬</span><h2>No comments found</h2></div>
+              ) : (
+                <div className="admin-record-list">
+                  {comments.map((comment) => (
+                    <article className="admin-record-card" key={comment.id}>
+                      <div className="admin-testimony-header">
+                        <div>
+                          <span className={`admin-status ${comment.status}`}>{comment.status}</span>
+                          <p className="admin-record-meta">{formatDate(comment.created_at)} · Testimony {comment.testimony_id.slice(0, 8)}</p>
+                        </div>
+                      </div>
+                      <p className="admin-testimony-body">{comment.body}</p>
+                      <div className="admin-testimony-actions">
+                        {comment.status !== 'approved' && (
+                          <button className="admin-approve-button" disabled={actionLoading === `comment-${comment.id}`} onClick={() => updateCommentStatus(comment.id, 'approved')}>
+                            Approve
+                          </button>
+                        )}
+                        {comment.status !== 'rejected' && (
+                          <button className="admin-reject-button" disabled={actionLoading === `comment-${comment.id}`} onClick={() => updateCommentStatus(comment.id, 'rejected')}>
+                            Reject
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {activeView === 'reports' && (
-            <div className="admin-placeholder">
-              <span>🛡️</span>
-              <h2>Community Reports</h2>
-              <p>
-                This section is reserved for reviewing reported content.
-              </p>
+            <div className="admin-records">
+              <div className="admin-section-heading">
+                <div>
+                  <h2>Community Reports</h2>
+                  <p>Review reports and record their resolution.</p>
+                </div>
+                <button className="admin-refresh" onClick={loadReports} disabled={reportsLoading}>
+                  ↻ {reportsLoading ? 'Loading...' : 'Refresh'}
+                </button>
+              </div>
+
+              <div className="admin-testimony-toolbar">
+                <select value={reportStatusFilter} onChange={(event) => setReportStatusFilter(event.target.value)} aria-label="Filter reports by status">
+                  <option value="open">Open reports</option>
+                  <option value="resolved">Resolved reports</option>
+                  <option value="all">All reports</option>
+                </select>
+              </div>
+
+              {successMessage && <div className="admin-success" role="status">{successMessage}</div>}
+              {reportsError && <div className="admin-error" role="alert">{reportsError}</div>}
+
+              {reportsLoading ? (
+                <div className="admin-placeholder"><h2>Loading reports...</h2></div>
+              ) : reports.filter((report) => reportStatusFilter === 'all' || report.status === reportStatusFilter).length === 0 ? (
+                <div className="admin-placeholder"><span>🛡️</span><h2>No {reportStatusFilter === 'all' ? '' : `${reportStatusFilter} `}reports found</h2></div>
+              ) : (
+                <div className="admin-record-list">
+                  {reports
+                    .filter((report) => reportStatusFilter === 'all' || report.status === reportStatusFilter)
+                    .map((report) => (
+                      <article className="admin-record-card" key={report.id}>
+                        <div className="admin-testimony-header">
+                          <div>
+                            <span className={`admin-status ${report.status}`}>{report.status}</span>
+                            <p className="admin-record-meta">{formatDate(report.created_at)} · Testimony {report.testimony_id.slice(0, 8)}</p>
+                          </div>
+                        </div>
+                        <p className="admin-testimony-body">{report.reason}</p>
+                        <div className="admin-testimony-actions">
+                          <button
+                            className={report.status === 'open' ? 'admin-approve-button' : 'admin-refresh'}
+                            disabled={actionLoading === `report-${report.id}`}
+                            onClick={() => updateReportStatus(report, report.status === 'open' ? 'resolved' : 'open')}
+                          >
+                            {report.status === 'open' ? 'Mark resolved' : 'Reopen report'}
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -463,7 +661,7 @@ export default function AdminDashboard() {
             <div className="admin-placeholder">
               <span>⚙️</span>
               <h2>Dashboard Settings</h2>
-              <p>Administrative settings will be managed here.</p>
+              <p>No administrator settings table is configured for this project.</p>
             </div>
           )}
 

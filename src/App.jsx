@@ -22,6 +22,7 @@ import {
 } from './LifeOSPages';
 import AdminAccess from './AdminAccess';
 import HomeDashboard from './HomeDashboard';
+import LandingPage from './LandingPage';
 import { Icon } from './Icons';
 import ProfilePage from './ProfilePage';
 import RemindersPage from './RemindersPage';
@@ -97,7 +98,7 @@ const readStored = (key, fallback) => {
 };
 
 const ROUTABLE_PAGES = [
-  'home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries',
+  'welcome', 'home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries',
   'songs', 'novena', 'rosary', 'chaplet', 'testimonies', 'prayer', 'journal',
   'saved', 'profile', 'reminders', 'growth', 'admin', 'encouragement'
 ];
@@ -113,10 +114,10 @@ function pageFromLocation() {
 
   return new URLSearchParams(window.location.search).get('view') === 'testimonies'
     ? 'testimonies'
-    : 'home';
+    : 'welcome';
 }
 
-function App() {
+function LifeOSApp() {
   const [page, setPage] = useState(pageFromLocation);
 
   // Mirror the in-app page in the URL hash so the browser and Android back buttons work.
@@ -1167,6 +1168,10 @@ function App() {
     );
   };
 
+  if (page === 'welcome') {
+    return <LandingPage onNavigate={setPage} />;
+  }
+
   return (
     <div className={page === 'home' ? 'app-shell is-home' : 'app-shell'}>
       <SiteNavigation page={page} />
@@ -1197,6 +1202,14 @@ function App() {
       </nav>
     </div>
   );
+}
+
+function App() {
+  if (window.location.pathname.replace(/\/+$/, '') === '/admin') {
+    return <AdminAccess />;
+  }
+
+  return <LifeOSApp />;
 }
 
 export default App;

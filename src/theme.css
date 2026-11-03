@@ -527,3 +527,310 @@ body[data-theme='dark'] .dash-feature-actions button { color: var(--dash-gold-so
 .seminar-details summary, .prayer-text summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
 .seminar-details ul { padding-left: 20px; }
 .prayer-text p { line-height: 1.7; }
+
+/* LIFEOS shared design system */
+:root {
+  --bg: #f5f3eb;
+  --bg-alt: #e9eee7;
+  --panel: #ffffff;
+  --panel-strong: #fffefa;
+  --panel-soft: #f4efdf;
+  --line: #dce2d8;
+  --ink: #1d2b25;
+  --muted: #627068;
+  --green: #174b35;
+  --green-deep: #0c3021;
+  --blue: #244e83;
+  --brand: #174b35;
+  --on-brand: #ffffff;
+  --gold: #c9a34e;
+  --gold-bright: #d7b85f;
+  --shadow: 0 12px 32px rgba(20, 44, 32, 0.08);
+}
+
+body[data-theme='dark'] {
+  --bg: #111b17;
+  --bg-alt: #192720;
+  --panel: #1b2922;
+  --panel-strong: #202f27;
+  --panel-soft: #26352b;
+  --line: #35453b;
+  --ink: #edf2e9;
+  --muted: #bbc8bc;
+  --green: #b6d2bd;
+  --green-deep: #0c3021;
+  --blue: #a9c2e4;
+  --brand: #b6d2bd;
+  --on-brand: #14251b;
+  --gold: #e2c36e;
+  --gold-bright: #e2c36e;
+  --shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); }
+body[data-theme='dark'] { background: var(--bg); }
+
+.app-shell {
+  width: min(1280px, calc(100% - 40px));
+  padding: 18px 0 64px;
+}
+
+.app-shell > .lifeos-site-nav { display: none; }
+.is-home .topbar { display: none; }
+
+body[data-theme] .topbar {
+  min-height: 68px;
+  padding: 10px 18px;
+  border: 1px solid rgba(215, 184, 95, 0.42);
+  border-radius: 12px;
+  background: var(--green-deep);
+  box-shadow: 0 8px 24px rgba(12, 48, 33, 0.16);
+}
+
+.topbar .brand-mark { background: var(--gold-bright); color: var(--green-deep); }
+.topbar .brand-eyebrow { color: var(--gold-bright); }
+.topbar .top-navigation-item { min-height: 42px; color: rgba(255, 255, 255, 0.78); }
+.topbar .top-navigation-item.active,
+.topbar .top-navigation-item:hover { background: var(--gold-bright); color: var(--green-deep); }
+.topbar .install-button { background: var(--gold-bright); color: var(--green-deep); }
+.topbar .icon-button { min-width: 42px; min-height: 42px; }
+
+.dash {
+  --dash-navy: var(--green-deep);
+  --dash-royal: var(--blue);
+  --dash-gold: var(--gold-bright);
+  --dash-gold-soft: #f2e7c7;
+  --dash-card: var(--panel-strong);
+  --dash-ink: var(--ink);
+  --dash-muted: var(--muted);
+  --dash-line: var(--line);
+  --dash-purple: var(--blue);
+  max-width: 1200px;
+  padding: 18px 18px 64px;
+  gap: 24px;
+}
+
+body[data-theme='dark'] .dash {
+  --dash-card: var(--panel);
+  --dash-ink: var(--ink);
+  --dash-muted: var(--muted);
+  --dash-line: var(--line);
+}
+
+.dash-header {
+  top: 8px;
+  padding: 9px 10px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px rgba(20, 44, 32, 0.06);
+}
+
+body[data-theme='dark'] .dash-header { background: color-mix(in srgb, var(--bg) 94%, transparent); }
+.dash-app-name { color: var(--green); }
+.dash-greeting { color: var(--ink); }
+.dash-icon-button { border-radius: 12px; color: var(--green); box-shadow: none; }
+.dash-avatar { background: var(--green); color: #fff; }
+.dash-menu-backdrop { background: rgba(7, 24, 17, 0.48); }
+.dash-menu { border-radius: 12px; box-shadow: 0 18px 48px rgba(12, 35, 24, 0.22); }
+.dash-menu-heading { color: var(--blue); }
+
+.dash-hero {
+  min-height: 410px;
+  padding: 58px 54px 48px;
+  border: 1px solid rgba(215, 184, 95, 0.65);
+  border-radius: 18px;
+  background: linear-gradient(90deg, rgba(8, 39, 27, 0.96), rgba(13, 52, 38, 0.84) 58%, rgba(26, 54, 79, 0.42)), url('/st-paul-preaching-athens.png') center 42% / cover;
+  box-shadow: 0 20px 44px rgba(12, 48, 33, 0.2);
+}
+
+.dash-hero-glow { display: none; }
+.dash-hero h1 { font-size: 4.25rem; letter-spacing: 0.04em; }
+.dash-hero-lead { max-width: 43rem; font-size: 1.2rem; line-height: 1.65; }
+.dash-hero .dash-actions { gap: 10px; }
+.dash-button { min-height: 46px; border-radius: 8px; }
+.dash-button-gold { background: var(--gold-bright); color: var(--green-deep); box-shadow: 0 7px 18px rgba(215, 184, 95, 0.24); }
+.dash-button-ghost { background: rgba(255, 255, 255, 0.08); }
+.dash-button-outline { border-color: var(--blue); color: var(--blue); }
+
+.dash-features-head h2,
+.dash-section-title { color: var(--green-deep); font-family: 'Playfair Display', Georgia, serif; }
+body[data-theme='dark'] .dash-features-head h2,
+body[data-theme='dark'] .dash-section-title { color: var(--ink); }
+.dash-features-head .dash-kicker,
+.dash-card-head .dash-kicker { color: var(--blue); }
+.dash-feature,
+.dash-card,
+.dash-seminar,
+.dash-premium,
+.dash-shortcut { border-radius: 10px; box-shadow: 0 8px 22px rgba(20, 44, 32, 0.06); }
+.dash-feature { padding: 20px; }
+.dash-feature::before { background: linear-gradient(90deg, var(--green), var(--gold-bright)); }
+.dash-feature-icon,
+.dash-card-icon,
+.dash-shortcut-icon { border-radius: 10px; background: var(--green); color: var(--gold-bright); box-shadow: none; }
+.dash-feature-actions button { min-height: 42px; border-radius: 7px; background: var(--panel-soft); color: var(--green); }
+.dash-next { border-radius: 9px; background: var(--bg-alt); }
+.dash-schedule li { border-radius: 7px; background: var(--bg-alt); }
+.dash-seminar-banner { border-radius: 10px; background: linear-gradient(90deg, rgba(8, 39, 27, 0.94), rgba(18, 54, 43, 0.72)), url('/st-paul-preaching-athens.png') center 43% / cover; }
+.dash-session { border-radius: 9px; }
+.dash-session-number { background: var(--green); }
+.dash-premium { border: 1px solid var(--line); background: var(--panel); }
+.dash-premium-tag { border-radius: 6px; background: var(--green); color: #fff; }
+
+.content-page { max-width: 1120px; margin: 0 auto; gap: 22px; }
+.page-intro { max-width: 780px; padding: 20px 0 4px; }
+.page-intro h2 { color: var(--green-deep); font-size: 2.55rem; line-height: 1.12; }
+body[data-theme='dark'] .page-intro h2 { color: var(--ink); }
+.page-intro .eyebrow,
+.mini-label { color: var(--blue); }
+body[data-theme='dark'] .page-intro .eyebrow,
+body[data-theme='dark'] .mini-label { color: var(--gold); }
+
+.panel,
+.reader-card,
+.verse-list-box,
+.community-panel,
+.community-setup-notice,
+.lifeos-pathway,
+.devotional-reading,
+.prayer-options,
+.prayer-feature,
+.encouragement-card,
+.reflection-book-spread,
+.wisdom-promo,
+.seminar-session,
+.saved-section,
+.journal-form {
+  border-color: var(--line);
+  border-radius: 10px;
+  background-color: var(--panel);
+  box-shadow: 0 8px 22px rgba(20, 44, 32, 0.05);
+}
+
+.primary-btn { min-height: 44px; border-radius: 7px; background: var(--green); color: #fff; box-shadow: none; }
+.secondary-btn { min-height: 44px; border-radius: 7px; border-color: var(--line); background: var(--panel); color: var(--green); }
+.primary-btn:hover,
+.secondary-btn:hover,
+.text-button:hover { filter: brightness(1.04); }
+.text-button,
+.saved-verse-open strong { color: var(--blue); }
+.tab-pill.active,
+.mode-pill.active { background: var(--green); color: #fff; border-color: var(--green); }
+.book-item.active { background: var(--panel-soft); color: var(--green); }
+.chapter-button.active { background: var(--green); color: #fff; border-color: var(--green); }
+.search-box,
+.field select,
+.encouragement-controls select,
+.reminder-time input,
+.journal-form textarea,
+.community-comment-form textarea,
+.report-form textarea { border-color: var(--line); border-radius: 7px; background-color: var(--panel-strong); color: var(--ink); }
+
+.bible-intro,
+body[data-theme] .bible-intro {
+  border-color: rgba(215, 184, 95, 0.58);
+  border-radius: 16px;
+  background-color: var(--green-deep);
+  background-image: linear-gradient(90deg, rgba(8, 39, 27, 0.96), rgba(13, 52, 38, 0.78) 62%, rgba(25, 50, 72, 0.35)), url('/st-paul-preaching-athens.png');
+  background-position: center, center 43%;
+  background-size: cover;
+  box-shadow: 0 18px 40px rgba(12, 48, 33, 0.16);
+}
+.bible-intro h2 { font-size: 2.45rem; }
+.bible-intro .eyebrow,
+.bible-library-count strong { color: var(--gold-bright); }
+.reader-layout { gap: 22px; }
+.library-panel { border-radius: 10px; }
+.reader-toolbar { gap: 16px; }
+.reader-card .featured-verse { border-color: var(--gold); }
+.continuous-prose { border-color: var(--line); border-radius: 8px; background: var(--panel-strong); }
+.prose-verse.active,
+.verse-item.active { background: rgba(201, 163, 78, 0.18); outline-color: rgba(201, 163, 78, 0.42); }
+.verse-num,
+.verse-item strong { color: var(--blue); }
+
+.prayer-feature { border-color: rgba(215, 184, 95, 0.58); background: linear-gradient(145deg, var(--green-deep), #1c4f3a); color: #fff; box-shadow: 0 16px 34px rgba(12, 48, 33, 0.16); }
+.prayer-feature .mini-label { color: var(--gold-bright); }
+.prayer-feature h3,
+.prayer-feature .prayer-words { color: #fff; }
+.prayer-feature .prayer-guidance { color: rgba(255, 255, 255, 0.76); }
+.prayer-symbol { color: rgba(215, 184, 95, 0.22); }
+.prayer-choice { min-height: 48px; border-radius: 7px; }
+.prayer-choice.active { border-color: var(--gold); background: var(--panel-soft); color: var(--green); }
+.devotional-reading { border-left: 3px solid var(--gold); }
+.devotional-reading blockquote,
+.guide-step > p:not(.mini-label) { color: var(--green-deep); }
+body[data-theme='dark'] .devotional-reading blockquote,
+body[data-theme='dark'] .guide-step > p:not(.mini-label) { color: var(--ink); }
+
+.profile-section { box-shadow: 0 8px 22px rgba(20, 44, 32, 0.05); }
+.profile-row { border-color: var(--line); }
+.profile-links a { min-height: 46px; border-color: var(--line); border-radius: 7px; }
+.growth-summary-card strong { color: var(--blue); }
+.growth-practice,
+.reminder-row { min-height: 60px; border-color: var(--line); }
+.community-panel,
+.community-setup-notice { padding: 22px; }
+.community-post { border-color: var(--line); }
+.community-comment { border-color: var(--gold); border-radius: 0 6px 6px 0; background: var(--panel-soft); }
+.moderation-queue { border-left-color: var(--gold); }
+.reflection-book-margin { background: linear-gradient(155deg, var(--green-deep), #1c4f3a); }
+
+body[data-theme] .bottom-nav {
+  border-color: rgba(215, 184, 95, 0.48);
+  background: rgba(12, 48, 33, 0.98);
+  box-shadow: 0 -8px 24px rgba(12, 36, 25, 0.2);
+}
+.bottom-nav-item { min-height: 50px; color: rgba(255, 255, 255, 0.68); }
+.bottom-nav-item.active { color: #fff; }
+.bottom-nav-item.active .bottom-nav-icon { color: var(--gold-bright); }
+
+#root :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+#root button,
+#root a { -webkit-tap-highlight-color: transparent; }
+.dash-feature,
+.dash-shortcut,
+.dash-session,
+.feature-card,
+.lifeos-pathway,
+.panel,
+.secondary-btn,
+.primary-btn { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+
+@media (max-width: 768px) {
+  .app-shell { width: 100%; padding: 0 0 calc(82px + env(safe-area-inset-bottom)); }
+  .app-shell > .topbar { border-radius: 0; }
+  .is-home .topbar { display: none; }
+  .dash { padding: 12px 14px calc(88px + env(safe-area-inset-bottom)); gap: 18px; }
+  .dash-header { top: 0; margin: 0; border-radius: 10px; }
+  .dash-hero { min-height: 0; padding: 34px 22px 26px; border-radius: 14px; }
+  .dash-hero h1 { font-size: 3rem; }
+  .dash-hero-lead { font-size: 1.05rem; }
+  .dash-feature { padding: 18px; }
+  .content-page { gap: 18px; padding: 16px 16px 28px; }
+  .page-intro { padding-top: 12px; }
+  .page-intro h2 { font-size: 2rem; }
+  .bible-intro { border-radius: 12px; }
+  .prayer-feature { border-radius: 10px; }
+  .community-panel,
+  .community-setup-notice { padding: 16px; }
+}
+
+@media (max-width: 380px) {
+  .dash { padding-right: 11px; padding-left: 11px; }
+  .dash-header-actions { gap: 5px; }
+  .dash-icon-button { width: 40px; height: 40px; }
+}
+
+@media (max-width: 960px) {
+  .topbar { gap: 8px; padding-right: 12px; padding-left: 12px; }
+  .topbar .brand-name strong { font-size: 1rem; white-space: nowrap; }
+  .topbar .connection-status { display: none; }
+  .top-navigation { gap: 0; }
+  .topbar .top-navigation-item { padding-right: 9px; padding-left: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

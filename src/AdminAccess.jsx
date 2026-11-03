@@ -59,7 +59,7 @@ export default function AdminAccess() {
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
-        checkModerator(newSession);
+        setTimeout(() => checkModerator(newSession), 0);
       }
     );
 
@@ -98,46 +98,66 @@ export default function AdminAccess() {
   };
 
   if (checking) {
-    return <p style={{ padding: 30 }}>Checking administrator access...</p>;
+    return (
+      <main className="lifeos-admin-auth">
+        <section className="lifeos-admin-auth-panel" aria-live="polite">
+          <span className="lifeos-admin-auth-mark" aria-hidden="true">✦</span>
+          <p>Checking administrator access...</p>
+        </section>
+      </main>
+    );
   }
 
   if (!isSupabaseConfigured || !supabase) {
-    return <p style={{ padding: 30 }}>{message}</p>;
+    return (
+      <main className="lifeos-admin-auth">
+        <section className="lifeos-admin-auth-panel">
+          <span className="lifeos-admin-auth-mark" aria-hidden="true">✦</span>
+          <p className="lifeos-admin-auth-eyebrow">THE LIVING WORD</p>
+          <h1>LIFEOS Admin</h1>
+          <p role="alert">{message}</p>
+        </section>
+      </main>
+    );
   }
 
   if (!session || !allowed) {
     return (
-      <main style={{ maxWidth: 420, margin: '80px auto', padding: 24 }}>
-        <h1>LIFEOS Admin</h1>
-        <p>Private administrator access</p>
+      <main className="lifeos-admin-auth">
+        <section className="lifeos-admin-auth-panel">
+          <span className="lifeos-admin-auth-mark" aria-hidden="true">✦</span>
+          <p className="lifeos-admin-auth-eyebrow">THE LIVING WORD</p>
+          <h1>LIFEOS Admin</h1>
+          <p>Sign in with an authorized administrator account.</p>
 
-        <form onSubmit={handleLogin}>
-          <label htmlFor="admin-email">Email</label>
-          <input
-            id="admin-email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-            style={{ display: 'block', width: '100%', padding: 12, margin: '8px 0 16px' }}
-          />
+          <form className="lifeos-admin-auth-form" onSubmit={handleLogin}>
+            <label htmlFor="admin-email">Email</label>
+            <input
+              id="admin-email"
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
 
-          <label htmlFor="admin-password">Password</label>
-          <input
-            id="admin-password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            style={{ display: 'block', width: '100%', padding: 12, margin: '8px 0 16px' }}
-          />
+            <label htmlFor="admin-password">Password</label>
+            <input
+              id="admin-password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
 
-          <button type="submit" disabled={checking}>
-            Sign in
-          </button>
-        </form>
+            <button type="submit" disabled={checking}>
+              {checking ? 'Checking access...' : 'Sign in'}
+            </button>
+          </form>
 
-        {message && <p role="alert">{message}</p>}
+          {message && <p className="lifeos-admin-auth-message" role="alert">{message}</p>}
+        </section>
       </main>
     );
   }
@@ -145,8 +165,8 @@ export default function AdminAccess() {
   return (
     <>
       <button
+        className="admin-signout-button"
         onClick={handleLogout}
-        style={{ position: 'fixed', top: 12, right: 12, zIndex: 1000 }}
       >
         Sign out
       </button>

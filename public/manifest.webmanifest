@@ -7,8 +7,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f5f6fb",
-  "theme_color": "#101b3d",
+  "background_color": "#f5f3eb",
+  "theme_color": "#0c3021",
   "icons": [
     {
       "src": "/spirit-icon-192.png",

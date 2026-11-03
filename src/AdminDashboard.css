@@ -613,6 +613,15 @@
 }
 
 @media (max-width: 600px) {
+  .lifeos-admin-auth-panel {
+    padding: 26px 22px;
+  }
+
+  .admin-signout-button {
+    top: 12px;
+    right: 12px;
+  }
+
   .admin-testimony-card {
     padding: 17px;
   }
@@ -629,4 +638,279 @@
   .admin-testimony-toolbar select {
     width: 100%;
   }
+}
+
+.lifeos-admin-auth {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: #f8f6ef;
+  color: #26352d;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.lifeos-admin-auth-panel {
+  width: min(100%, 440px);
+  padding: 38px;
+  border: 1px solid #e9e7dc;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 44px #183a2512;
+}
+
+.lifeos-admin-auth-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: #d6ad55;
+  color: #0b2b1e;
+  font-size: 25px;
+}
+
+.lifeos-admin-auth-eyebrow {
+  margin: 24px 0 8px;
+  color: #a77b25;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.lifeos-admin-auth-panel h1 {
+  margin: 0 0 10px;
+  color: #123d2b;
+  font-size: 27px;
+}
+
+.lifeos-admin-auth-panel > p:not(.lifeos-admin-auth-eyebrow) {
+  color: #78847c;
+  line-height: 1.6;
+}
+
+.lifeos-admin-auth-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.lifeos-admin-auth-form label {
+  margin-top: 5px;
+  color: #26352d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lifeos-admin-auth-form input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #dfe4dd;
+  border-radius: 7px;
+  background: #fff;
+  color: #26352d;
+  font: inherit;
+}
+
+.lifeos-admin-auth-form input:focus-visible,
+.lifeos-admin-auth-form button:focus-visible {
+  outline: 3px solid #d6ad5580;
+  outline-offset: 2px;
+}
+
+.lifeos-admin-auth-form button,
+.admin-signout-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: #123d2b;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lifeos-admin-auth-form button {
+  margin-top: 12px;
+}
+
+.lifeos-admin-auth-form button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.lifeos-admin-auth-message {
+  padding: 12px;
+  border-radius: 7px;
+  background: #fff0f0;
+  color: #a42c2c !important;
+}
+
+.admin-signout-button {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 1000;
+  background: #fff;
+  color: #123d2b;
+  border: 1px solid #d9c28d;
+}
+
+.admin-record-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-record-card {
+  padding: 22px;
+  border: 1px solid #e8e9e3;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.admin-record-meta {
+  margin: 10px 0 0;
+  color: #858c85;
+  font-size: 13px;
+}
+
+.admin-status.open {
+  background: #fff4d8;
+  color: #936313;
+}
+
+.admin-status.resolved {
+  background: #e4f5e9;
+  color: #24723d;
+}
+
+@media (max-width: 600px) {
+  .lifeos-admin-auth-panel {
+    padding: 26px 22px;
+  }
+
+  .admin-signout-button {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+.lifeos-admin-auth {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: #f8f6ef;
+  color: #26352d;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.lifeos-admin-auth-panel {
+  width: min(100%, 440px);
+  padding: 38px;
+  border: 1px solid #e9e7dc;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 44px #183a2512;
+}
+
+.lifeos-admin-auth-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: #d6ad55;
+  color: #0b2b1e;
+  font-size: 25px;
+}
+
+.lifeos-admin-auth-eyebrow {
+  margin: 24px 0 8px;
+  color: #a77b25;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.lifeos-admin-auth-panel h1 {
+  margin: 0 0 10px;
+  color: #123d2b;
+  font-size: 27px;
+}
+
+.lifeos-admin-auth-panel > p:not(.lifeos-admin-auth-eyebrow) {
+  color: #78847c;
+  line-height: 1.6;
+}
+
+.lifeos-admin-auth-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.lifeos-admin-auth-form label {
+  margin-top: 5px;
+  color: #26352d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lifeos-admin-auth-form input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #dfe4dd;
+  border-radius: 7px;
+  background: #fff;
+  color: #26352d;
+  font: inherit;
+}
+
+.lifeos-admin-auth-form input:focus-visible,
+.lifeos-admin-auth-form button:focus-visible {
+  outline: 3px solid #d6ad5580;
+  outline-offset: 2px;
+}
+
+.lifeos-admin-auth-form button,
+.admin-signout-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: #123d2b;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lifeos-admin-auth-form button {
+  margin-top: 12px;
+}
+
+.lifeos-admin-auth-form button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.lifeos-admin-auth-message {
+  padding: 12px;
+  border-radius: 7px;
+  background: #fff0f0;
+  color: #a42c2c !important;
+}
+
+.admin-signout-button {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 1000;
+  background: #fff;
+  color: #123d2b;
+  border: 1px solid #d9c28d;
 }

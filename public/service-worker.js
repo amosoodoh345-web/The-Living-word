@@ -1,6 +1,7 @@
-const CACHE_NAME = 'life-in-the-spirit-v5';
+const CACHE_NAME = 'life-in-the-spirit-v6';
 const APP_SHELL = [
   '/',
+  '/index.html',
   '/manifest.webmanifest',
   '/spirit-icon-512.png',
   '/church.html',
