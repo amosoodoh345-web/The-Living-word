@@ -1,11 +1,17 @@
 const CACHE_PREFIX = 'life-in-the-spirit-';
 const BUILD_ID = '__LIFEOS_BUILD_ID__';
 const CACHE_NAME = `${CACHE_PREFIX}${BUILD_ID}`;
+const BUILD_ASSETS = '__LIFEOS_BUILD_ASSETS__';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
+  '/site-navigation.css',
+  '/spirit-icon-192.png',
   '/spirit-icon-512.png',
+  ...BUILD_ASSETS
+];
+const OPTIONAL_PAGES = [
   '/church.html',
   '/Bible.html',
   '/Life%20in%20the%20spirit.html',
@@ -15,7 +21,12 @@ const APP_SHELL = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => Promise.all(APP_SHELL.map((url) => cache.add(url).catch(() => undefined))))
+      .then(async (cache) => {
+        await cache.addAll(APP_SHELL);
+        await Promise.all(OPTIONAL_PAGES.map((url) => cache.add(url).catch((error) => {
+          console.warn(`Could not cache optional page ${url}:`, error);
+        })));
+      })
   );
 });
 

@@ -66,15 +66,15 @@ Existing pages include daily prayer intentions, a Holy Spirit novena, Rosary and
 
 The testimony page supports account sign-in, submission of testimonies and praise reports for review, display of approved stories, comments subject to moderation, and reports on approved stories. User submissions are pending until a moderator approves them. Private testimony drafts are a separate device-local feature.
 
-The current testimony page includes account creation and sign-in controls. This is existing functionality; this work did not add another registration or login flow. Whether new accounts can actually register also depends on the Supabase Auth project settings.
+Account creation, sign-in, and password recovery are available from the welcome page; the profile displays the signed-in account. Registration, email confirmation, and password recovery depend on the Supabase Auth and redirect configuration.
 
 ### Admin access and moderation
 
-`src/AdminAccess.jsx` restores a Supabase session and calls the `is_moderator()` database function before showing the admin dashboard. An account that fails the moderator check is signed out and denied the admin view. The database policies—not client-side visibility—must remain the authorization boundary.
+`src/AdminAccess.jsx` restores a Supabase session and calls the `is_moderator()` database function before showing the admin dashboard. An account that fails the moderator check is denied the admin view without ending its community session. The database policies—not client-side visibility—must remain the authorization boundary.
 
-The admin dashboard includes community statistics and testimony search/status filtering with approve/reject actions. Its dedicated Comments, Reports, and Settings tabs are placeholders. The current testimony page contains the operative pending-comment and open-report moderation queues, including report resolution.
+The admin dashboard includes community statistics, testimony search/status filtering, comment moderation, report resolution, and a Supabase-backed settings form. Settings are stored preferences only: they do not yet change public branding, moderation behavior, or send notifications. The testimony page also contains pending-comment and open-report moderation queues.
 
-Although the database policies permit authors to delete their own pending content, the current user interface does not expose delete controls for submitted community testimonies or comments. The privacy policy must not promise an in-app deletion control that is not present.
+The community interface allows authors to edit or delete their own pending testimonies. Submitted comments do not yet have author editing or deletion controls.
 
 ## 5. Technology stack
 
@@ -112,6 +112,7 @@ The repository's ordered migrations define:
 | `public.testimony_comments` | Parent testimony, author ID, comment body, moderation status, and timestamps. |
 | `public.testimony_reports` | Reported testimony, reporter ID, reason, open/resolved status, resolver, and resolution time. |
 | `public.moderators` | User IDs that are authorized to moderate. |
+| `public.admin_settings` | Singleton administrator preferences; readable and updatable by moderators. |
 
 Migration files:
 
@@ -119,6 +120,7 @@ Migration files:
 2. `supabase/migrations/202610160002_moderation_workflow.sql`
 3. `supabase/migrations/202610160003_testimony_comments.sql`
 4. `supabase/migrations/202611010004_complete_report_moderation.sql`
+5. `supabase/migrations/202611060005_admin_settings.sql`
 
 ### Security and Row Level Security (RLS)
 
@@ -137,8 +139,8 @@ This is a review of repository migration source, not a live database inspection 
 - The source reads the browser-safe URL and anon key from environment variables.
 - No service-role/secret-key reference was found in the active frontend source or migrations during this review.
 - `.env.local` is ignored by Git and was not read; do not commit it.
-- Community sign-up controls already exist in `TestimoniesPage`. Confirm whether public account registration is intended and configure Supabase Auth accordingly before launch.
-- The `comments`, `reports`, and `settings` areas in the separate admin dashboard are currently placeholders; moderation of those items is handled in the testimony page.
+- Community sign-up requires the intended Supabase Auth and email settings to be configured before launch.
+- Admin settings store preferences but do not yet control moderation, public branding, or notifications.
 
 ## 8. Environment configuration
 
@@ -181,7 +183,7 @@ Run the unit tests:
 npm test
 ```
 
-The configured Node test suite covers daily Scripture selection, local-day devotional rotation, explicit reading-history intent, reminders, and spiritual-growth calculations.
+The configured Node test suite covers daily Scripture selection, local-day devotional rotation, explicit reading-history intent, reminders, spiritual-growth calculations, and public navigation.
 
 Production build:
 
@@ -221,12 +223,12 @@ The repository contains no evidence that a Vercel deployment has been completed.
 - Bible text coverage depends on bundled passages, prior cache, and third-party API/version availability.
 - Browser notifications cannot guarantee reminders after the app is closed.
 - The app does not include cross-device accounts for personal content, journal backup, payments, or premium access.
-- The admin dashboard's dedicated comments, reports, and settings views are unfinished placeholders.
-- The community user interface does not currently expose account deletion or deletion controls for submitted testimonies/comments; provide and document a support-based request process before public launch.
+- Administrator settings do not yet control moderation, public branding, or notification delivery.
+- The community user interface does not currently expose account deletion or deletion controls for submitted comments and non-pending testimonies; provide and document a support-based request process before public launch.
 - The privacy policy at `privacy.html` is a draft and still contains a contact placeholder. Replace it and obtain appropriate review before public launch.
 - Confirm Scripture/content licensing, pastoral review of formation materials, production Supabase migrations/RLS/Auth configuration, privacy/retention rules, and mobile/browser support before release.
-- `capacitor.config.json` is preparation only; Capacitor Android dependencies/platform packaging are not installed or verified.
+- The Capacitor Android project exists, but native builds and OS-scheduled notifications have not been verified.
 
 ## 14. Future improvements
 
-Possible future work, subject to product approval, includes completing the admin comments/report queue, reviewing the community registration policy, adding secure personal-data export/backup, expanding automated browser tests, improving Bible offline downloads, and implementing reliable scheduled push notifications. These are recommendations, not features currently claimed by LIFEOS.
+Possible future work, subject to product approval, includes connecting administrator preferences to actual behavior, reviewing the community registration policy, adding secure personal-data export/backup, expanding automated browser tests, improving Bible offline downloads, and implementing reliable scheduled push notifications. These are recommendations, not features currently claimed by LIFEOS.

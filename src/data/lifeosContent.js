@@ -50,7 +50,7 @@ export const ROSARY_STEPS = [
   'On the first bead, pray the Our Father. On the next three beads, pray three Hail Marys. Conclude with the Glory Be.',
   'Announce the first mystery and take a moment to reflect on it. Pray the Our Father.',
   'On each of the next ten beads, pray a Hail Mary while reflecting on the mystery. Conclude the decade with the Glory Be and the Fatima Prayer if customary.',
-  'Repeat the mystery and decade pattern for the remaining four mysteries.',
+  'Repeat the mystery and decade pattern for the remaining four mysteries. After the decades, you may pray this traditional form of the Litany of the Blessed Virgin Mary; invocations vary by parish.',
   'Conclude with the Hail, Holy Queen and the Sign of the Cross, according to your custom.'
 ];
 

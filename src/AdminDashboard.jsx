@@ -39,6 +39,11 @@ export default function AdminDashboard() {
   const [reportsLoading, setReportsLoading] = useState(false);
   const [reportsError, setReportsError] = useState('');
   const [reportStatusFilter, setReportStatusFilter] = useState('open');
+  const [settings, setSettings] = useState(null);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsError, setSettingsError] = useState('');
+  const [settingsSuccess, setSettingsSuccess] = useState('');
 
   const pageTitles = {
     overview: 'Dashboard Overview',
@@ -173,6 +178,34 @@ export default function AdminDashboard() {
     }
   }
 
+  async function loadSettings() {
+    if (!supabase) {
+      setSettingsError('Supabase is not configured.');
+      return;
+    }
+
+    setSettingsLoading(true);
+    setSettingsError('');
+    setSettingsSuccess('');
+
+    try {
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .select('id, app_name, moderation_enabled, notify_new_testimonies, notify_new_comments, notify_new_reports')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) throw new Error('Administrator settings are not available. Check access and apply the latest Supabase migration.');
+      setSettings(data);
+    } catch (error) {
+      setSettings(null);
+      setSettingsError(error.message || 'Unable to load administrator settings.');
+    } finally {
+      setSettingsLoading(false);
+    }
+  }
+
   useEffect(() => {
     loadStats();
   }, []);
@@ -186,7 +219,42 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (activeView === 'comments') loadComments();
     if (activeView === 'reports') loadReports();
+    if (activeView === 'settings') loadSettings();
   }, [activeView]);
+
+  async function saveSettings(event) {
+    event.preventDefault();
+    if (!supabase || !settings) return;
+
+    setSettingsSaving(true);
+    setSettingsError('');
+    setSettingsSuccess('');
+
+    try {
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .update({
+          app_name: settings.app_name.trim(),
+          moderation_enabled: settings.moderation_enabled,
+          notify_new_testimonies: settings.notify_new_testimonies,
+          notify_new_comments: settings.notify_new_comments,
+          notify_new_reports: settings.notify_new_reports,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', 1)
+        .select('id, app_name, moderation_enabled, notify_new_testimonies, notify_new_comments, notify_new_reports')
+        .single();
+
+      if (error) throw error;
+
+      setSettings(data);
+      setSettingsSuccess('Administrator settings saved successfully.');
+    } catch (error) {
+      setSettingsError(error.message || 'Unable to save administrator settings.');
+    } finally {
+      setSettingsSaving(false);
+    }
+  }
 
   async function updateTestimonyStatus(id, newStatus) {
     const confirmed = window.confirm(
@@ -203,7 +271,9 @@ export default function AdminDashboard() {
       const { error } = await supabase
         .from('testimonies')
         .update({ status: newStatus })
-        .eq('id', id);
+        .eq('id', id)
+        .select('id')
+        .single();
 
       if (error) throw error;
 
@@ -231,7 +301,9 @@ export default function AdminDashboard() {
       const { error } = await supabase
         .from('testimony_comments')
         .update({ status: newStatus })
-        .eq('id', id);
+        .eq('id', id)
+        .select('id')
+        .single();
 
       if (error) throw error;
 
@@ -260,7 +332,9 @@ export default function AdminDashboard() {
       const { error } = await supabase
         .from('testimony_reports')
         .update(resolution)
-        .eq('id', report.id);
+        .eq('id', report.id)
+        .select('id')
+        .single();
 
       if (error) throw error;
 
@@ -658,10 +732,107 @@ export default function AdminDashboard() {
           )}
 
           {activeView === 'settings' && (
-            <div className="admin-placeholder">
-              <span>⚙️</span>
-              <h2>Dashboard Settings</h2>
-              <p>No administrator settings table is configured for this project.</p>
+            <div className="admin-settings">
+              <div className="admin-section-heading">
+                <div>
+                  <h2>Dashboard Settings</h2>
+                  <p>Manage LIFEOS community and notification preferences.</p>
+                </div>
+                <button className="admin-refresh" onClick={loadSettings} disabled={settingsLoading || settingsSaving}>
+                  ↻ {settingsLoading ? 'Loading...' : 'Refresh'}
+                </button>
+              </div>
+
+              {settingsError && <div className="admin-error" role="alert">{settingsError}</div>}
+              {settingsSuccess && <div className="admin-success" role="status">{settingsSuccess}</div>}
+
+              {settingsLoading ? (
+                <div className="admin-placeholder" aria-live="polite">
+                  <span>⏳</span>
+                  <h2>Loading settings...</h2>
+                </div>
+              ) : settings ? (
+                <form className="admin-settings-form" onSubmit={saveSettings}>
+                  <section className="admin-settings-card">
+                    <div className="admin-settings-card-heading">
+                      <div>
+                        <h3>Application</h3>
+                        <p>Save the preferred application name. Other pages do not yet use this value.</p>
+                      </div>
+                    </div>
+                    <label htmlFor="admin-app-name">Application name</label>
+                    <input
+                      id="admin-app-name"
+                      type="text"
+                      value={settings.app_name}
+                      maxLength={120}
+                      disabled={settingsSaving}
+                      onChange={(event) => setSettings({ ...settings, app_name: event.target.value })}
+                      required
+                    />
+                  </section>
+
+                  <section className="admin-settings-card">
+                    <div className="admin-settings-card-heading">
+                      <div>
+                        <h3>Community moderation</h3>
+                        <p>This preference is stored only. New content still requires moderator approval regardless of this setting.</p>
+                      </div>
+                    </div>
+                    <label className="admin-setting-toggle">
+                      <input
+                        type="checkbox"
+                        checked={settings.moderation_enabled}
+                        disabled={settingsSaving}
+                        onChange={(event) => setSettings({ ...settings, moderation_enabled: event.target.checked })}
+                      />
+                      <span>
+                        <strong>Preferred community moderation setting</strong>
+                        <small>Changing this preference does not change the existing moderation policies.</small>
+                      </span>
+                    </label>
+                  </section>
+
+                  <section className="admin-settings-card">
+                    <div className="admin-settings-card-heading">
+                      <div>
+                        <h3>Notification preferences</h3>
+                        <p>These preferences are saved, but notification delivery is not configured.</p>
+                      </div>
+                    </div>
+                    {[
+                      ['notify_new_testimonies', 'New testimonies', 'Preference for testimony submissions.'],
+                      ['notify_new_comments', 'New comments', 'Preference for comment submissions.'],
+                      ['notify_new_reports', 'New reports', 'Preference for community reports.'],
+                    ].map(([key, label, description]) => (
+                      <label className="admin-setting-toggle" key={key}>
+                        <input
+                          type="checkbox"
+                          checked={settings[key]}
+                          disabled={settingsSaving}
+                          onChange={(event) => setSettings({ ...settings, [key]: event.target.checked })}
+                        />
+                        <span>
+                          <strong>{label}</strong>
+                          <small>{description}</small>
+                        </span>
+                      </label>
+                    ))}
+                  </section>
+
+                  <div className="admin-settings-actions">
+                    <button className="admin-approve-button" type="submit" disabled={settingsSaving || !settings.app_name.trim()}>
+                      {settingsSaving ? 'Saving...' : 'Save settings'}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="admin-placeholder">
+                  <span>⚙️</span>
+                  <h2>Settings unavailable</h2>
+                  <p>Settings could not be loaded from Supabase.</p>
+                </div>
+              )}
             </div>
           )}
 

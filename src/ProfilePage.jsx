@@ -17,6 +17,10 @@ export default function ProfilePage({
   reminders,
   notificationPermission,
   counts,
+  session,
+  authReady,
+  sessionError,
+  onSignOut,
   onNavigate
 }) {
   const enabledReminders = reminders.filter((reminder) => reminder.enabled).length;
@@ -27,6 +31,22 @@ export default function ProfilePage({
         <p className="eyebrow">Your space</p>
         <h2>Profile & settings</h2>
         <p>Your reflections, progress, and preferences are saved only on this device. Signing in is only needed for community testimonies.</p>
+      </section>
+
+      <section className="panel profile-section" aria-label="Community account">
+        <div className="section-heading"><div><p className="mini-label">Community</p><h3>Your account</h3></div></div>
+        {sessionError && <p role="alert">{sessionError}</p>}
+        {!authReady ? <p role="status">Checking your session...</p> : session ? (
+          <div className="profile-row">
+            <span>Signed in<small>{session.user.user_metadata?.full_name || session.user.email || 'Community member'}</small></span>
+            <button className="secondary-btn small" onClick={onSignOut}>Sign out</button>
+          </div>
+        ) : (
+          <div className="profile-row">
+            <span>Not signed in<small>Sign in to share with the community.</small></span>
+            <button className="secondary-btn small" onClick={() => onNavigate('signin')}>Sign in</button>
+          </div>
+        )}
       </section>
 
       <section className="panel profile-section" aria-label="App settings">

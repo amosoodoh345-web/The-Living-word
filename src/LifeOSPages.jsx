@@ -179,7 +179,7 @@ export function WisdomReadingsPage({ onOpenBible }) {
 
 export function PrayerPage({ prayerFocus, setPrayerFocus, defaultPrayerFocuses, onNavigate }) {
   return (
-    <main className="content-page lifeos-content-page">
+    <main className="content-page lifeos-content-page prayer-mobile-page">
       <section className="page-intro">
         <p className="eyebrow">Daily prayer</p>
         <h2>A moment of prayer</h2>
@@ -261,7 +261,7 @@ export function PrayerGuidePage({ kind }) {
   const currentStep = Math.min(step, steps.length - 1);
 
   return (
-    <main className="content-page lifeos-content-page">
+    <main className="content-page lifeos-content-page prayer-guide-page">
       <section className="page-intro">
         <p className="eyebrow">Interactive prayer guide</p>
         <h2>{isRosary ? 'The Holy Rosary' : 'Divine Mercy Chaplet'}</h2>
@@ -278,6 +278,9 @@ export function PrayerGuidePage({ kind }) {
       )}
       <article className="devotional-reading guide-step" aria-live="polite">
         <p className="mini-label">Step {currentStep + 1} of {steps.length}</p>
+        <div className="prayer-progress" role="progressbar" aria-label="Prayer guide progress" aria-valuemin={1} aria-valuemax={steps.length} aria-valuenow={currentStep + 1}>
+          <span style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }} />
+        </div>
         <p>{steps[currentStep]}</p>
         {(isRosary ? ROSARY_PRAYER_SETS : CHAPLET_PRAYER_SETS)[currentStep]?.map((key) => (
           <details className="prayer-text" key={key}>
@@ -346,14 +349,12 @@ export function SongsPage() {
   );
 }
 
-export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = '', onPrefillConsumed }) {
+export function TestimoniesPage({ session, onNavigate, reports, onAdd, onDelete, initialExperience = '', onPrefillConsumed }) {
   const [title, setTitle] = useState(() => initialExperience ? 'My experience' : '');
   const [story, setStory] = useState(initialExperience);
   const [category, setCategory] = useState('testimony');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSigningUp, setIsSigningUp] = useState(false);
-  const [session, setSession] = useState(null);
+  const [editingPost, setEditingPost] = useState(null);
+  const [editingBusy, setEditingBusy] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
   const [communityPosts, setCommunityPosts] = useState([]);
   const [mySubmissions, setMySubmissions] = useState([]);
@@ -361,7 +362,8 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
   const [pendingComments, setPendingComments] = useState([]);
   const [moderationReports, setModerationReports] = useState([]);
   const [commentDrafts, setCommentDrafts] = useState({});
-  const [isLoadingCommunity, setIsLoadingCommunity] = useState(false);
+  const [isLoadingCommunity, setIsLoadingCommunity] = useState(isSupabaseConfigured);
+  const [communityLoadError, setCommunityLoadError] = useState('');
   const [reportingId, setReportingId] = useState('');
   const [reportReason, setReportReason] = useState('');
   const [message, setMessage] = useState('');
@@ -373,28 +375,8 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
   useEffect(() => {
     if (!isSupabaseConfigured) return undefined;
     let isCurrent = true;
-
-    supabase.auth.getSession().then(({ data, error }) => {
-      if (!isCurrent) return;
-      if (error) setMessage('Could not restore your sign-in session. Please sign in again.');
-      setSession(data?.session || null);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setMessage('');
-    });
-
-    return () => {
-      isCurrent = false;
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isSupabaseConfigured) return undefined;
-    let isCurrent = true;
     setIsLoadingCommunity(true);
+    setCommunityLoadError('');
 
     const loadCommunity = async () => {
       try {
@@ -427,7 +409,9 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
 
         if (!isCurrent) return;
         if (publicResult.error || ownResult.error || moderatorResult.error || commentsResult.error) {
-          setMessage('The community feed is not available. Check all Supabase migrations and access policies.');
+          setCommunityLoadError('The community feed is not available. Check the Supabase configuration, migrations, and access policies.');
+          setCommunityPosts([]);
+          setMySubmissions([]);
           setIsModerator(false);
           setPendingSubmissions([]);
           setPendingComments([]);
@@ -472,6 +456,7 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
             if (!isCurrent) return;
             if (pendingResult.error || commentsPendingResult.error || reportsResult.error) {
               setMessage('The moderator queue could not load. Confirm the moderation migration is applied.');
+              setIsModerator(false);
             } else {
               setPendingSubmissions(pendingResult.data || []);
               setPendingComments(commentsPendingResult.data || []);
@@ -485,7 +470,10 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
         }
       } catch {
         if (!isCurrent) return;
-        setMessage('The community service could not be reached. Check your connection and Supabase configuration.');
+        setCommunityLoadError('The community service could not be reached. Check your connection and Supabase configuration.');
+        setCommunityPosts([]);
+        setMySubmissions([]);
+        setIsModerator(false);
       } finally {
         if (isCurrent) setIsLoadingCommunity(false);
       }
@@ -498,35 +486,17 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     };
   }, [session]);
 
-  const handleAuthentication = async (event) => {
-    event.preventDefault();
-    setMessage('');
-    const result = isSigningUp
-      ? await supabase.auth.signUp({ email: email.trim(), password })
-      : await supabase.auth.signInWithPassword({ email: email.trim(), password });
-
-    if (result.error) {
-      setMessage(result.error.message);
-    } else if (isSigningUp && !result.data.session) {
-      setMessage('Check your email to confirm your account, then sign in.');
-    } else {
-      setSession(result.data.session);
-      setPassword('');
-      setMessage(isSigningUp ? 'Account created. You can now submit a testimony for review.' : 'You are signed in.');
-    }
-  };
-
   const submitCommunityPost = async (event) => {
     event.preventDefault();
     if (!session || !title.trim() || !story.trim()) return;
     setMessage('');
-    const { error } = await supabase.from('testimonies').insert({
+    const { data, error } = await supabase.from('testimonies').insert({
       user_id: session.user.id,
       title: title.trim(),
       body: story.trim(),
       category,
       status: 'pending'
-    });
+    }).select('id, title, body, category, status, created_at').single();
 
     if (error) {
       setMessage('Your testimony could not be submitted. Please try again.');
@@ -535,14 +505,7 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
 
     setTitle('');
     setStory('');
-    setMySubmissions((previous) => [{
-      id: `pending-${Date.now()}`,
-      title: title.trim(),
-      body: story.trim(),
-      category,
-      status: 'pending',
-      created_at: new Date().toISOString()
-    }, ...previous]);
+    setMySubmissions((previous) => [data, ...previous]);
     setMessage('Submitted for moderator review. It will appear publicly only if approved.');
   };
 
@@ -564,13 +527,6 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     }
 
     setCommentDrafts((previous) => ({ ...previous, [testimonyId]: '' }));
-    setPendingComments((previous) => [{
-      id: `pending-${Date.now()}`,
-      testimony_id: testimonyId,
-      user_id: session.user.id,
-      body,
-      created_at: new Date().toISOString()
-    }, ...previous]);
     setMessage('Comment submitted for review. It will appear after a moderator approves it.');
   };
 
@@ -583,7 +539,11 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
       reason: reportReason.trim()
     });
 
-    setMessage(error ? 'This report could not be submitted.' : 'Thank you. The report was sent to moderators.');
+    if (error) {
+      setMessage('This report could not be submitted.');
+      return;
+    }
+    setMessage('Thank you. The report was sent to moderators.');
     setReportReason('');
     setReportingId('');
   };
@@ -592,7 +552,9 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     const { error } = await supabase
       .from('testimonies')
       .update({ status })
-      .eq('id', submission.id);
+      .eq('id', submission.id)
+      .select('id')
+      .single();
 
     if (error) {
       setMessage('That moderation decision could not be saved.');
@@ -611,7 +573,9 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     const { error } = await supabase
       .from('testimony_comments')
       .update({ status })
-      .eq('id', comment.id);
+      .eq('id', comment.id)
+      .select('id')
+      .single();
 
     if (error) {
       setMessage('That comment moderation decision could not be saved.');
@@ -631,7 +595,9 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     const { error } = await supabase
       .from('testimony_reports')
       .update({ status: 'resolved', resolved_by: session.user.id, resolved_at: new Date().toISOString() })
-      .eq('id', report.id);
+      .eq('id', report.id)
+      .select('id')
+      .single();
 
     if (error) {
       setMessage('That report could not be marked resolved.');
@@ -656,6 +622,50 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
     setMessage(error ? 'Could not sign out. Please try again.' : 'You are signed out.');
   };
 
+  const saveEditedPost = async (event) => {
+    event.preventDefault();
+    if (!session || !editingPost) return;
+    if (!editingPost.title.trim() || !editingPost.body.trim()) {
+      setMessage('Enter a title and story before saving.');
+      return;
+    }
+    setEditingBusy(true);
+    setMessage('');
+    try {
+      const { data, error } = await supabase.from('testimonies')
+        .update({ title: editingPost.title.trim(), body: editingPost.body.trim(), category: editingPost.category })
+        .eq('id', editingPost.id).eq('user_id', session.user.id).eq('status', 'pending')
+        .select('id, user_id, title, body, category, status, created_at').single();
+      if (error) throw error;
+      setMySubmissions((previous) => previous.map((post) => post.id === data.id ? data : post));
+      setEditingPost(null);
+      setMessage('Your pending testimony was updated.');
+    } catch (error) {
+      setMessage(error.message || 'Your testimony could not be updated.');
+    } finally {
+      setEditingBusy(false);
+    }
+  };
+
+  const deletePendingPost = async (post) => {
+    if (!session || !window.confirm('Delete this pending testimony?')) return;
+    setEditingBusy(true);
+    setMessage('');
+    try {
+      const { data, error } = await supabase.from('testimonies')
+        .delete().eq('id', post.id).eq('user_id', session.user.id).eq('status', 'pending')
+        .select('id').single();
+      if (error) throw error;
+      setMySubmissions((previous) => previous.filter((item) => item.id !== data.id));
+      setEditingPost(null);
+      setMessage('Your pending testimony was deleted.');
+    } catch (error) {
+      setMessage(error.message || 'Your testimony could not be deleted.');
+    } finally {
+      setEditingBusy(false);
+    }
+  };
+
   return (
     <main className="content-page lifeos-content-page">
       <section className="page-intro">
@@ -672,7 +682,7 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
         <>
           <section className="community-panel">
             <div className="section-heading"><div><p className="mini-label">Community feed</p><h3>Approved stories</h3></div><span className="subtle-label">Reviewed before publishing</span></div>
-            {isLoadingCommunity ? <p className="subtle-label">Loading community stories…</p> : communityPosts.length === 0 ? <p className="empty-state">No approved stories have been published yet.</p> : communityPosts.map((post) => (
+            {isLoadingCommunity ? <p className="subtle-label">Loading community stories…</p> : communityLoadError ? <p role="alert">{communityLoadError}</p> : communityPosts.length === 0 ? <p className="empty-state">No approved stories have been published yet.</p> : communityPosts.map((post) => (
               <article className="community-post" key={post.id}>
                 <p className="mini-label">{post.category === 'praise_report' ? 'Praise report' : 'Testimony'} · {new Date(post.created_at).toLocaleDateString()}</p>
                 <h4>{post.title}</h4><p>{post.body}</p>
@@ -689,7 +699,7 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
                       <textarea id={`comment-${post.id}`} value={commentDrafts[post.id] || ''} onChange={(event) => setCommentDrafts((previous) => ({ ...previous, [post.id]: event.target.value }))} maxLength={2000} required />
                       <button className="secondary-btn small" type="submit">Comment for review</button>
                     </form>
-                  ) : <p className="subtle-label">Sign in below to join the conversation. Comments are reviewed before appearing.</p>}
+                  ) : <p className="subtle-label">Sign in to join the conversation. Comments are reviewed before appearing.</p>}
                 </div>
                 {session && <button className="text-button" onClick={() => { setReportingId(post.id); setReportReason(''); }}>Report this story</button>}
                 {reportingId === post.id && (
@@ -771,20 +781,38 @@ export function TestimoniesPage({ reports, onAdd, onDelete, initialExperience = 
                 {mySubmissions.length === 0 ? <p className="empty-state">You have no submissions yet.</p> : mySubmissions.map((post) => (
                   <article className="lifeos-pathway" key={post.id}>
                     <p className="mini-label">{post.category === 'praise_report' ? 'Praise report' : 'Testimony'} · {post.status}</p><h3>{post.title}</h3><p>{post.body}</p>
+                    {post.status === 'pending' && (
+                      <div className="moderation-actions">
+                        <button className="secondary-btn small" type="button" disabled={editingBusy} onClick={() => setEditingPost({ ...post })}>Edit</button>
+                        <button className="text-button" type="button" disabled={editingBusy} onClick={() => deletePendingPost(post)}>Delete</button>
+                      </div>
+                    )}
+                    {editingPost?.id === post.id && (
+                      <form className="journal-form" onSubmit={saveEditedPost}>
+                        <label htmlFor={`edit-title-${post.id}`}>Title</label>
+                        <input id={`edit-title-${post.id}`} value={editingPost.title} maxLength={120} required onChange={(event) => setEditingPost({ ...editingPost, title: event.target.value })} />
+                        <label htmlFor={`edit-body-${post.id}`}>Story</label>
+                        <textarea id={`edit-body-${post.id}`} value={editingPost.body} maxLength={5000} required onChange={(event) => setEditingPost({ ...editingPost, body: event.target.value })} />
+                        <label htmlFor={`edit-category-${post.id}`}>Story type</label>
+                        <select id={`edit-category-${post.id}`} value={editingPost.category} onChange={(event) => setEditingPost({ ...editingPost, category: event.target.value })}>
+                          <option value="testimony">Testimony</option><option value="praise_report">Praise report</option>
+                        </select>
+                        <div className="moderation-actions">
+                          <button className="primary-btn small" type="submit" disabled={editingBusy}>{editingBusy ? 'Saving...' : 'Save changes'}</button>
+                          <button className="text-button" type="button" disabled={editingBusy} onClick={() => setEditingPost(null)}>Cancel</button>
+                        </div>
+                      </form>
+                    )}
                   </article>
                 ))}
               </section>
             </>
           ) : (
-            <form className="journal-form panel" onSubmit={handleAuthentication}>
-              <div className="section-heading"><div><p className="mini-label">Community account</p><h3>{isSigningUp ? 'Create an account' : 'Sign in to share'}</h3></div></div>
-              <label htmlFor="community-email">Email</label>
-              <input id="community-email" className="search-box" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-              <label htmlFor="community-password">Password</label>
-              <input id="community-password" className="search-box" type="password" autoComplete={isSigningUp ? 'new-password' : 'current-password'} minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required />
-              <div className="journal-form-footer"><button className="primary-btn" type="submit">{isSigningUp ? 'Create account' : 'Sign in'}</button><button className="text-button" type="button" onClick={() => setIsSigningUp((value) => !value)}>{isSigningUp ? 'I already have an account' : 'Create an account'}</button></div>
+            <section className="journal-form panel">
+              <div className="section-heading"><div><p className="mini-label">Community account</p><h3>Sign in to share</h3></div></div>
+              <div className="journal-form-footer"><button className="primary-btn" type="button" onClick={() => onNavigate('signin')}>Sign in</button><button className="text-button" type="button" onClick={() => onNavigate('signup')}>Create an account</button></div>
               <p className="subtle-label">Email confirmation may be required. Your email is not shown with public stories.</p>
-            </form>
+            </section>
           )}
         </>
       )}

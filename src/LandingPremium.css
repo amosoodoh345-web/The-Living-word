@@ -1,0 +1,325 @@
+.lifeos-landing {
+  --wine: #4b101b;
+  --burgundy: #701d2a;
+  --champagne: #c49a45;
+  --parchment: #f3e4cc;
+  --brown: #38251f;
+}
+
+.lifeos-landing .landing-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  width: 100%;
+  min-height: 76px;
+  background: rgba(255, 248, 237, .97);
+  border-bottom: 1px solid rgba(196, 154, 69, .35);
+  box-shadow: 0 3px 20px rgba(75, 16, 27, .06);
+}
+
+.lifeos-landing .landing-desktop-nav button,
+.lifeos-landing .landing-nav-signin {
+  padding: 10px 8px;
+  border-radius: 7px;
+  color: var(--brown);
+}
+
+.lifeos-landing .landing-desktop-nav button:hover,
+.lifeos-landing .landing-nav-signin:hover {
+  color: #a56d17;
+}
+
+.lifeos-landing .landing-desktop-nav .landing-nav-active {
+  background: var(--burgundy);
+  color: white;
+}
+
+.landing-nav-group {
+  display: flex;
+  align-items: center;
+}
+
+.landing-nav-dropdown {
+  position: relative;
+}
+
+.landing-nav-dropdown summary {
+  padding: 9px 5px;
+  color: var(--burgundy);
+  cursor: pointer;
+  list-style: none;
+}
+
+.landing-nav-dropdown summary::-webkit-details-marker { display: none; }
+.landing-nav-dropdown summary:focus-visible { outline: 3px solid var(--champagne); }
+
+.landing-nav-dropdown > div {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: grid;
+  min-width: 150px;
+  padding: 8px;
+  border: 1px solid #e8d3b1;
+  border-radius: 10px;
+  background: #fff8ed;
+  box-shadow: 0 12px 30px rgba(75, 16, 27, .15);
+}
+
+.landing-nav-dropdown > div button { text-align: left; }
+
+.lifeos-landing .landing-hero-image {
+  background-image: url('/images/lifeos-hero-optimized.jpg');
+  background-position: center center;
+}
+
+.lifeos-landing .landing-hero-content {
+  background: linear-gradient(90deg, #f3e4cc, #fff8ed 50%, #f3e4cc);
+}
+
+.lifeos-landing .landing-primary-action,
+.lifeos-landing .landing-secondary-action {
+  min-height: 48px;
+  border-radius: 999px;
+}
+
+.lifeos-landing .landing-scripture,
+.lifeos-landing .landing-explore,
+.lifeos-landing .landing-growth,
+.lifeos-landing .landing-community,
+.lifeos-landing .landing-invitation,
+.lifeos-landing .landing-footer {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.lifeos-landing .landing-scripture {
+  position: relative;
+  min-height: 320px;
+  padding: 65px max(6vw, calc((100vw - 1200px) / 2));
+  overflow: hidden;
+  border-top: 3px solid var(--champagne);
+  border-bottom: 3px solid var(--champagne);
+  background:
+    radial-gradient(ellipse at 86% 20%, rgba(255, 253, 220, .95), transparent 35%),
+    linear-gradient(120deg, #f2dfbd, #fff6e3 48%, #e9c48a);
+}
+
+.landing-scripture::after,
+.landing-growth::after {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(196, 154, 69, .35);
+  pointer-events: none;
+  content: '';
+}
+
+.lifeos-landing .landing-scripture-copy {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 660px;
+}
+
+.lifeos-landing .landing-scripture h2,
+.lifeos-landing .landing-growth h2,
+.lifeos-landing .landing-invitation h2 {
+  color: var(--burgundy);
+}
+
+.lifeos-landing .landing-scripture blockquote {
+  color: var(--brown);
+  font-style: italic;
+}
+
+.lifeos-landing .landing-scripture-reference {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--burgundy);
+  color: white;
+}
+
+.lifeos-landing .landing-scripture .landing-text-link {
+  display: flex;
+  width: fit-content;
+  padding: 10px 17px;
+  border: 1px solid var(--champagne);
+  border-radius: 999px;
+}
+
+.lifeos-landing .landing-scripture-symbol {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: #a9752b;
+}
+
+.landing-scripture-symbol::before {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbe6, rgba(247, 215, 156, .1) 70%);
+  content: '';
+}
+
+.landing-scripture-symbol svg,
+.landing-scripture-symbol span { position: relative; }
+.landing-scripture-symbol svg { width: 140px; height: 140px; stroke-width: 1; }
+.landing-scripture-symbol span { margin-right: -12px; font-size: 90px; opacity: .6; }
+
+.lifeos-landing .landing-explore {
+  padding: 72px max(5vw, calc((100vw - 1200px) / 2)) 80px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(196, 154, 69, .16), transparent 24%),
+    repeating-linear-gradient(45deg, transparent 0 36px, rgba(255, 255, 255, .018) 37px 38px),
+    linear-gradient(120deg, #4b101b, #801f30 50%, #4b101b);
+}
+
+.lifeos-landing .landing-explore .landing-section-kicker,
+body[data-theme='dark'] .lifeos-landing .landing-explore .landing-section-kicker {
+  color: #f2d89c;
+}
+
+.lifeos-landing .landing-explore .landing-section-title h2 {
+  color: #fff8ed;
+}
+
+.lifeos-landing .landing-explore .landing-section-title > p:last-child {
+  color: #f3e4cc;
+}
+
+.lifeos-landing .landing-faith-card {
+  border: 1px solid #d5ad69;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #fffaf0, #f3e4cc);
+  box-shadow: 0 8px 20px rgba(29, 0, 7, .18);
+}
+
+.lifeos-landing .landing-faith-card:hover {
+  border-color: #fff0c7;
+  box-shadow: 0 14px 28px rgba(29, 0, 7, .25);
+}
+
+.lifeos-landing .landing-growth {
+  position: relative;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  align-items: stretch;
+  border-radius: 0;
+  background: radial-gradient(circle at 85% 20%, #fff8e6, transparent 35%), #f3e4cc;
+}
+
+.lifeos-landing .landing-growth-art {
+  min-height: 330px;
+  margin: 42px 0 42px max(6vw, calc((100vw - 1200px) / 2));
+  border: 2px solid #c49a45;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 35%, #fff4bc, #d59a50 45%, #713024 100%);
+  box-shadow: 0 8px 26px rgba(75, 16, 27, .18);
+}
+
+.landing-dove {
+  z-index: 1;
+  width: min(60%, 220px);
+  fill: #fff9e8;
+  filter: drop-shadow(0 0 14px rgba(255, 250, 208, .8));
+}
+
+.lifeos-landing .landing-growth-copy {
+  position: relative;
+  z-index: 1;
+  padding: 65px max(6vw, calc((100vw - 1200px) / 2)) 65px clamp(35px, 5vw, 75px);
+}
+
+.landing-growth-actions,
+.landing-invitation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+}
+
+.lifeos-landing .landing-community {
+  padding: 80px max(6vw, calc((100vw - 1200px) / 2));
+  text-align: center;
+  background:
+    linear-gradient(90deg, rgba(75, 16, 27, .96), rgba(75, 16, 27, .82)),
+    url('/images/st-paul-community.jpg') center 40% / cover;
+}
+
+.lifeos-landing .landing-community h2 { color: #fff8ed; }
+.lifeos-landing .landing-community > p:not(.landing-section-kicker) { color: #f3e4cc; }
+.lifeos-landing .landing-community > .landing-section-kicker { color: #f4d18c; }
+.lifeos-landing .landing-community > .landing-secondary-action { border-color: #f3e4cc; background: #fff8ed; color: #701d2a; }
+.lifeos-landing .landing-story .landing-section-kicker { color: #701d2a; }
+.landing-community-credit { display: block; margin-top: 24px; color: #f3e4cc; font-size: 11px; }
+
+.lifeos-landing .landing-invitation {
+  padding: 65px 24px;
+  border-radius: 0;
+  background: radial-gradient(circle at 10% 50%, #f3e0bb, transparent 30%), #fff8ed;
+}
+
+.landing-invitation-actions { justify-content: center; }
+
+.lifeos-landing .landing-footer {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 36px;
+  padding: 56px max(6vw, calc((100vw - 1200px) / 2)) 28px;
+  background: #4b101b;
+  color: #f3e4cc;
+}
+
+.lifeos-landing .landing-footer .landing-footer-brand > strong {
+  color: #fff8ed;
+  font-size: 30px;
+}
+
+.lifeos-landing .landing-footer nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-left: 1px solid rgba(196, 154, 69, .45);
+  padding-left: 22px;
+}
+
+.lifeos-landing .landing-footer nav strong {
+  margin-bottom: 5px;
+  color: #f3d9a1;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+.lifeos-landing .landing-footer nav button,
+.lifeos-landing .landing-footer nav a {
+  padding: 3px 0;
+  color: #fff8ed;
+  text-align: left;
+}
+
+.lifeos-landing .landing-footer nav button:hover,
+.lifeos-landing .landing-footer nav a:hover { color: #e7c879; }
+.lifeos-landing .landing-footer > p { grid-column: 1 / -1; border-color: rgba(196, 154, 69, .45); }
+
+@media (max-width: 750px) {
+  .lifeos-landing .landing-header { min-height: 68px; }
+  .lifeos-landing .landing-hero-image { background-position: right center; }
+  .lifeos-landing .landing-scripture { padding: 52px 25px; }
+  .lifeos-landing .landing-scripture-symbol { display: none; }
+  .lifeos-landing .landing-explore { padding: 58px 18px 65px; }
+  .lifeos-landing .landing-faith-card { min-height: 210px; padding: 17px; }
+  .lifeos-landing .landing-growth { grid-template-columns: 1fr; }
+  .lifeos-landing .landing-growth-art { min-height: 220px; margin: 28px 28px 0; }
+  .lifeos-landing .landing-growth-copy { padding: 35px 28px 48px; }
+  .lifeos-landing .landing-community { padding: 60px 24px; }
+  .lifeos-landing .landing-invitation { padding: 60px 22px; }
+  .lifeos-landing .landing-footer { grid-template-columns: 1fr 1fr; gap: 28px; padding: 45px 24px 24px; }
+  .lifeos-landing .landing-footer-brand { grid-column: 1 / -1; }
+  .lifeos-landing .landing-footer nav { padding-left: 14px; }
+}

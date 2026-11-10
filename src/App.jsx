@@ -23,6 +23,7 @@ import {
 import AdminAccess from './AdminAccess';
 import HomeDashboard from './HomeDashboard';
 import LandingPage from './LandingPage';
+import AuthPage from './AuthPage';
 import { Icon } from './Icons';
 import ProfilePage from './ProfilePage';
 import RemindersPage from './RemindersPage';
@@ -36,6 +37,9 @@ import {
 import { getGrowthSummary, toggleDailyPractice } from './lib/spiritualGrowth';
 import { matchesReadingIntent } from './lib/readingHistory';
 import { SEMINAR_SESSIONS } from './data/lifeosContent';
+import { PUBLIC_PAGES } from './data/publicNavigation';
+import { supabase } from './lib/supabase';
+import { confirmationDestination } from './lib/authNavigation';
 
 const translations = [
   { id: 'kjv', label: 'KJV', fullName: 'King James Version (with Apocrypha)' },
@@ -73,6 +77,19 @@ const navGroups = {
 
 const isNavItemActive = (itemId, currentPage) => (navGroups[itemId] || [itemId]).includes(currentPage);
 
+function BottomNavigation({ page, onNavigate }) {
+  const activePage = page === 'welcome' ? 'home' : page;
+  return (
+    <nav className="bottom-nav" aria-label="Main navigation">
+      {navItems.map((item) => (
+        <button key={item.id} className={isNavItemActive(item.id, activePage) ? 'bottom-nav-item active' : 'bottom-nav-item'} onClick={() => onNavigate(item.id)} aria-label={item.label} aria-current={isNavItemActive(item.id, activePage) ? 'page' : undefined}>
+          <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span><span>{item.mobileLabel || item.label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+}
+
 function SiteNavigation({ page }) {
   return (
     <nav className="lifeos-site-nav" aria-label="The Living Word pages">
@@ -97,12 +114,12 @@ const readStored = (key, fallback) => {
   }
 };
 
-const ROUTABLE_PAGES = [
-  'welcome', 'home', 'bible', 'explore', 'seminar', 'devotional', 'wisdom', 'ministries',
-  'songs', 'novena', 'rosary', 'chaplet', 'testimonies', 'prayer', 'journal',
-  'saved', 'profile', 'reminders', 'growth', 'admin', 'encouragement'
-];
+const AUTH_PAGES = ['signin', 'signup', 'forgot', 'reset'];
+const ROUTABLE_PAGES = ['welcome', 'admin', ...AUTH_PAGES, ...PUBLIC_PAGES.map(({ page }) => page)];
 function pageFromLocation() {
+  const callback = new URLSearchParams(window.location.search).get('auth');
+  if (callback === 'recovery') return 'reset';
+  if (callback === 'confirmed') return 'signin';
   const hashPage = window.location.hash
     .slice(1)
     .replace(/^\/+/, '')
@@ -119,19 +136,66 @@ function pageFromLocation() {
 
 function LifeOSApp() {
   const [page, setPage] = useState(pageFromLocation);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authCallback] = useState(() => new URLSearchParams(window.location.search).get('auth'));
+  const isAuthCallback = ['recovery', 'confirmed'].includes(authCallback);
+  const [session, setSession] = useState(null);
+  const [authReady, setAuthReady] = useState(!supabase);
+  const [sessionError, setSessionError] = useState('');
+
+  useEffect(() => {
+    if (!supabase) return undefined;
+    let active = true;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (!active) return;
+      setSession(nextSession);
+      if (event === 'PASSWORD_RECOVERY') setPage('reset');
+      if (event === 'INITIAL_SESSION') {
+        if (authCallback === 'confirmed') setPage(confirmationDestination(nextSession));
+        setAuthReady(true);
+      }
+    });
+    supabase.auth.getSession().then(({ error }) => {
+      if (active && error) {
+        setSessionError(error.message || 'Could not restore your session.');
+        setAuthReady(true);
+      }
+    }).catch((error) => {
+      if (active) {
+        setSessionError(error.message || 'Could not restore your session.');
+        setAuthReady(true);
+      }
+    });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, [authCallback]);
 
   // Mirror the in-app page in the URL hash so the browser and Android back buttons work.
   useEffect(() => {
+    if (!authReady) return;
     const target = `#/${page}`;
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('auth')) {
+      url.searchParams.delete('auth');
+      url.hash = target;
+      window.history.replaceState(null, '', url);
+      return;
+    }
     if (window.location.hash === target) return;
     if (!window.location.hash) window.history.replaceState(null, '', target);
     else window.history.pushState(null, '', target);
-  }, [page]);
+  }, [page, authReady]);
 
   useEffect(() => {
     const onNavigate = () => setPage(pageFromLocation());
     window.addEventListener('popstate', onNavigate);
-    return () => window.removeEventListener('popstate', onNavigate);
+    window.addEventListener('hashchange', onNavigate);
+    return () => {
+      window.removeEventListener('popstate', onNavigate);
+      window.removeEventListener('hashchange', onNavigate);
+    };
   }, []);
   const [sharedExperience, setSharedExperience] = useState(() => {
     try {
@@ -144,6 +208,7 @@ function LifeOSApp() {
   });
   const [activeTranslation, setActiveTranslation] = useState('kjv');
   const [selectedBook, setSelectedBook] = useState('Genesis');
+  const [bibleLibraryOpen, setBibleLibraryOpen] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [selectedVerse, setSelectedVerse] = useState(1);
   const [testamentFilter, setTestamentFilter] = useState('ALL');
@@ -576,6 +641,7 @@ function LifeOSApp() {
     setSelectedVerse(1);
     setReadingIntent({ book, chapter: 1, verse: 1 });
     setSearchTerm('');
+    setBibleLibraryOpen(false);
   };
 
   const moveVerse = (direction) => {
@@ -627,6 +693,14 @@ function LifeOSApp() {
     if (page === 'profile') {
       return (
         <ProfilePage
+          session={session}
+          authReady={authReady}
+          sessionError={sessionError}
+          onSignOut={async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) setNotice(error.message || 'Could not sign out.');
+            else setNotice('You are signed out.');
+          }}
           theme={theme}
           onToggleTheme={() => setTheme((previous) => previous === 'light' ? 'dark' : 'light')}
           isInstalled={isInstalled}
@@ -669,31 +743,19 @@ function LifeOSApp() {
     if (page === 'bible') {
       return (
         <main className="content-page bible-page">
-          <section className="bible-intro">
-            <div>
-              <p className="eyebrow">The complete 73-book library</p>
-              <h2>Scripture, in full.</h2>
-              <p>Read chapter by chapter across the Old Testament, Deuterocanonical books, and New Testament. Chapters load as you read and are cached on this device for later.</p>
+          <header className="bible-reader-header">
+            <div className="bible-reader-brand">
+              <span className="bible-reader-mark" aria-hidden="true"><Icon name="book" /></span>
+              <div><p className="bible-reader-kicker">LIFEOS · THE LIVING WORD</p><h2>Holy Bible</h2></div>
             </div>
-            <div className="bible-library-count" aria-label="Bible library contents">
-              <strong>{BIBLE_BOOKS.length}</strong><span>books</span>
-              <i aria-hidden="true" />
-              <strong>{BIBLE_BOOKS.reduce((total, book) => total + book.chapters, 0).toLocaleString()}</strong><span>chapters</span>
-            </div>
-            <a className="bible-art-credit" href="https://commons.wikimedia.org/wiki/File:Paul_preaching_to_Athens_(SM_5510z).png" target="_blank" rel="noreferrer">St Paul preaching at Athens · Städel Museum · Public Domain</a>
-          </section>
-
-          <section className="wisdom-promo" aria-label="Wisdom readings">
-            <div>
-              <p className="mini-label">Proverbs · Ecclesiastes · Psalms</p>
-              <h3>75 words of wisdom</h3>
-              <p>Original reflection notes with Scripture references, ready to explore in context.</p>
-            </div>
-            <button className="primary-btn small" onClick={() => setPage('wisdom')}>Open wisdom guide <span aria-hidden="true">→</span></button>
-          </section>
+            <p>A quiet place to read, reflect, and grow in the Word.</p>
+            <button className="bible-library-toggle" type="button" aria-expanded={bibleLibraryOpen} aria-controls="bible-library" onClick={() => setBibleLibraryOpen((open) => !open)}>
+              {bibleLibraryOpen ? 'Close books' : 'Browse books'} <span aria-hidden="true">{bibleLibraryOpen ? '−' : '+'}</span>
+            </button>
+          </header>
 
           <div className="reader-layout">
-            <aside className="reader-sidebar" aria-label="Bible library">
+            <aside id="bible-library" className={bibleLibraryOpen ? 'reader-sidebar library-open' : 'reader-sidebar'} aria-label="Bible library">
               <section className="library-panel panel">
                 <div className="section-heading">
                   <div><p className="mini-label">Library</p><h3>Browse books</h3></div>
@@ -735,6 +797,7 @@ function LifeOSApp() {
                       key={b.name}
                       className={b.name === selectedBook ? 'book-item active' : 'book-item'}
                       onClick={() => changeBook(b.name)}
+                      aria-current={b.name === selectedBook ? 'true' : undefined}
                     >
                       <span className="book-title">{b.name}</span>
                       <span className={`book-tag tag-${b.testament.toLowerCase()}`}>
@@ -793,10 +856,12 @@ function LifeOSApp() {
                   <button
                     className={readingMode === 'continuous' ? 'mode-pill active' : 'mode-pill'}
                     onClick={() => setReadingMode('continuous')}
+                    aria-pressed={readingMode === 'continuous'}
                   >Prose reader</button>
                   <button
                     className={readingMode === 'cards' ? 'mode-pill active' : 'mode-pill'}
                     onClick={() => setReadingMode('cards')}
+                    aria-pressed={readingMode === 'cards'}
                   >Verse cards</button>
                 </div>
               </div>
@@ -807,6 +872,8 @@ function LifeOSApp() {
                     key={chapter}
                     className={chapter === selectedChapter ? 'chapter-button active' : 'chapter-button'}
                     onClick={() => selectChapter(chapter)}
+                    aria-label={`Chapter ${chapter}`}
+                    aria-current={chapter === selectedChapter ? 'true' : undefined}
                   >{chapter}</button>
                 ))}
               </div>
@@ -894,7 +961,7 @@ function LifeOSApp() {
                 <div className="section-heading">
                   <div>
                     <p className="mini-label">{selectedBook} Chapter {selectedChapter}</p>
-                    <h3>All verses in this chapter</h3>
+                    <h3>Read the chapter</h3>
                   </div>
                   <div className="panel-heading-actions">
                     <span className="subtle-label">{chapterVerses.length} total verses</span>
@@ -942,7 +1009,16 @@ function LifeOSApp() {
                           key={`${selectedBook}-${selectedChapter}-${entry.verse}`}
                           className={isActive ? 'prose-verse active' : 'prose-verse'}
                           onClick={() => selectVerse(entry.verse)}
-                          title={`Click to select verse ${entry.verse}`}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              selectVerse(entry.verse);
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          aria-pressed={isActive}
+                          aria-label={`Select verse ${entry.verse}: ${entry.text}`}
                         >
                           <sup className="verse-num">{entry.verse}</sup>
                           <span className="verse-body">{entry.text}</span>
@@ -954,7 +1030,7 @@ function LifeOSApp() {
                       <p className="empty-state">No matching verses found for "{searchTerm}".</p>
                     )}
                   </div>
-                ) : (
+                        ) : (
                   <div className="verse-list">
                     {filteredVerses.map((entry) => (
                       <button
@@ -989,6 +1065,14 @@ function LifeOSApp() {
               </section>
             </section>
           </div>
+          <section className="wisdom-promo" aria-label="Wisdom readings">
+            <div>
+              <p className="mini-label">Proverbs · Ecclesiastes · Psalms</p>
+              <h3>75 words of wisdom</h3>
+              <p>Original reflection notes with Scripture references, ready to explore in context.</p>
+            </div>
+            <button className="primary-btn small" onClick={() => setPage('wisdom')}>Open wisdom guide <span aria-hidden="true">→</span></button>
+          </section>
         </main>
       );
     }
@@ -1065,7 +1149,7 @@ function LifeOSApp() {
     if (page === 'rosary' || page === 'chaplet') return <PrayerGuidePage kind={page} key={page} />;
 
     if (page === 'testimonies') {
-      return <TestimoniesPage reports={testimonyDrafts} onAdd={addTestimonyDraft} onDelete={(id) => setTestimonyDrafts((previous) => previous.filter((draft) => draft.id !== id))} initialExperience={sharedExperience} onPrefillConsumed={setSharedExperience} />;
+      return <TestimoniesPage session={session} onNavigate={setPage} reports={testimonyDrafts} onAdd={addTestimonyDraft} onDelete={(id) => setTestimonyDrafts((previous) => previous.filter((draft) => draft.id !== id))} initialExperience={sharedExperience} onPrefillConsumed={setSharedExperience} />;
     }
 
     if (page === 'prayer') {
@@ -1168,8 +1252,16 @@ function LifeOSApp() {
     );
   };
 
+  if (!authReady && isAuthCallback) {
+    return <main className="account-page"><p role="status">Checking your session...</p></main>;
+  }
+
+  if (AUTH_PAGES.includes(page)) {
+    return <AuthPage key={page} mode={page} session={session} onNavigate={setPage} />;
+  }
+
   if (page === 'welcome') {
-    return <LandingPage onNavigate={setPage} />;
+    return <><LandingPage onNavigate={setPage} onOpenScripture={openScriptureReference} session={session} /><BottomNavigation page={page} onNavigate={setPage} /></>;
   }
 
   return (
@@ -1189,17 +1281,19 @@ function LifeOSApp() {
           <span className={isOnline ? 'connection-status' : 'connection-status offline'}><span />{isOnline ? 'Online' : 'Offline mode'}</span>
           <button className="icon-button theme-button" onClick={() => setTheme((previous) => previous === 'light' ? 'dark' : 'light')} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>{theme === 'light' ? '☾' : '☀'}</button>
           <button className="install-button" onClick={installApp} disabled={isInstalled}>{isInstalled ? 'Installed ✓' : '↓ Install'}</button>
+          <div className="mobile-feature-menu" onKeyDown={(event) => { if (event.key === 'Escape') setMobileMenuOpen(false); }}>
+            <button type="button" className="mobile-feature-toggle" aria-label={mobileMenuOpen ? 'Close features menu' : 'Open features menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-feature-links" onClick={() => setMobileMenuOpen((open) => !open)}>☰</button>
+            {mobileMenuOpen && <nav id="mobile-feature-links" aria-label="All LIFEOS features">
+              {PUBLIC_PAGES.map(({ page: destination, label }) => (
+                <button type="button" key={destination} onClick={() => { setMobileMenuOpen(false); setPage(destination); }}>{label}</button>
+              ))}
+            </nav>}
+          </div>
         </div>
       </header>
       {notice && <div className="app-notice" role="status"><span>{notice}</span><button onClick={() => setNotice('')} aria-label="Dismiss">×</button></div>}
       {renderPage()}
-      <nav className="bottom-nav" aria-label="Main navigation">
-        {navItems.map((item) => (
-          <button key={item.id} className={isNavItemActive(item.id, page) ? 'bottom-nav-item active' : 'bottom-nav-item'} onClick={() => { setPage(item.id); setNotice(''); }} aria-label={item.label} aria-current={isNavItemActive(item.id, page) ? 'page' : undefined}>
-            <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span><span>{item.mobileLabel || item.label}</span>
-          </button>
-        ))}
-      </nav>
+      <BottomNavigation page={page} onNavigate={(destination) => { setMobileMenuOpen(false); setPage(destination); setNotice(''); }} />
     </div>
   );
 }

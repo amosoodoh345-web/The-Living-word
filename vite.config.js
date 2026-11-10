@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,13 +20,20 @@ export default defineConfig({
       async closeBundle() {
         const workerPath = resolve(rootDirectory, 'dist', 'service-worker.js');
         const source = await readFile(workerPath, 'utf8');
+        const assets = (await readdir(resolve(rootDirectory, 'dist', 'assets')))
+          .filter((name) => /\.(js|css)$/.test(name))
+          .sort()
+          .map((name) => `/assets/${name}`);
         const versionedSource = source.replace(
           "const BUILD_ID = '__LIFEOS_BUILD_ID__';",
           `const BUILD_ID = ${JSON.stringify(buildId)};`
+        ).replace(
+          "const BUILD_ASSETS = '__LIFEOS_BUILD_ASSETS__';",
+          `const BUILD_ASSETS = ${JSON.stringify(assets)};`
         );
 
-        if (versionedSource === source) {
-          throw new Error('Could not inject the LIFEOS build ID into the service worker.');
+        if (versionedSource.includes('__LIFEOS_BUILD_ID__') || versionedSource.includes('__LIFEOS_BUILD_ASSETS__') || assets.length === 0) {
+          throw new Error('Could not inject the LIFEOS build ID and assets into the service worker.');
         }
 
         await writeFile(workerPath, versionedSource);

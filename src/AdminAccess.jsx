@@ -35,9 +35,7 @@ export default function AdminAccess() {
       if (!active) return;
 
       if (error || data !== true) {
-        await supabase.auth.signOut();
-        setSession(null);
-        setMessage('Access denied. This account is not an administrator.');
+        setMessage(error ? 'Unable to verify administrator access. Check your connection and try again.' : 'Access denied. This account is not an administrator.');
         setChecking(false);
         return;
       }

@@ -2111,7 +2111,7 @@ body[data-theme='dark'] .reader-card {
   max-width: 900px;
   padding-left: 18px;
   border-left: 3px solid var(--gold);
-  font-size: 1.3rem !important;
+  font-size: 1.3rem;
   line-height: 1.7;
 }
 

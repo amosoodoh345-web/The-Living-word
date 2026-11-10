@@ -1,0 +1,21 @@
+export const PUBLIC_PAGES = [
+  { page: 'home', label: 'Home' },
+  { page: 'bible', label: 'Bible' },
+  { page: 'explore', label: 'Explore' },
+  { page: 'seminar', label: 'Life in the Spirit Seminar' },
+  { page: 'devotional', label: 'Daily Devotional' },
+  { page: 'wisdom', label: 'Wisdom' },
+  { page: 'ministries', label: 'Ministries' },
+  { page: 'songs', label: 'Songs' },
+  { page: 'novena', label: 'Novena' },
+  { page: 'rosary', label: 'Rosary' },
+  { page: 'chaplet', label: 'Chaplet' },
+  { page: 'testimonies', label: 'Testimonies' },
+  { page: 'prayer', label: 'Prayer' },
+  { page: 'journal', label: 'Journal' },
+  { page: 'saved', label: 'Saved' },
+  { page: 'profile', label: 'Profile' },
+  { page: 'reminders', label: 'Reminders' },
+  { page: 'growth', label: 'Spiritual Growth' },
+  { page: 'encouragement', label: 'Encouragement' }
+];

@@ -6,19 +6,9 @@ import { CrossLogo, Icon } from './Icons';
 import { extractPassageText, getDailyScripture } from './lib/dailyScripture';
 import { formatCountdown, getNextReminder } from './lib/reminders';
 import { SITE_NAVIGATION } from './siteNavigation';
+import { PUBLIC_PAGES } from './data/publicNavigation';
 
 const DAY_MS = 86400000;
-
-const MENU_PAGES = [
-  { page: 'home', label: 'Home' },
-  { page: 'bible', label: 'Bible Reading' },
-  { page: 'seminar', label: 'Life in the Spirit Seminar' },
-  { page: 'devotional', label: 'Daily Devotionals' },
-  { page: 'prayer', label: 'Prayer, Rosary & Chaplet' },
-  { page: 'encouragement', label: 'Spiritual Reflections' },
-  { page: 'testimonies', label: 'Testimonies' },
-  { page: 'ministries', label: 'Church & Ministries' }
-];
 
 const FEATURES = [
   { id: 'bible', icon: 'book', title: 'Bible Reading', text: 'Read Scripture in KJV, WEB or BBE and keep your place as you go.', actions: [{ label: 'Open the Bible', page: 'bible' }] },
@@ -167,7 +157,7 @@ export default function HomeDashboard({
           <nav className="dash-menu" id="dash-menu" aria-label="Explore LIFEOS">
             <p className="dash-menu-heading">In the app</p>
             <ul>
-              {MENU_PAGES.map((item) => (
+              {PUBLIC_PAGES.map((item) => (
                 <li key={item.page}><button onClick={() => goTo(item.page)}>{item.label}</button></li>
               ))}
             </ul>

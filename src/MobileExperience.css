@@ -1,0 +1,270 @@
+.prayer-progress {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8d8c0;
+}
+
+.prayer-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #c49a45;
+  transition: width .2s ease;
+}
+
+.mobile-feature-menu { display: none; }
+
+@media (max-width: 768px) {
+  .app-shell {
+    --bg: #fff8ed;
+    --bg-alt: #f3e4cc;
+    --panel: #fffefa;
+    --panel-strong: #fff;
+    --panel-soft: #f8eee3;
+    --line: #e5d4bf;
+    --ink: #38251f;
+    --muted: #705d53;
+    --green: #701d2a;
+    --green-deep: #4b101b;
+    --brand: #701d2a;
+    --on-brand: #fff;
+    --blue: #701d2a;
+    --gold: #a67324;
+    --gold-bright: #e5c16e;
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  body[data-theme='dark'] .app-shell {
+    --bg: #201719;
+    --bg-alt: #352529;
+    --panel: #2a1e21;
+    --panel-strong: #322428;
+    --panel-soft: #433033;
+    --line: #634b45;
+    --ink: #fff2e4;
+    --muted: #dcc8ba;
+    --green: #f1c4b8;
+    --green-deep: #fff0df;
+    --brand: #f1c4b8;
+    --on-brand: #3a1119;
+    --blue: #f1c4b8;
+    --gold: #e7c77f;
+    --gold-bright: #f0d99c;
+  }
+
+  .app-shell > .topbar,
+  body[data-theme='dark'] .app-shell > .topbar {
+    background: #4b101b;
+    border-color: #c49a45;
+    color: #fff8ed;
+  }
+
+  .app-shell .topbar .brand-name strong { color: #fff8ed; }
+  .app-shell .topbar .brand-mark { background: #c49a45; color: #4b101b; }
+
+  .mobile-feature-menu { display: block; position: relative; }
+  .mobile-feature-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid #c49a45;
+    border-radius: 9px;
+    background: #701d2a;
+    color: #fff;
+    font-size: 20px;
+  }
+  .mobile-feature-menu nav {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 60;
+    display: grid;
+    width: min(280px, calc(100vw - 28px));
+    max-height: min(65vh, 500px);
+    overflow-y: auto;
+    padding: 8px;
+    border: 1px solid #c49a45;
+    border-radius: 12px;
+    background: #fff8ed;
+    box-shadow: 0 15px 35px rgba(48, 10, 19, .25);
+  }
+  .mobile-feature-menu nav button {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 0;
+    border-bottom: 1px solid #efdfcc;
+    background: transparent;
+    color: #4b101b;
+    text-align: left;
+    font-weight: 700;
+  }
+
+  body[data-theme] .bottom-nav,
+  .bottom-nav {
+    z-index: 35;
+    min-height: calc(70px + env(safe-area-inset-bottom));
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    border-top: 2px solid #c49a45;
+    background: #4b101b;
+    box-shadow: 0 -8px 26px rgba(48, 10, 19, .23);
+  }
+
+  .bottom-nav-item {
+    min-height: 54px;
+    color: #fff;
+    font-size: 11px;
+  }
+
+  .bottom-nav-item.active {
+    background: rgba(196, 154, 69, .2);
+    color: #ffe4a0;
+  }
+
+  .bottom-nav-item.active .bottom-nav-icon { color: #ffe4a0; }
+  .lifeos-landing { padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
+  .lifeos-landing .landing-menu-scrim { z-index: 50; }
+  .lifeos-landing .landing-drawer { z-index: 51; padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+
+  .app-shell .dash {
+    --dash-navy: #4b101b;
+    --dash-royal: #701d2a;
+    --dash-gold: #c49a45;
+    --dash-gold-soft: #f2d89c;
+  }
+
+  .app-shell .dash-hero {
+    border-color: #c49a45;
+    background: linear-gradient(90deg, rgba(75, 16, 27, .92), rgba(75, 16, 27, .7)), url('/images/lifeos-hero-optimized.jpg') 82% center / cover;
+  }
+
+  .app-shell .dash-seminar-banner {
+    background: linear-gradient(90deg, rgba(75, 16, 27, .94), rgba(75, 16, 27, .74)), url('/images/st-paul-community.jpg') center / cover;
+  }
+
+  .app-shell .dash-button-gold { color: #4b101b; }
+  .app-shell .dash-feature-icon,
+  .app-shell .dash-card-icon,
+  .app-shell .dash-shortcut-icon,
+  .app-shell .dash-session-number,
+  .app-shell .dash-premium-tag,
+  .app-shell .dash-avatar { background: #701d2a; color: #fff2d6; }
+
+  .app-shell .primary-btn {
+    border-color: #701d2a;
+    background: #701d2a;
+    color: #fff;
+  }
+
+  .app-shell .prayer-mobile-page .prayer-feature {
+    border-color: #c49a45;
+    background: linear-gradient(145deg, #4b101b, #853647);
+    color: #fff8ed;
+  }
+
+  .prayer-mobile-page .prayer-feature .secondary-btn {
+    border-color: #e5c16e;
+    background: #fff8ed;
+    color: #701d2a;
+  }
+
+  .prayer-guide-page .mystery-picker {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px;
+    border-color: #c49a45;
+    border-radius: 16px;
+  }
+
+  .prayer-guide-page .mystery-picker .tab-pill {
+    min-height: 48px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel-strong);
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .prayer-guide-page .mystery-picker .tab-pill.active {
+    border-color: #701d2a;
+    background: #701d2a;
+    color: white;
+  }
+
+  .prayer-guide-page .mystery-list,
+  .prayer-guide-page .mystery-picker .subtle-label {
+    grid-column: 1 / -1;
+  }
+
+  .prayer-guide-page .mystery-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .prayer-guide-page .guide-step {
+    padding: 22px 18px;
+    border: 1px solid #c49a45;
+    border-radius: 16px;
+    background: var(--panel);
+  }
+
+  .prayer-guide-page .guide-step > p:not(.mini-label) {
+    min-height: 0;
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .prayer-guide-page .prayer-text {
+    margin: 10px 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel-strong);
+    color: var(--ink);
+  }
+
+  .prayer-guide-page .prayer-text[open] {
+    border-color: #c49a45;
+    box-shadow: inset 3px 0 #c49a45;
+  }
+
+  .prayer-guide-page .prayer-text summary {
+    min-height: 48px;
+    padding: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .prayer-guide-page .prayer-text p {
+    padding: 0 14px 14px;
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+
+  .prayer-guide-page .devotional-actions { gap: 10px; }
+  .prayer-guide-page .devotional-actions button { min-height: 48px; flex: 1 1 120px; }
+
+  .account-page {
+    min-height: 100svh;
+    padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+    background: radial-gradient(circle at 50% 0, #f3e4cc, #fff8ed 65%);
+  }
+
+  .account-card {
+    padding: 26px 20px;
+    border-color: #d7b778;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(75, 16, 27, .12);
+  }
+
+  .account-card h1 { color: #701d2a; font-size: 2rem; }
+  .account-form input { min-height: 50px; font-size: 16px; }
+  .account-submit { min-height: 50px; background: #701d2a; }
+  .account-back, .account-links button { min-height: 44px; color: #701d2a; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prayer-progress span { transition: none; }
+}

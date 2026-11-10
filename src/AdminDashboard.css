@@ -608,6 +608,106 @@
   margin-bottom: 18px;
 }
 
+.admin-settings {
+  width: 100%;
+}
+
+.admin-settings-form {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-settings-card {
+  padding: 24px;
+  border: 1px solid #e8e9e3;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(20, 45, 30, 0.05);
+}
+
+.admin-settings-card-heading {
+  margin-bottom: 20px;
+}
+
+.admin-settings-card h3 {
+  margin: 0 0 7px;
+  color: var(--forest);
+  font-size: 17px;
+}
+
+.admin-settings-card p,
+.admin-setting-toggle small {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.admin-settings-card p {
+  margin: 0;
+}
+
+.admin-settings-card > label:not(.admin-setting-toggle) {
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-settings-card input[type="text"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #dfe4dd;
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+
+.admin-setting-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid #edf0eb;
+  cursor: pointer;
+}
+
+.admin-setting-toggle:first-of-type {
+  border-top: 0;
+}
+
+.admin-setting-toggle input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--forest);
+}
+
+.admin-setting-toggle span {
+  display: grid;
+  gap: 3px;
+}
+
+.admin-setting-toggle strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.admin-setting-toggle small {
+  font-size: 12px;
+}
+
+.admin-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.admin-settings-actions button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
 .admin-testimonies .admin-error {
   margin-bottom: 18px;
 }

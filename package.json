@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test src/lib/dailyScripture.test.js src/lib/dailyDevotional.test.js src/lib/readingHistory.test.js src/lib/reminders.test.js src/lib/spiritualGrowth.test.js"
+    "test": "node --test src/lib/dailyScripture.test.js src/lib/dailyDevotional.test.js src/lib/readingHistory.test.js src/lib/reminders.test.js src/lib/spiritualGrowth.test.js src/lib/publicNavigation.test.js src/lib/serviceWorker.test.js src/lib/authValidation.test.js src/lib/authNavigation.test.js src/lib/prayerTexts.test.js"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
